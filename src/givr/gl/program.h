@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../types.h"
 #include "shader.h"
-#include "som.h"
 
 #include <memory>
 

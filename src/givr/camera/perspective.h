@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../types.h"
-#include "som.h"
+#include "givm.h"
 
 namespace givr {
 

@@ -1,12 +1,13 @@
 #pragma once
 
-#include "som.h"
+#include "givm.h"
 
 namespace givr {
 
     // The framing for a particular draw call. Includes position, normal etc.
     // is the model matrix
-    using frame = mat4f;
+    using frame = givm::mat4f;
+    using vec3f = givm::vec3f;
 
     // Note that all methods have two forms, one which
     // turns an identify matrix into one that positions the element at

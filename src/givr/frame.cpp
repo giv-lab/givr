@@ -1,6 +1,7 @@
 #include "frame.h"
 
 using frame = givr::frame;
+using namespace givm;
 
 frame givr::at(float x, float y) {
     return at(vec3f(x, y, 0.f));
