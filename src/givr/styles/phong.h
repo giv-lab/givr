@@ -24,7 +24,6 @@ namespace givr {
     template <typename GeometryT>
     buffer_data fill_buffers(GeometryT const &g, phong const &) {
         // Add static assert that the geometry we have has vertices and indices
-        //r.primitive = primitive_type::TRIANGLES;
         buffer_data data;
         typename GeometryT::data d = generate_geometry(g);
         static_assert(has_vertices<GeometryT>::value, "The phong style requires vertices. The geometry you are using does not provide them.");
@@ -43,6 +42,7 @@ namespace givr {
             shader{p.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{p.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        ctx.primitive = primitive_type::TRIANGLES;
         return ctx;
     }
 

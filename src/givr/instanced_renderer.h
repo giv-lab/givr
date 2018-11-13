@@ -7,6 +7,8 @@
 #include "gl/buffer.h"
 #include "gl/vertex_array.h"
 
+#include <glad/glad.h>
+
 #include <functional>
 #include <memory>
 #include <vector>
@@ -47,10 +49,7 @@ namespace givr {
 
         ctx.vao->bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        GLenum mode = GL_TRIANGLES;
-        if (ctx.primitive == primitive_type::TRIANGLES) {
-            mode = GL_TRIANGLES;
-        }
+        GLenum mode = givr::get_mode(ctx.primitive);
         ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
         ctx.model_transforms_buffer->data(GL_ARRAY_BUFFER, ctx.model_transforms, GL_DYNAMIC_DRAW);
 
