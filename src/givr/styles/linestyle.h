@@ -9,7 +9,7 @@
 
 namespace givr {
 
-    struct phong {
+    struct linestyle {
         vec3f colour;
         vec3f light_position;
 
@@ -22,21 +22,17 @@ namespace givr {
     };
 
     template <typename GeometryT>
-    buffer_data fill_buffers(GeometryT const &g, phong const &) {
+    buffer_data fill_buffers(GeometryT const &g, linestyle const &) {
         buffer_data data;
         typename GeometryT::data d = generate_geometry(g);
-        static_assert(has_vertices<GeometryT>::value, "The phong style requires vertices. The geometry you are using does not provide them.");
-        static_assert(has_indices<GeometryT>::value, "The phong style requires indices. The geometry you are using does not provide them.");
-        static_assert(has_normals<GeometryT>::value, "The phong style requires normals. The geometry you are using does not provide them.");
+        static_assert(has_vertices<GeometryT>::value, "The linestyle style requires vertices. The geometry you are using does not provide them.");
         data.add_vertices(d.vertices);
-        data.add_indices(d.indices);
-        data.add_normals(d.normals);
         return std::move(data);
     }
 
     template <typename GeometryT>
-    phong::render_context get_context(GeometryT &, phong const &p) {
-        auto ctx = phong::render_context{};
+    linestyle::render_context get_context(GeometryT &, linestyle const &p) {
+        auto ctx = linestyle::render_context{};
         ctx.shader_program = std::make_unique<program>(
             shader{p.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{p.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
@@ -46,7 +42,7 @@ namespace givr {
     }
 
     template <typename ViewContextT>
-    void draw(phong const &p, phong::render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(linestyle const &p, linestyle::render_context &ctx, ViewContextT const &view_ctx) {
         draw_instanced(ctx, view_ctx, [&p](std::unique_ptr<program> const &program) {
             p.set_uniforms(program);
         });
