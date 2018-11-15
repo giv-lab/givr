@@ -61,6 +61,9 @@ namespace givr {
 
         ctx.model_transforms.clear();
     }
+    void allocate_buffers(
+        instanced_render_context &ctx
+    );
     void upload_buffers(
         instanced_render_context &ctx,
         buffer_data const &data

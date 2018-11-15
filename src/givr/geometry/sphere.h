@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+#include "../types.h"
 
 namespace givr {
 
@@ -10,6 +11,9 @@ namespace givr {
         std::size_t altitudePoints = 20;
 
         struct data {
+            buffer_usage_type vertices_type;
+            buffer_usage_type normals_type;
+
             std::vector<float> vertices;
             std::vector<float> normals;
             std::vector<std::uint16_t> indices;

@@ -52,6 +52,9 @@ namespace givr {
 
         ctx.vao->unbind();
     }
+    void allocate_buffers(
+        array_render_context &ctx
+    );
     void upload_buffers(
         array_render_context &ctx,
         buffer_data const &data

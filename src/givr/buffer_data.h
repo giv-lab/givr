@@ -3,16 +3,22 @@
 #include <vector>
 
 #include <glad/glad.h>
+#include "types.h"
 
 namespace givr {
     struct buffer_data {
         // Holds the necessary vertex buffer data
         // if the size is zero, then it is not used and will not be supplied to the shader
 
+        buffer_usage_type indices_type;
         std::vector<GLushort> indices;
+        buffer_usage_type vertices_type;
         std::vector<float> vertices;
+        buffer_usage_type normals_type;
         std::vector<float> normals;
+        buffer_usage_type uvs_type;
         std::vector<float> uvs;
+        buffer_usage_type colours_type;
         std::vector<float> colours;
 
         void add_indices(std::vector<GLushort> const &new_indices);
