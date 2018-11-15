@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../buffer_data.h"
-#include "../instanced_renderer.h"
+#include "../array_renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
 
@@ -11,9 +11,9 @@ namespace givr {
 
     struct linestyle {
         vec3f colour;
-        vec3f light_position;
+        float line_width = 1.f;
 
-        using render_context = instanced_render_context;
+        using render_context = array_render_context;
 
         std::string get_vertex_shader_source() const;
         std::string get_fragment_shader_source() const;
@@ -27,6 +27,9 @@ namespace givr {
         typename GeometryT::data d = generate_geometry(g);
         static_assert(has_vertices<GeometryT>::value, "The linestyle style requires vertices. The geometry you are using does not provide them.");
         data.add_vertices(d.vertices);
+
+        // TODO: better way to optionall add data like colours.
+        // if (d.colours.size() > 0) data.add_colours(d.colours);
         return std::move(data);
     }
 
@@ -37,13 +40,14 @@ namespace givr {
             shader{p.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{p.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
-        ctx.primitive = primitive_type::TRIANGLES;
+        ctx.primitive = primitive_type::LINE_STRIP;
         return ctx;
     }
 
     template <typename ViewContextT>
     void draw(linestyle const &p, linestyle::render_context &ctx, ViewContextT const &view_ctx) {
-        draw_instanced(ctx, view_ctx, [&p](std::unique_ptr<program> const &program) {
+        glLineWidth(p.line_width);
+        draw_array(ctx, view_ctx, [&p](std::unique_ptr<program> const &program) {
             p.set_uniforms(program);
         });
     }

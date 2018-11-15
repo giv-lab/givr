@@ -22,7 +22,7 @@ namespace givr {
         return ctx;
     }
     template <typename GeometryT, typename StyleT>
-    typename StyleT::render_context update_renderable(GeometryT const &g, StyleT const &style) {
+    typename StyleT::render_context update_renderable(GeometryT const &g, StyleT const &style, typename StyleT::render_context &ctx) {
         upload_buffers(ctx, update_buffers(g, style));
         return ctx;
     }

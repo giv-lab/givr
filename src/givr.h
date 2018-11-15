@@ -13,6 +13,7 @@
 #include "givr/gl/buffer.h"
 #include "givr/gl/vertex_array.h"
 #include "givr/geometry/sphere.h"
+#include "givr/geometry/polyline.h"
 #include "givr/styles/flatfill.h"
 #include "givr/styles/linestyle.h"
 #include "givr/styles/phong.h"

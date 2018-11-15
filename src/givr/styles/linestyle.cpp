@@ -4,12 +4,10 @@ using linestyle = givr::linestyle;
 
 void linestyle::set_uniforms(std::unique_ptr<program> const &p) const {
     p->set_vec3("colour", colour);
-    p->set_vec3("light_position", light_position);
 }
 
 std::string linestyle::get_vertex_shader_source() const {
     return std::string(R"shader(
-        attribute mat4 model;
         attribute vec3 position;
 
         uniform mat4 view;
@@ -18,7 +16,7 @@ std::string linestyle::get_vertex_shader_source() const {
         varying vec3 frag_pos;
 
         void main(){
-            mat4 modelview = view * model;
+            mat4 modelview = view;
             mat4 mvp = projection * modelview;
             gl_Position = mvp * vec4(position, 1.0);
             vec4 model_vert = modelview * vec4(position, 1.0);
@@ -39,7 +37,7 @@ std::string linestyle::get_fragment_shader_source() const {
 
         void main()
         {
-            gl_FragColor = colour;
+            gl_FragColor = vec4(colour, 1.);
         }
 
 
