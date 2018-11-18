@@ -46,6 +46,7 @@ namespace givr {
 
     template <typename ViewContextT>
     void draw(linestyle const &p, linestyle::render_context &ctx, ViewContextT const &view_ctx) {
+        glEnable(GL_LINE_SMOOTH);
         glLineWidth(p.line_width);
         draw_array(ctx, view_ctx, [&p](std::unique_ptr<program> const &program) {
             p.set_uniforms(program);
