@@ -59,6 +59,10 @@ namespace givr {
             GLenum buffer_type,
             std::vector<float> const &data
         ) {
+            if (data.size() == 0) {
+                ++buffer_index;
+                return;
+            }
             std::unique_ptr<buffer> &vbo = ctx.array_buffers[buffer_index];
             vbo->bind(type);
             vbo->data(type, data, buffer_type);
