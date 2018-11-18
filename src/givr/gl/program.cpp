@@ -60,11 +60,12 @@ void program::set_mat4(const std::string &name, mat4f const &mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(m_program_id, name.c_str()), 1, GL_FALSE, value_ptr(mat));
 }
-
-/*void program::set_bool(const std::string &name, bool value) const
+void program::set_bool(const std::string &name, bool value) const
 {
     glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), static_cast<int>(value));
 }
+
+/*
 void program::set_int(const std::string &name, int value) const
 {
     glUniform1i(glGetUniformLocation(m_program_id, name.c_str()), value);
