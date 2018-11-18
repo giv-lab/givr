@@ -23,8 +23,12 @@ namespace givr {
 
         void add_indices(std::vector<GLushort> const &new_indices);
         void add_vertices(std::vector<float> const &new_vertices);
+        void add_vertices(std::vector<vec3f> const &new_vertices);
         void add_normals(std::vector<float> const &new_normals);
+        void add_normals(std::vector<vec3f> const &new_normals);
         void add_uvs(std::vector<float> const &new_uvs);
+        //TODO: void add_uvs(std::vector<vec2f> const &new_uvs);
         void add_colours(std::vector<float> const &new_colours);
+        void add_colours(std::vector<vec3f> const &new_colours);
     }; // end struct buffer_data
 };// end namespace givr

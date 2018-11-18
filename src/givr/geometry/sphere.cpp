@@ -1,10 +1,7 @@
 #include "sphere.h"
-#include "tiny_obj_loader.h"
 
 #include <cassert>
 #include <cmath>
-#include <sstream>
-#include <string>
 
 using sphere = givr::sphere;
 
