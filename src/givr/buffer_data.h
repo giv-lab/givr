@@ -11,7 +11,7 @@ namespace givr {
         // if the size is zero, then it is not used and will not be supplied to the shader
 
         buffer_usage_type indices_type;
-        std::vector<GLushort> indices;
+        std::vector<GLuint> indices;
         buffer_usage_type vertices_type;
         std::vector<float> vertices;
         buffer_usage_type normals_type;
@@ -21,7 +21,7 @@ namespace givr {
         buffer_usage_type colours_type;
         std::vector<float> colours;
 
-        void add_indices(std::vector<GLushort> const &new_indices);
+        void add_indices(std::vector<GLuint> const &new_indices);
         void add_vertices(std::vector<float> const &new_vertices);
         void add_vertices(std::vector<vec3f> const &new_vertices);
         void add_normals(std::vector<float> const &new_normals);

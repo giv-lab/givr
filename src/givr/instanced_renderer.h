@@ -54,7 +54,7 @@ namespace givr {
         ctx.model_transforms_buffer->data(GL_ARRAY_BUFFER, ctx.model_transforms, GL_DYNAMIC_DRAW);
 
         glDrawElementsInstanced(
-            mode, ctx.number_of_indices, GL_UNSIGNED_SHORT, 0, ctx.model_transforms.size()
+            mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, ctx.model_transforms.size()
         );
 
         ctx.vao->unbind();

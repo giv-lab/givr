@@ -2,7 +2,7 @@
 
 using buffer_data = givr::buffer_data;
 
-void buffer_data::add_indices(std::vector<GLushort> const &new_indices) {
+void buffer_data::add_indices(std::vector<GLuint> const &new_indices) {
     indices.insert(indices.end(), new_indices.begin(), new_indices.end());
 }
 void buffer_data::add_vertices(std::vector<float> const &new_vertices) {

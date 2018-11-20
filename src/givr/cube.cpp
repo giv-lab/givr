@@ -13,8 +13,8 @@ std::vector<float> givr::generate_vertices(cube const &) {
     };
 }
 
-std::vector<std::uint16_t> givr::generate_indices(cube const &) {
-    return std::vector<std::uint16_t>{
+std::vector<std::uint32_t> givr::generate_indices(cube const &) {
+    return std::vector<std::uint32_t>{
         0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1
     };
 }

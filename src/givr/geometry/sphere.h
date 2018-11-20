@@ -16,7 +16,7 @@ namespace givr {
 
             std::vector<float> vertices;
             std::vector<float> normals;
-            std::vector<std::uint16_t> indices;
+            std::vector<std::uint32_t> indices;
         };
 
     };
