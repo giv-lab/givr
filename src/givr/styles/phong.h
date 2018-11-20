@@ -13,6 +13,8 @@ namespace givr {
         vec3f colour;
         vec3f light_position;
         bool per_vertex_colour;
+        float ambient_factor = 0.05f;
+        float specular_factor = 0.03f;
 
         using render_context = instanced_render_context;
 
