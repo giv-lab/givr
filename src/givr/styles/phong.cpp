@@ -61,7 +61,7 @@ std::string phong::get_fragment_shader_source() const {
             // diffuse
             vec3 light_dir = normalize(light_position - frag_pos);
             vec3 normal = normalize(frag_normal);
-            float diff = max(dot(light_dir, normal), 0.0);
+            float diff = abs(dot(light_dir, normal));
             vec3 diffuse = diff * final_colour;
 
             // specular
