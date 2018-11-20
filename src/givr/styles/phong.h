@@ -14,7 +14,8 @@ namespace givr {
         vec3f light_position;
         bool per_vertex_colour;
         float ambient_factor = 0.05f;
-        float specular_factor = 0.03f;
+        float specular_factor = 0.3f;
+        float phong_exponent = 8.0f;
 
         using render_context = instanced_render_context;
 
