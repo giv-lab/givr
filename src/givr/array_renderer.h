@@ -15,24 +15,22 @@
 
 namespace givr {
 
-    struct instanced_render_context {
+    struct array_render_context {
         std::unique_ptr<program> shader_program;
         std::unique_ptr<vertex_array> vao;
-
-        std::vector<mat4f> model_transforms;
-        std::unique_ptr<buffer> model_transforms_buffer;
 
         // Keep references to the GL_ARRAY_BUFFERS so that
         // the stay in scope for this context.
         std::vector<std::unique_ptr<buffer>> array_buffers;
-        GLuint number_of_indices;
+        GLuint start_index;
+        GLuint end_index;
 
         primitive_type primitive;
     };
 
     template <typename ViewContextT>
-    void draw_instanced(
-        instanced_render_context &ctx,
+    void draw_array(
+        array_render_context &ctx,
         ViewContextT const &view_ctx,
         std::function<void(std::unique_ptr<program> const&)> set_uniforms
     ) {
@@ -50,22 +48,15 @@ namespace givr {
         ctx.vao->bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         GLenum mode = givr::get_mode(ctx.primitive);
-        ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
-        ctx.model_transforms_buffer->data(GL_ARRAY_BUFFER, ctx.model_transforms, GL_DYNAMIC_DRAW);
-
-        glDrawElementsInstanced(
-            mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, ctx.model_transforms.size()
-        );
+        glDrawArrays(mode, ctx.start_index, ctx.end_index);
 
         ctx.vao->unbind();
-
-        ctx.model_transforms.clear();
     }
     void allocate_buffers(
-        instanced_render_context &ctx
+        array_render_context &ctx
     );
     void upload_buffers(
-        instanced_render_context &ctx,
+        array_render_context &ctx,
         buffer_data const &data
     );
 };// end namespace givr

@@ -25,4 +25,10 @@ namespace givr {
 
     GLenum get_mode(primitive_type const &t);
 
+    enum class buffer_usage_type {
+        STATIC_DRAW,
+        DYNAMIC_DRAW
+    };
+    GLenum get_buffer_usage_type(buffer_usage_type const &d);
+
 };// end namespace givr

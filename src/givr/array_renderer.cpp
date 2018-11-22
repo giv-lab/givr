@@ -1,19 +1,9 @@
-#include "instanced_renderer.h"
+#include "array_renderer.h"
 
 namespace givr {
-    void allocate_buffers(instanced_render_context &ctx) {
+    void allocate_buffers(array_render_context &ctx) {
         ctx.vao = std::make_unique<vertex_array>();
         ctx.vao->alloc(1);
-
-
-        // Map - but don't upload framing data.
-        ctx.model_transforms_buffer = std::make_unique<buffer>();
-        ctx.model_transforms_buffer->alloc(1);
-
-
-        std::unique_ptr<buffer> indices = std::make_unique<buffer>();
-        indices->alloc(1);
-        ctx.array_buffers.push_back(std::move(indices));
 
         auto allocate_buffer = [&ctx]() {
             std::unique_ptr<buffer> vbo = std::make_unique<buffer>();
@@ -29,40 +19,22 @@ namespace givr {
     }
 
     void upload_buffers(
-        instanced_render_context &ctx,
+        array_render_context &ctx,
         buffer_data const &data
     ) {
         std::uint16_t va_index = 0;
         ctx.vao->bind();
 
+        ctx.start_index = 0;
+        ctx.end_index =  data.vertices.size() / 3;
 
-        // Map - but don't upload framing data.
-        ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
-        auto vec4_size = sizeof(mat4f)/4;
-        for (std::uint16_t i = 0; i < 4; ++i) {
-            glVertexAttribPointer(va_index, 4, GL_FLOAT, GL_FALSE, sizeof(mat4f), (GLvoid*)(i*vec4_size));
-            glEnableVertexAttribArray(va_index);
-            glVertexAttribDivisor(va_index, 1);
-            ++va_index;
-        }
-
-
-        std::unique_ptr<buffer> &indices = ctx.array_buffers[0];
-        indices->bind(GL_ELEMENT_ARRAY_BUFFER);
-        indices->data(GL_ELEMENT_ARRAY_BUFFER, data.indices, GL_STATIC_DRAW);
-        ctx.number_of_indices = data.indices.size();
-
-        std::uint16_t buffer_index = 1;
+        std::uint16_t buffer_index = 0;
         auto apply_buffer = [&ctx, &va_index, &buffer_index](
             GLenum type,
             GLuint size,
             GLenum buffer_type,
             std::vector<float> const &data
         ) {
-            if (data.size() == 0) {
-                ++buffer_index;
-                return;
-            }
             std::unique_ptr<buffer> &vbo = ctx.array_buffers[buffer_index];
             vbo->bind(type);
             vbo->data(type, data, buffer_type);

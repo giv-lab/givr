@@ -31,3 +31,14 @@ GLenum givr::get_mode(primitive_type const &t) {
     }
 }
 
+GLenum givr::get_buffer_usage_type(buffer_usage_type const &d) {
+    switch(d) {
+        case buffer_usage_type::STATIC_DRAW:
+            return GL_STATIC_DRAW;
+        case buffer_usage_type::DYNAMIC_DRAW:
+            return GL_DYNAMIC_DRAW;
+        default:
+            return GL_STATIC_DRAW;
+    }
+
+}
