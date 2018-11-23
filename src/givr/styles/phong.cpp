@@ -2,7 +2,7 @@
 
 using phong = givr::phong;
 
-void phong::set_uniforms(std::unique_ptr<program> const &p) const {
+void phong::set_uniforms(std::unique_ptr<givr::program> const &p) const {
     p->set_vec3("colour", colour);
     p->set_bool("per_vertex_colour", per_vertex_colour);
     p->set_vec3("light_position", light_position);

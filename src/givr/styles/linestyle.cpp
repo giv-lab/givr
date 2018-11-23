@@ -2,7 +2,7 @@
 
 using linestyle = givr::linestyle;
 
-void linestyle::set_uniforms(std::unique_ptr<program> const &p) const {
+void linestyle::set_uniforms(std::unique_ptr<givr::program> const &p) const {
     p->set_vec3("colour", colour);
 }
 

@@ -2,7 +2,7 @@
 
 using flatfill = givr::flatfill;
 
-void flatfill::set_uniforms(std::unique_ptr<program> &p) const {
+void flatfill::set_uniforms(std::unique_ptr<givr::program> &p) const {
     p->set_vec3("colour", colour);
 }
 
