@@ -25,4 +25,6 @@ namespace givr {
 
     mat4f get_view_matrix(turntable const & t);
 
+	vec3f get_view_position(turntable const & t);
+
 }; // end namespace givr

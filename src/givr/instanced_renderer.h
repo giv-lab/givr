@@ -40,7 +40,7 @@ namespace givr {
 
         mat4f view = get_view_matrix(view_ctx.camera);
         mat4f projection = get_projection_matrix(view_ctx.projection);
-        vec3f view_pos(view[0]);
+        vec3f view_pos = get_view_position(view_ctx.camera);
 
         ctx.shader_program->set_vec3("view_pos", view_pos);
         ctx.shader_program->set_mat4("view", view);
