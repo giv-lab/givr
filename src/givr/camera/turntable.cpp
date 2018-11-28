@@ -31,16 +31,16 @@ mat4f givr::get_view_matrix(turntable const & t) {
         camera_position,
         t.translation,
         // TODO: Not sure this up vector is correct
-		// JEREMY: I think it's correct, the only thing it needs to be is perpendicular to the right vector
+        // JEREMY: I think it's correct, the only thing it needs to be is perpendicular to the right vector
         up
     );
 }
 
 vec3f givr::get_view_position(turntable const & t) {
-	return vec3f{
-		angle_to_x(t.radius, t.longitude, t.latitude),
-		angle_to_y(t.radius, t.latitude),
-		angle_to_z(t.radius, t.longitude, t.latitude) };
+    return vec3f{
+        angle_to_x(t.radius, t.longitude, t.latitude),
+        angle_to_y(t.radius, t.latitude),
+        angle_to_z(t.radius, t.longitude, t.latitude) };
 }
 
 void turntable::rotate_around_x_percent(float perc) {
@@ -51,7 +51,7 @@ void turntable::rotate_around_y_percent(float perc) {
 }
 
 void turntable::rotate_around_x(float angle) {
-	longitude += angle;
+    longitude += angle;
 }
 void turntable::rotate_around_y(float angle) {
     latitude = std::fmin(std::fmax(latitude + angle, 0.001f), M_PI - 0.001f);

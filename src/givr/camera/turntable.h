@@ -13,7 +13,7 @@ namespace givr {
         float latitude = LATITUDE_MAX / 2.;
         float longitude = 0.f;//LONGITUDE_MAX / 2.;
         float radius = 75.f;
-        vec3f translation = vec3f{0.f, 0.f, 0.f};
+        vec3f translation = vec3f{ 0.f, 0.f, 0.f };
 
         void rotate_around_x_percent(float perc);
         void rotate_around_y_percent(float perc);
@@ -25,6 +25,6 @@ namespace givr {
 
     mat4f get_view_matrix(turntable const & t);
 
-	vec3f get_view_position(turntable const & t);
+    vec3f get_view_position(turntable const & t);
 
 }; // end namespace givr
