@@ -72,13 +72,12 @@ std::string phong::get_fragment_shader_source() const {
 
             // specular
             vec3 view_dir = normalize(view_pos - original_pos);
-            vec3 reflect_dir = max(2.0*dot(light_dir, normal), 0.0)*normal - light_dir;		//reflect(-light_dir, normal);
+            vec3 reflect_dir = max(2.0*dot(light_dir, normal), 0.0)*normal - light_dir;
             float spec = 0.0;
             spec = pow(max(dot(view_dir, reflect_dir), 0.0), phong_exponent);
             vec3 specular = vec3(specular_factor) * spec; // assuming bright white light colour
 
             gl_FragColor = vec4(ambient + diffuse + specular, 1.0);
-			//gl_FragColor = vec4(view_dir, 1.0);
         }
 
 
