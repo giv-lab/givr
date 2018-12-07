@@ -31,8 +31,8 @@ std::string phong::get_vertex_shader_source() const {
             mat4 mvp = projection * mv;
             gl_Position = mvp * vec4(position, 1.0);
             vec4 model_vert = mv * vec4(position, 1.0);
-            original_pos = vec3(position);
-            frag_normal = normal;
+            original_pos = vec3(mv);
+            frag_normal = vec3(model*vec4(normal, 0));
             frag_colour = colour;
         }
 
@@ -72,7 +72,7 @@ std::string phong::get_fragment_shader_source() const {
 
             // specular
             vec3 view_dir = normalize(view_pos - original_pos);
-            vec3 reflect_dir = reflect(-light_dir, normal);
+            vec3 reflect_dir = max(2.0*dot(light_dir, normal), 0.0)*normal - light_dir;
             float spec = 0.0;
             spec = pow(max(dot(view_dir, reflect_dir), 0.0), phong_exponent);
             vec3 specular = vec3(specular_factor) * spec; // assuming bright white light colour
