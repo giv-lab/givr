@@ -15,7 +15,7 @@ sphere::data givr::generate_geometry(sphere const &s) {
     auto sphereFunc = [](float azi, float alt) {
         return point{ std::cos(azi)*std::sin(alt), std::cos(alt), std::sin(azi)*std::sin(alt) };
     };
-
+    
     for (size_t azi = 0; azi < s.azimuthPoints; azi++) {
         for (size_t alt = 0; alt < s.altitudePoints; alt++) {
             if (azi < s.azimuthPoints - 1 && alt < s.altitudePoints - 1) {
@@ -39,7 +39,7 @@ sphere::data givr::generate_geometry(sphere const &s) {
             float u = float(azi) / float(s.azimuthPoints - 1);
             float v = float(alt) / float(s.altitudePoints - 1);
             //Make uniform distribution
-            v = acos(1 - 2.f*v) / M_PI;
+            v = acos(1 - 2.f*v) / M_PI;     //DELETE THIS IF SPHERES LOOK BAD
 
             point spherePoint = sphereFunc(2.f*M_PI*u, M_PI*v);
             data.vertices.push_back(spherePoint.v[0]);
@@ -50,8 +50,8 @@ sphere::data givr::generate_geometry(sphere const &s) {
             data.normals.push_back(spherePoint.v[1]);
             data.normals.push_back(spherePoint.v[2]);
 
-            data.texCoords.push_back(u);
-            data.texCoords.push_back(v);
+            data.uvs.push_back(u);
+            data.uvs.push_back(v);
 
 
         }
