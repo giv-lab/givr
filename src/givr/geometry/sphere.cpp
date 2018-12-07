@@ -55,8 +55,6 @@ sphere::data givr::generate_geometry(sphere const &s) {
 
 
         }
-
-        printf("vertices.size() = %d\n", data.vertices.size() / 3);
     }
 
     assert(data.vertices.size() == data.normals.size());
