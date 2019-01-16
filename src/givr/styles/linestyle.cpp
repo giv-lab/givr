@@ -1,8 +1,9 @@
 #include "linestyle.h"
 
 using linestyle = givr::linestyle;
+using linestyle_render_context = givr::linestyle_render_context;
 
-void linestyle::set_uniforms(std::unique_ptr<givr::program> const &p) const {
+void linestyle_render_context::set_uniforms(std::unique_ptr<givr::program> const &p) const {
     p->set_vec3("colour", colour);
 }
 

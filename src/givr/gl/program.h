@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include <glad/glad.h>
+#include "../gl.h"
 
 namespace givr {
 

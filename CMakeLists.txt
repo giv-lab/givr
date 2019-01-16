@@ -22,16 +22,10 @@ if(NOT GIVR_GLAD_H)
     message(SEND_ERROR "Can't find glad/glad.h in ${GIVR_GLAD_INCLUDE_DIR}")
 endif()
 
-set(GIVR_GIVM_INCLUDE_DIR "" CACHE FILEPATH "Path to givm includes")
-find_file(GIVR_GIVM_H "givm.h" ${GIVR_GIVM_INCLUDE_DIR})
-if(NOT GIVR_GIVM_H)
-    message(SEND_ERROR "Can't find givm.h in ${GIVR_GIVM_INCLUDE_DIR}")
-endif()
-
-include_directories(${GIVR_GIVM_INCLUDE_DIR} ${GIVR_GLAD_INCLUDE_DIR} src)
+include_directories(${GIVR_GLAD_INCLUDE_DIR} src)
 file(GLOB SOURCES src/* src/givr/* src/givr/gl/* src/givr/styles/* src/givr/geometry/* src/givr/camera/*)
 
 add_library(givr ${SOURCES})
 target_compile_definitions(givr PRIVATE ${DEFINITIONS})
-target_link_libraries(givr glm::glm givm)
+target_link_libraries(givr glm::glm)
 

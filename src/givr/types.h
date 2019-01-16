@@ -1,11 +1,11 @@
 #pragma once
 
-#include "givm.h"
+#include <glm/glm.hpp>
 
-#include <glad/glad.h>
+#include "gl.h"
 
-using vec3f = givm::vec3f;
-using mat4f = givm::mat4f;
+using vec3f = glm::vec3;
+using mat4f = glm::mat4;
 
 namespace givr {
     enum class primitive_type {

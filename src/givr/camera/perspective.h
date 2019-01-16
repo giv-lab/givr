@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../types.h"
-#include "givm.h"
 
 namespace givr {
 

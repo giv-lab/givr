@@ -1,5 +1,7 @@
 #include "turntable.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <cmath>
 #include <iostream>
 
@@ -27,13 +29,7 @@ mat4f givr::get_view_matrix(turntable const & t) {
     vec3f binormal = cross(camera_position, up);
     up = glm::normalize(cross(binormal, camera_position));
 
-    return lookAt(
-        camera_position,
-        t.translation,
-        // TODO: Not sure this up vector is correct
-        // JEREMY: I think it's correct, the only thing it needs to be is perpendicular to the right vector
-        up
-    );
+    return glm::lookAt(camera_position, t.translation, up);
 }
 
 vec3f givr::get_view_position(turntable const & t) {

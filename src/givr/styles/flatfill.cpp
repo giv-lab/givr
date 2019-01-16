@@ -1,8 +1,9 @@
 #include "flatfill.h"
 
 using flatfill = givr::flatfill;
+using flatfill_render_context = givr::flatfill_render_context;
 
-void flatfill::set_uniforms(std::unique_ptr<givr::program> &p) const {
+void flatfill_render_context::set_uniforms(std::unique_ptr<givr::program> &p) const {
     p->set_vec3("colour", colour);
 }
 

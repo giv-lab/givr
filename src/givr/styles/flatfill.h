@@ -9,15 +9,19 @@
 
 namespace givr {
 
+    struct flatfill_render_context : public instanced_render_context {
+        vec3f colour;
+        void set_uniforms(std::unique_ptr<program> &p) const;
+    };
+
     struct flatfill {
         vec3f colour;
 
-        using render_context = instanced_render_context;
+        using render_context = flatfill_render_context;
 
         std::string get_vertex_shader_source() const;
         std::string get_fragment_shader_source() const;
 
-        void set_uniforms(std::unique_ptr<program> &p) const;
     };
 
 
@@ -39,13 +43,14 @@ namespace givr {
             shader{f.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{f.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        ctx.colour = f.colour;
         return ctx;
     }
 
     template <typename ViewContextT>
-    void draw(flatfill const &f, flatfill::render_context &ctx, ViewContextT const &view_ctx) {
-        draw_instanced(ctx, view_ctx, [&f](std::unique_ptr<program> program) {
-            f.set_uniforms(program);
+    void draw(flatfill::render_context &ctx, ViewContextT const &view_ctx) {
+        draw_instanced(ctx, view_ctx, [&ctx](std::unique_ptr<program> program) {
+            ctx.set_uniforms(program);
         });
     }
 };// end namespace givr

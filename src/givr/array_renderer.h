@@ -7,7 +7,7 @@
 #include "gl/buffer.h"
 #include "gl/vertex_array.h"
 
-#include <glad/glad.h>
+#include "gl.h"
 
 #include <functional>
 #include <memory>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "frame.h"
-#include <glad/glad.h>
+#include "gl.h"
 
 //------------------------------------------------------------------------------
 // Example Code:

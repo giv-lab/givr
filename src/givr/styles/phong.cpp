@@ -1,8 +1,9 @@
 #include "phong.h"
 
 using phong = givr::phong;
+using phong_render_context = givr::phong_render_context;
 
-void phong::set_uniforms(std::unique_ptr<givr::program> const &p) const {
+void phong_render_context::set_uniforms(std::unique_ptr<givr::program> const &p) const {
     p->set_vec3("colour", colour);
     p->set_bool("per_vertex_colour", per_vertex_colour);
     p->set_vec3("light_position", light_position);
