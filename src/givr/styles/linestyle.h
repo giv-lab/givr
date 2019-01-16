@@ -53,7 +53,7 @@ namespace givr {
 
     template <typename GeometryT>
     linestyle::array_render_context
-    get_instanced_context(GeometryT &g, linestyle const &l) {
+    get_array_context(GeometryT &g, linestyle const &l) {
         return get_context<linestyle::array_render_context, GeometryT>(g, l);
     }
 

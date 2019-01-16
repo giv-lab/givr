@@ -16,7 +16,6 @@ namespace givr {
 
     };
 
-
     polyline::data generate_geometry(polyline const &s);
 
 };// end namespace givr

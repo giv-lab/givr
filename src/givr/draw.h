@@ -24,6 +24,15 @@ namespace givr {
         return ctx;
     }
     template <typename GeometryT, typename StyleT>
+    typename StyleT::array_render_context
+    create_array_renderable(GeometryT const &g, StyleT const &style) {
+        typename StyleT::array_render_context ctx =
+            get_array_context(g, style);
+        allocate_buffers(ctx);
+        upload_buffers(ctx, fill_buffers(g, style));
+        return ctx;
+    }
+    template <typename GeometryT, typename StyleT>
     void update_renderable(
         GeometryT const &g,
         StyleT const &style,
