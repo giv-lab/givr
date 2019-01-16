@@ -6,24 +6,29 @@
 //------------------------------------------------------------------------------
 // Example Code:
 // flatfill style{.colour=yellow};
-// sphere geom;
-// geom.r = 1;
-// renderable spheres = create_renderable(geom, style);
+// sphere geom{.radius=1};
+// auto spheres = create_instanced_renderable(geom, style);
 // for (..) {
-//     add_instance(spheres, i, at(x, y));
+//     add_instance(spheres, at(x, y));
 // }
-// draw(spheres, style, camera);
+// draw(spheres, view);
 //------------------------------------------------------------------------------
 namespace givr {
     template <typename GeometryT, typename StyleT>
-    typename StyleT::render_context create_renderable(GeometryT const &g, StyleT const &style) {
-        typename StyleT::render_context ctx = get_context(g, style);
+    typename StyleT::instanced_render_context
+    create_instanced_renderable(GeometryT const &g, StyleT const &style) {
+        typename StyleT::instanced_render_context ctx =
+            get_instanced_context(g, style);
         allocate_buffers(ctx);
         upload_buffers(ctx, fill_buffers(g, style));
         return ctx;
     }
     template <typename GeometryT, typename StyleT>
-    void update_renderable(GeometryT const &g, StyleT const &style, typename StyleT::render_context &ctx) {
+    void update_renderable(
+        GeometryT const &g,
+        StyleT const &style,
+        typename StyleT::instanced_render_context &ctx
+    ) {
         upload_buffers(ctx, fill_buffers(g, style));
     }
     template <typename ContextT>

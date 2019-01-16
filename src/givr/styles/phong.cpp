@@ -1,9 +1,8 @@
 #include "phong.h"
 
-using phong = givr::phong;
-using phong_render_context = givr::phong_render_context;
+using pirc = givr::phong_instanced_render_context;
 
-void phong_render_context::set_uniforms(std::unique_ptr<givr::program> const &p) const {
+void pirc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
     p->set_vec3("colour", colour);
     p->set_bool("per_vertex_colour", per_vertex_colour);
     p->set_vec3("light_position", light_position);
@@ -12,7 +11,7 @@ void phong_render_context::set_uniforms(std::unique_ptr<givr::program> const &p)
     p->set_float("phong_exponent", phong_exponent);
 }
 
-std::string phong::get_vertex_shader_source() const {
+std::string pirc::get_vertex_shader_source() const {
     return std::string(R"shader(
         attribute mat4 model;
         attribute vec3 position;
@@ -41,7 +40,7 @@ std::string phong::get_vertex_shader_source() const {
     );
 }
 
-std::string phong::get_fragment_shader_source() const {
+std::string pirc::get_fragment_shader_source() const {
     return std::string(R"shader(
         uniform vec3 colour;
         uniform bool per_vertex_colour;

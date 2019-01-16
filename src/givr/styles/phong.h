@@ -8,30 +8,28 @@
 #include <string>
 
 namespace givr {
-
-    struct phong_render_context : public instanced_render_context {
+    struct phong_parameters {
         vec3f colour;
         vec3f light_position;
         bool per_vertex_colour = false;
         float ambient_factor = 0.05f;
         float specular_factor = 0.3f;
         float phong_exponent = 8.0f;
-
-        void set_uniforms(std::unique_ptr<program> const &p) const;
     };
 
-    struct phong {
-        vec3f colour;
-        vec3f light_position;
-        bool per_vertex_colour = false;
-        float ambient_factor = 0.05f;
-        float specular_factor = 0.3f;
-        float phong_exponent = 8.0f;
-
-        using render_context = phong_render_context;
+    struct phong_instanced_render_context
+        :
+            public phong_parameters,
+            public instanced_render_context
+    {
+        void set_uniforms(std::unique_ptr<program> const &p) const;
 
         std::string get_vertex_shader_source() const;
         std::string get_fragment_shader_source() const;
+    };
+
+    struct phong : phong_parameters {
+        using instanced_render_context = phong_instanced_render_context;
 
     };
 
@@ -53,13 +51,15 @@ namespace givr {
         return std::move(data);
     }
 
-    template <typename GeometryT>
-    phong::render_context get_context(GeometryT &, phong const &p) {
-        auto ctx = phong::render_context{};
+    template <typename RenderContextT, typename GeometryT>
+    RenderContextT get_context(GeometryT &, phong const &p) {
+        auto ctx = RenderContextT{};
+        // TODO: this probably belongs in the constructor
         ctx.shader_program = std::make_unique<program>(
-            shader{p.get_vertex_shader_source(), GL_VERTEX_SHADER},
-            shader{p.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
+            shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
+            shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        // TODO: Want a compile time guard to ensure geometry and style are compatible.
         ctx.primitive = primitive_type::TRIANGLES;
         ctx.colour = p.colour;
         ctx.light_position = p.light_position;
@@ -70,8 +70,14 @@ namespace givr {
         return ctx;
     }
 
+    template <typename GeometryT>
+    phong::instanced_render_context
+    get_instanced_context(GeometryT &g, phong const &p) {
+        return get_context<phong::instanced_render_context, GeometryT>(g, p);
+    }
+
     template <typename ViewContextT>
-    void draw(phong::render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(phong::instanced_render_context &ctx, ViewContextT const &view_ctx) {
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
