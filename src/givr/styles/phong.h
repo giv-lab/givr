@@ -2,6 +2,7 @@
 
 #include "../buffer_data.h"
 #include "../instanced_renderer.h"
+#include "../array_renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
 
@@ -28,9 +29,20 @@ namespace givr {
         std::string get_fragment_shader_source() const;
     };
 
+    struct phong_array_render_context
+        :
+            public phong_parameters,
+            public array_render_context
+    {
+        void set_uniforms(std::unique_ptr<program> const &p) const;
+
+        std::string get_vertex_shader_source() const;
+        std::string get_fragment_shader_source() const;
+    };
+
     struct phong : phong_parameters {
         using instanced_render_context = phong_instanced_render_context;
-
+        using array_render_context = phong_array_render_context;
     };
 
     template <typename GeometryT>
@@ -76,6 +88,12 @@ namespace givr {
         return get_context<phong::instanced_render_context, GeometryT>(g, p);
     }
 
+    template <typename GeometryT>
+    phong::array_render_context
+    get_array_context(GeometryT &g, phong const &p) {
+        return get_context<phong::array_render_context, GeometryT>(g, p);
+    }
+
     template <typename ViewContextT>
     void draw(phong::instanced_render_context &ctx, ViewContextT const &view_ctx) {
         glEnable(GL_MULTISAMPLE);
@@ -88,4 +106,17 @@ namespace givr {
         });
     }
 
+    template <typename ViewContextT>
+    void draw(phong::array_render_context &ctx, ViewContextT const &view_ctx) {
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        draw_array(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
+            ctx.set_uniforms(program);
+        });
+    }
+
 };// end namespace
+

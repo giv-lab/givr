@@ -22,10 +22,14 @@ namespace givr {
         // Keep references to the GL_ARRAY_BUFFERS so that
         // the stay in scope for this context.
         std::vector<std::unique_ptr<buffer>> array_buffers;
+
+        GLuint number_of_indices;
         GLuint start_index;
         GLuint end_index;
 
         primitive_type primitive;
+
+        bool has_indices = false;
     };
 
     template <typename ViewContextT>
@@ -48,7 +52,11 @@ namespace givr {
         ctx.vao->bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         GLenum mode = givr::get_mode(ctx.primitive);
-        glDrawArrays(mode, ctx.start_index, ctx.end_index);
+        if (ctx.number_of_indices > 0) {
+            glDrawElements(mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0);
+        } else {
+            glDrawArrays(mode, ctx.start_index, ctx.end_index);
+        }
 
         ctx.vao->unbind();
     }
