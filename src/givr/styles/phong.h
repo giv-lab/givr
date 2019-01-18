@@ -107,14 +107,15 @@ namespace givr {
     }
 
     template <typename ViewContextT>
-    void draw(phong::render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(phong::render_context &ctx, ViewContextT const &view_ctx, mat4f const model=mat4f(1.f)) {
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        draw_array(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
+        draw_array(ctx, view_ctx, [&ctx, &model](std::unique_ptr<program> const &program) {
             ctx.set_uniforms(program);
+            program->set_mat4("model", model);
         });
     }
 

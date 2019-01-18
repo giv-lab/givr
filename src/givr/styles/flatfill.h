@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../buffer_data.h"
+#include "../renderer.h"
 #include "../instanced_renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
@@ -9,19 +10,33 @@
 
 namespace givr {
 
-    struct flatfill_render_context : public instanced_render_context {
+    struct flatfill_params {
         vec3f colour;
+    };
+
+    struct flatfill_instanced_render_context
+        : public instanced_render_context,
+          public flatfill_params
+    {
         void set_uniforms(std::unique_ptr<program> const &p) const;
 
         std::string get_vertex_shader_source() const;
         std::string get_fragment_shader_source() const;
     };
 
-    struct flatfill {
-        vec3f colour;
+    struct flatfill_render_context
+        : public render_context,
+          public flatfill_params
+    {
+        void set_uniforms(std::unique_ptr<program> const &p) const;
 
-        using instanced_render_context = flatfill_render_context;
+        std::string get_vertex_shader_source() const;
+        std::string get_fragment_shader_source() const;
+    };
 
+    struct flatfill : public flatfill_params {
+        using instanced_render_context = flatfill_instanced_render_context;
+        using render_context = flatfill_render_context;
     };
 
 
@@ -54,10 +69,24 @@ namespace givr {
         return get_context<flatfill::instanced_render_context, GeometryT>(g, f);
     }
 
+    template <typename GeometryT>
+    flatfill::render_context
+    get_context(GeometryT &g, flatfill const &f) {
+        return get_context<flatfill::render_context, GeometryT>(g, f);
+    }
+
     template <typename ViewContextT>
     void draw(flatfill::instanced_render_context &ctx, ViewContextT const &view_ctx) {
         draw_instanced(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
             ctx.set_uniforms(program);
+        });
+    }
+
+    template <typename ViewContextT>
+    void draw(flatfill::render_context &ctx, ViewContextT const &view_ctx, mat4f model=mat4f(1.f)) {
+        draw_array(ctx, view_ctx, [&ctx, &model](std::unique_ptr<program> const &program) {
+            ctx.set_uniforms(program);
+            program->set_mat4("model", model);
         });
     }
 };// end namespace givr

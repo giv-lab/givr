@@ -2,6 +2,7 @@
 
 #include "../buffer_data.h"
 #include "../renderer.h"
+#include "../instanced_renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
 
@@ -9,9 +10,15 @@
 
 namespace givr {
 
-    struct linestyle_render_context : public render_context {
+    struct linestyle_params {
         vec3f colour;
         float line_width = 1.f;
+    };
+
+    struct linestyle_render_context
+        : public render_context,
+          public linestyle_params
+    {
 
         void set_uniforms(std::unique_ptr<program> const &p) const;
 
@@ -19,11 +26,20 @@ namespace givr {
         std::string get_fragment_shader_source() const;
     };
 
-    struct linestyle {
-        vec3f colour;
-        float line_width = 1.f;
+    struct linestyle_instanced_render_context
+        : public instanced_render_context,
+          public linestyle_params
+    {
 
+        void set_uniforms(std::unique_ptr<program> const &p) const;
+
+        std::string get_vertex_shader_source() const;
+        std::string get_fragment_shader_source() const;
+    };
+
+    struct linestyle : public linestyle_params {
         using render_context = linestyle_render_context;
+        using instanced_render_context = linestyle_instanced_render_context;
     };
 
     template <typename GeometryT>
@@ -57,12 +73,28 @@ namespace givr {
         return get_context<linestyle::render_context, GeometryT>(g, l);
     }
 
+    template <typename GeometryT>
+    linestyle::instanced_render_context
+    get_instanced_context(GeometryT &g, linestyle const &l) {
+        return get_context<linestyle::instanced_render_context, GeometryT>(g, l);
+    }
+
     template <typename ViewContextT>
-    void draw(linestyle::render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(linestyle::instanced_render_context &ctx, ViewContextT const &view_ctx) {
         glEnable(GL_LINE_SMOOTH);
         glLineWidth(ctx.line_width);
-        draw_array(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
+        draw_instanced(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
             ctx.set_uniforms(program);
+        });
+    }
+
+    template <typename ViewContextT>
+    void draw(linestyle::render_context &ctx, ViewContextT const &view_ctx, mat4f model=mat4f(1.f)) {
+        glEnable(GL_LINE_SMOOTH);
+        glLineWidth(ctx.line_width);
+        draw_array(ctx, view_ctx, [&ctx, &model](std::unique_ptr<program> const &program) {
+            ctx.set_uniforms(program);
+            program->set_mat4("model", model);
         });
     }
 
