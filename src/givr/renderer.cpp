@@ -1,7 +1,7 @@
-#include "array_renderer.h"
+#include "renderer.h"
 
 namespace givr {
-    void allocate_buffers(array_render_context &ctx) {
+    void allocate_buffers(render_context &ctx) {
         ctx.vao = std::make_unique<vertex_array>();
         ctx.vao->alloc(1);
 
@@ -24,7 +24,7 @@ namespace givr {
     }
 
     void upload_buffers(
-        array_render_context &ctx,
+        render_context &ctx,
         buffer_data const &data
     ) {
         std::uint16_t va_index = 0;

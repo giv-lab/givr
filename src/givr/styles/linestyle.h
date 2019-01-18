@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../buffer_data.h"
-#include "../array_renderer.h"
+#include "../renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
 
@@ -9,7 +9,7 @@
 
 namespace givr {
 
-    struct linestyle_render_context : public array_render_context {
+    struct linestyle_render_context : public render_context {
         vec3f colour;
         float line_width = 1.f;
 
@@ -23,7 +23,7 @@ namespace givr {
         vec3f colour;
         float line_width = 1.f;
 
-        using array_render_context = linestyle_render_context;
+        using render_context = linestyle_render_context;
     };
 
     template <typename GeometryT>
@@ -52,13 +52,13 @@ namespace givr {
     }
 
     template <typename GeometryT>
-    linestyle::array_render_context
-    get_array_context(GeometryT &g, linestyle const &l) {
-        return get_context<linestyle::array_render_context, GeometryT>(g, l);
+    linestyle::render_context
+    get_context(GeometryT &g, linestyle const &l) {
+        return get_context<linestyle::render_context, GeometryT>(g, l);
     }
 
     template <typename ViewContextT>
-    void draw(linestyle::array_render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(linestyle::render_context &ctx, ViewContextT const &view_ctx) {
         glEnable(GL_LINE_SMOOTH);
         glLineWidth(ctx.line_width);
         draw_array(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {

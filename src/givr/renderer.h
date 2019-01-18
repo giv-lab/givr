@@ -15,7 +15,7 @@
 
 namespace givr {
 
-    struct array_render_context {
+    struct render_context {
         std::unique_ptr<program> shader_program;
         std::unique_ptr<vertex_array> vao;
 
@@ -34,7 +34,7 @@ namespace givr {
 
     template <typename ViewContextT>
     void draw_array(
-        array_render_context &ctx,
+        render_context &ctx,
         ViewContextT const &view_ctx,
         std::function<void(std::unique_ptr<program> const&)> set_uniforms
     ) {
@@ -61,10 +61,10 @@ namespace givr {
         ctx.vao->unbind();
     }
     void allocate_buffers(
-        array_render_context &ctx
+        render_context &ctx
     );
     void upload_buffers(
-        array_render_context &ctx,
+        render_context &ctx,
         buffer_data const &data
     );
 };// end namespace givr

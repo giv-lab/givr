@@ -1,7 +1,7 @@
 #include "phong.h"
 
 using pirc = givr::phong_instanced_render_context;
-using parc = givr::phong_array_render_context;
+using parc = givr::phong_render_context;
 
 template <typename RenderContextT>
 void set_phong_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
