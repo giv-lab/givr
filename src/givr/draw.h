@@ -1,6 +1,6 @@
 #pragma once
 
-#include "frame.h"
+#include "types.h"
 #include "gl.h"
 
 //------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ namespace givr {
         upload_buffers(ctx, fill_buffers(g, style));
     }
     template <typename ContextT>
-    void add_instance(ContextT &ctx, frame const &f) {
+    void add_instance(ContextT &ctx, glm::mat4 const &f) {
         ctx.model_transforms.push_back(f);
     }
 
