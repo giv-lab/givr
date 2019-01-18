@@ -52,8 +52,6 @@ sphere::data givr::generate_geometry(sphere const &s) {
 
             data.uvs.push_back(u);
             data.uvs.push_back(v);
-
-
         }
     }
 
