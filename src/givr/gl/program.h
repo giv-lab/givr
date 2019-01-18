@@ -23,6 +23,7 @@ namespace givr {
         operator GLuint() const { return m_program_id; }
         void use();
 
+        void set_vec2(const std::string &name, vec2f const &value) const;
         void set_vec3(const std::string &name, vec3f const &value) const;
         void set_mat4(const std::string &name, mat4f const &mat) const;
         void set_bool(const std::string &name, bool value) const;

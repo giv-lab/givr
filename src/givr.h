@@ -15,7 +15,9 @@
 #include "givr/geometry/sphere.h"
 #include "givr/geometry/polyline.h"
 #include "givr/geometry/mesh.h"
+#include "givr/geometry/custom.h"
 #include "givr/styles/flatfill.h"
-#include "givr/styles/linestyle.h"
+#include "givr/styles/linestrip.h"
+#include "givr/styles/lines.h"
 #include "givr/styles/phong.h"
 

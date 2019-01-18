@@ -8,7 +8,7 @@
 namespace givr {
 
     struct polyline {
-        std::vector<float> vertices;
+        std::vector<vec3f> vertices;
         struct data {
             buffer_usage_type vertices_type;
             std::vector<float> vertices;

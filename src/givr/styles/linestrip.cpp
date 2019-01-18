@@ -1,21 +1,21 @@
-#include "linestyle.h"
+#include "linestrip.h"
 
-using lrc = givr::linestyle_render_context;
-using lirc = givr::linestyle_instanced_render_context;
+using lrc = givr::linestrip_render_context;
+using lirc = givr::linestrip_instanced_render_context;
 
 template <typename RenderContextT>
-void set_linestyle_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
+void set_linestrip_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
     p->set_vec3("colour", ctx.colour);
 }
 
 void lrc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_linestyle_uniforms(*this, p);
+    set_linestrip_uniforms(*this, p);
 }
 void lirc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_linestyle_uniforms(*this, p);
+    set_linestrip_uniforms(*this, p);
 }
 
-std::string linestyle_vertex_source(std::string model_source) {
+std::string linestrip_vertex_source(std::string model_source) {
     return model_source + std::string(R"shader( mat4 model;
         attribute vec3 position;
 
@@ -36,7 +36,7 @@ std::string linestyle_vertex_source(std::string model_source) {
     );
 }
 
-std::string linestyle_fragment_source() {
+std::string linestrip_fragment_source() {
     return std::string(R"shader(
         uniform vec3 colour;
         uniform vec3 light_position;
@@ -55,18 +55,18 @@ std::string linestyle_fragment_source() {
 }
 
 std::string lrc::get_vertex_shader_source() const {
-    return linestyle_vertex_source("uniform");
+    return linestrip_vertex_source("uniform");
 }
 
 std::string lrc::get_fragment_shader_source() const {
-    return linestyle_fragment_source();
+    return linestrip_fragment_source();
 }
 
 std::string lirc::get_vertex_shader_source() const {
-    return linestyle_vertex_source("attribute");
+    return linestrip_vertex_source("attribute");
 }
 
 std::string lirc::get_fragment_shader_source() const {
-    return linestyle_fragment_source();
+    return linestrip_fragment_source();
 }
 
