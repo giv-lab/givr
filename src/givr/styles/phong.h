@@ -71,14 +71,7 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
-        // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        ctx.primitive = primitive_type::TRIANGLES;
-        ctx.colour = p.colour;
-        ctx.light_position = p.light_position;
-        ctx.per_vertex_colour = p.per_vertex_colour;
-        ctx.ambient_factor = p.ambient_factor;
-        ctx.specular_factor = p.specular_factor;
-        ctx.phong_exponent = p.phong_exponent;
+        update_style(ctx, p);
         return ctx;
     }
 
@@ -92,6 +85,18 @@ namespace givr {
     phong::render_context
     get_context(GeometryT &g, phong const &p) {
         return get_context<phong::render_context, GeometryT>(g, p);
+    }
+
+    template <typename RenderContextT>
+    void update_style(RenderContextT &ctx, phong const &p) {
+        // TODO: Want a compile time guard to ensure geometry and style are compatible.
+        ctx.primitive = primitive_type::TRIANGLES;
+        ctx.colour = p.colour;
+        ctx.light_position = p.light_position;
+        ctx.per_vertex_colour = p.per_vertex_colour;
+        ctx.ambient_factor = p.ambient_factor;
+        ctx.specular_factor = p.specular_factor;
+        ctx.phong_exponent = p.phong_exponent;
     }
 
     template <typename ViewContextT>

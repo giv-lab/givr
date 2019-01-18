@@ -38,6 +38,16 @@ namespace givr {
         StyleT const &style,
         typename StyleT::instanced_render_context &ctx
     ) {
+        update_style(ctx, style);
+        upload_buffers(ctx, fill_buffers(g, style));
+    }
+    template <typename GeometryT, typename StyleT>
+    void update_renderable(
+        GeometryT const &g,
+        StyleT const &style,
+        typename StyleT::render_context &ctx
+    ) {
+        update_style(ctx, style);
         upload_buffers(ctx, fill_buffers(g, style));
     }
     template <typename ContextT>

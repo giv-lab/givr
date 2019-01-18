@@ -61,9 +61,7 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
-        ctx.primitive = primitive_type::LINE_STRIP;
-        ctx.colour = l.colour;
-        ctx.line_width = l.line_width;
+        update_style(ctx, l);
         return ctx;
     }
 
@@ -77,6 +75,14 @@ namespace givr {
     linestyle::instanced_render_context
     get_instanced_context(GeometryT &g, linestyle const &l) {
         return get_context<linestyle::instanced_render_context, GeometryT>(g, l);
+    }
+
+    template <typename RenderContextT>
+    void update_style(RenderContextT &ctx, linestyle const &l) {
+        // TODO: Want a compile time guard to ensure geometry and style are compatible.
+        ctx.primitive = primitive_type::LINE_STRIP;
+        ctx.colour = l.colour;
+        ctx.line_width = l.line_width;
     }
 
     template <typename ViewContextT>

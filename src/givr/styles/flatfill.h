@@ -58,8 +58,7 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
-        ctx.primitive = primitive_type::TRIANGLES;
-        ctx.colour = f.colour;
+        update_style(ctx, f);
         return ctx;
     }
 
@@ -73,6 +72,13 @@ namespace givr {
     flatfill::render_context
     get_context(GeometryT &g, flatfill const &f) {
         return get_context<flatfill::render_context, GeometryT>(g, f);
+    }
+
+    template <typename RenderContextT>
+    void update_style(RenderContextT &ctx, flatfill const &f) {
+        // TODO: Want a compile time guard to ensure geometry and style are compatible.
+        ctx.primitive = primitive_type::TRIANGLES;
+        ctx.colour = f.colour;
     }
 
     template <typename ViewContextT>
