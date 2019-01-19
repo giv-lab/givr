@@ -10,9 +10,16 @@
 
 namespace givr {
 
+    enum class line_type {
+        LINES,
+        LINE_LOOP,
+        LINE_STRIP
+    };
+
     struct lines_params {
         vec3f colour;
         float line_width = 1.f;
+        line_type type = line_type::LINES;
     };
 
     struct lines_render_context
@@ -80,7 +87,17 @@ namespace givr {
     template <typename RenderContextT>
     void update_style(RenderContextT &ctx, lines const &l) {
         // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        ctx.primitive = primitive_type::LINES;
+        switch (l.type) {
+            case line_type::LINES:
+                ctx.primitive = primitive_type::LINES;
+                break;
+            case line_type::LINE_LOOP:
+                ctx.primitive = primitive_type::LINE_LOOP;
+                break;
+            case line_type::LINE_STRIP:
+                ctx.primitive = primitive_type::LINE_STRIP;
+                break;
+        };
         ctx.colour = l.colour;
         ctx.line_width = l.line_width;
     }
