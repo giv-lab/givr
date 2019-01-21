@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../vertex_array_data.h"
 #include "../buffer_data.h"
 #include "../renderer.h"
 #include "../instanced_renderer.h"
@@ -45,9 +46,13 @@ namespace givr {
         buffer_data data;
         typename GeometryT::data d = generate_geometry(g);
         static_assert(has_vertices<GeometryT>::value, "The flatfill style requires vertices. The geometry you are using does not provide them.");
-        static_assert(has_indices<GeometryT>::value, "The flatfill style requires indices. The geometry you are using does not provide them.");
+        data.vertices_type = d.vertices_type;
         data.add_vertices(d.vertices);
-        data.add_indices(d.indices);
+        if constexpr (has_indices<GeometryT>::value) {
+            data.indices_type = d.indices_type;
+            data.add_indices(d.indices);
+        }
+        // TODO: this could probably have per vertex colouring too.
         return std::move(data);
     }
 
@@ -58,6 +63,7 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        ctx.primitive = get_primitive<GeometryT>();
         update_style(ctx, f);
         return ctx;
     }
@@ -76,8 +82,6 @@ namespace givr {
 
     template <typename RenderContextT>
     void update_style(RenderContextT &ctx, flatfill const &f) {
-        // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        ctx.primitive = primitive_type::TRIANGLES;
         ctx.colour = f.colour;
     }
 

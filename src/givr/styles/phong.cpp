@@ -111,4 +111,3 @@ std::string prc::get_vertex_shader_source() const {
 std::string prc::get_fragment_shader_source() const {
     return phong_fragment_source();
 }
-

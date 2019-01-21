@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../vertex_array_data.h"
 #include "../buffer_data.h"
 #include "../renderer.h"
 #include "../instanced_renderer.h"
@@ -10,16 +11,9 @@
 
 namespace givr {
 
-    enum class line_type {
-        LINES,
-        LINE_LOOP,
-        LINE_STRIP
-    };
-
     struct lines_params {
         vec3f colour;
         float line_width = 1.f;
-        line_type type = line_type::LINES;
     };
 
     struct lines_render_context
@@ -51,13 +45,31 @@ namespace givr {
 
     template <typename GeometryT>
     buffer_data fill_buffers(GeometryT const &g, lines const &) {
+        static_assert(
+            givr::is_line_based<GeometryT>(),
+            R"error(
+            The lines style requires LINES, LINE_LOOP, LINE_STRIP,
+            LINES_ADJACENCY, or LINE_STRIP_ADJACENCY for the primitive
+            type. The geometry you use is not of this type"
+            )error"
+        );
+        static_assert(
+            has_vertices<GeometryT>::value,
+            R"error(
+            The lines style requires vertices. The geometry you are using
+            does not provide them.
+            )error"
+        );
         buffer_data data;
         typename GeometryT::data d = generate_geometry(g);
-        static_assert(has_vertices<GeometryT>::value, "The lines style requires vertices. The geometry you are using does not provide them.");
         data.add_vertices(d.vertices);
 
-        // TODO: better way to optionall add data like colours.
-        // if (d.colours.size() > 0) data.add_colours(d.colours);
+        if constexpr (has_indices<GeometryT>::value) {
+            data.indices_type = d.indices_type;
+            data.add_indices(d.indices);
+        }
+
+        // TODO: This could optionally support per vertex colouring too.
         return std::move(data);
     }
 
@@ -68,6 +80,8 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        // TODO: Want a compile time guard to ensure geometry and style are compatible.
+        ctx.primitive = get_primitive<GeometryT>();
         update_style(ctx, l);
         return ctx;
     }
@@ -86,18 +100,6 @@ namespace givr {
 
     template <typename RenderContextT>
     void update_style(RenderContextT &ctx, lines const &l) {
-        // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        switch (l.type) {
-            case line_type::LINES:
-                ctx.primitive = primitive_type::LINES;
-                break;
-            case line_type::LINE_LOOP:
-                ctx.primitive = primitive_type::LINE_LOOP;
-                break;
-            case line_type::LINE_STRIP:
-                ctx.primitive = primitive_type::LINE_STRIP;
-                break;
-        };
         ctx.colour = l.colour;
         ctx.line_width = l.line_width;
     }

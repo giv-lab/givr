@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../vertex_array_data.h"
 #include "../buffer_data.h"
 #include "../instanced_renderer.h"
 #include "../renderer.h"
@@ -49,17 +50,25 @@ namespace givr {
     buffer_data fill_buffers(GeometryT const &g, phong const &) {
         buffer_data data;
         typename GeometryT::data d = generate_geometry(g);
+        static_assert(
+            givr::is_triangle_based<GeometryT>(),
+            "The phong style requires TRIANGLES, TRIANGLE_STRIP, TRIANGLE_FAN, TRIANGLES_ADJACENCY, or TRIANGLE_STRIP_ADJACENCY for the primitive type. The geometry you use is not of this type"
+        );
         static_assert(has_vertices<GeometryT>::value, "The phong style requires vertices. The geometry you are using does not provide them.");
-        static_assert(has_indices<GeometryT>::value, "The phong style requires indices. The geometry you are using does not provide them.");
         static_assert(has_normals<GeometryT>::value, "The phong style requires normals. The geometry you are using does not provide them.");
         data.vertices_type = d.vertices_type;
         data.add_vertices(d.vertices);
-        data.indices_type = d.indices_type;
-        data.add_indices(d.indices);
         data.normals_type = d.normals_type;
         data.add_normals(d.normals);
-        data.colours_type = d.colours_type;
-        data.add_colours(d.colours);
+
+        if constexpr (has_indices<GeometryT>::value) {
+            data.indices_type = d.indices_type;
+            data.add_indices(d.indices);
+        }
+        if constexpr (has_colours<GeometryT>::value) {
+            data.colours_type = d.colours_type;
+            data.add_colours(d.colours);
+        }
         return std::move(data);
     }
 
@@ -71,6 +80,7 @@ namespace givr {
             shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
             shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
         );
+        ctx.primitive = get_primitive<GeometryT>();
         update_style(ctx, p);
         return ctx;
     }
@@ -89,8 +99,6 @@ namespace givr {
 
     template <typename RenderContextT>
     void update_style(RenderContextT &ctx, phong const &p) {
-        // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        ctx.primitive = primitive_type::TRIANGLES;
         ctx.colour = p.colour;
         ctx.light_position = p.light_position;
         ctx.per_vertex_colour = p.per_vertex_colour;
@@ -99,6 +107,7 @@ namespace givr {
         ctx.phong_exponent = p.phong_exponent;
     }
 
+    // TODO: come up with a better way to not duplicate OpenGL state setup
     template <typename ViewContextT>
     void draw(phong::instanced_render_context &ctx, ViewContextT const &view_ctx) {
         glEnable(GL_MULTISAMPLE);

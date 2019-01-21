@@ -38,15 +38,15 @@ namespace givr {
         V2 unified_dataB;
         std::unordered_map<index_pair, unsigned int> index_map;
 
-        for (int i = 0; i < indices_A.size(); i++) {
+        for (std::size_t i = 0; i < indices_A.size(); i++) {
             if (index_map.find({ indices_A[i], indices_B[i] }) == index_map.end()) {
                 index_map[{indices_A[i], indices_B[i]}] = unified_dataA.size()/components_A;
                 unified_indices.push_back(unified_dataA.size()/components_A);
 
-                for (int j = 0; j < components_A; j++)
+                for (std::size_t j = 0; j < components_A; j++)
                     unified_dataA.push_back(data_A[indices_A[i]*components_A + j]);
 
-                for (int j = 0; j < components_B; j++)
+                for (std::size_t j = 0; j < components_B; j++)
                     unified_dataB.push_back(data_B[indices_B[i]*components_B + j]);
             }
             else {
@@ -71,14 +71,14 @@ namespace givr {
         V3 partially_unified_dataC;
         std::unordered_map<index_pair, unsigned int> partially_unified_index_map;
 
-        for (int i = 0; i < indices_A.size(); i++) {
+        for (std::size_t i = 0; i < indices_A.size(); i++) {
             if (partially_unified_index_map.find({ indices_A[i], indices_B[i] }) == partially_unified_index_map.end()) {
                 partially_unified_index_map[ {indices_A[i], indices_B[i]} ] = partially_unified_dataA.size()/components_A;
                 partially_unified_indices.push_back(partially_unified_dataA.size()/components_A);
 
-                for(int j=0; j<components_A; j++)
+                for(std::size_t j=0; j<components_A; j++)
                     partially_unified_dataA.push_back(data_A[indices_A[i]*components_A + j]);
-                for (int j = 0; j<components_B; j++)
+                for (std::size_t j = 0; j<components_B; j++)
                     partially_unified_dataB.push_back(data_B[indices_B[i]*components_B + j]);
             }
             else {
@@ -92,16 +92,16 @@ namespace givr {
         V3 unified_dataC;
         std::unordered_map<index_pair, unsigned int> unified_index_map;
 
-        for (int i = 0; i < partially_unified_indices.size(); i++) {
+        for (std::size_t i = 0; i < partially_unified_indices.size(); i++) {
             if (unified_index_map.find({ partially_unified_indices[i], indices_C[i] }) == unified_index_map.end()) {
                 unified_index_map[{partially_unified_indices[i], indices_C[i] }] = unified_dataA.size()/components_A;
                 unified_indices.push_back(unified_dataA.size()/components_A);
 
-                for (int j = 0; j<components_A; j++)
+                for (std::size_t j = 0; j<components_A; j++)
                     unified_dataA.push_back(partially_unified_dataA[partially_unified_indices[i] * components_A + j]);
-                for (int j = 0; j<components_B; j++)
+                for (std::size_t j = 0; j<components_B; j++)
                     unified_dataB.push_back(partially_unified_dataB[partially_unified_indices[i] * components_B + j]);
-                for (int j = 0; j<components_C; j++)
+                for (std::size_t j = 0; j<components_C; j++)
                     unified_dataC.push_back(data_C[indices_C[i] * components_C + j]);
             }
             else {

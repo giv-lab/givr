@@ -5,12 +5,13 @@
 #include <vector>
 #include <string>
 #include "../types.h"
+#include "../vertex_array_data.h"
 
 namespace givr {
     struct mesh {
         std::string filename;
 
-        struct data {
+        struct data : vertex_array_data<primitive_type::TRIANGLES> {
             buffer_usage_type vertices_type;
             buffer_usage_type normals_type;
             buffer_usage_type indices_type;

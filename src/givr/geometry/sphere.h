@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include "../types.h"
+#include "../vertex_array_data.h"
 
 namespace givr {
 
@@ -10,7 +11,7 @@ namespace givr {
         std::size_t azimuthPoints = 20;
         std::size_t altitudePoints = 20;
 
-        struct data {
+        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
             buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
             buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
             buffer_usage_type indices_type = buffer_usage_type::STATIC_DRAW;
