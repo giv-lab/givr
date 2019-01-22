@@ -1,6 +1,4 @@
 #pragma once
-#include <cstddef>
-#include <cstdint>
 #include <vector>
 
 #include "../vertex_array_data.h"
