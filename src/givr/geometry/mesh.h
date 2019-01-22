@@ -12,10 +12,10 @@ namespace givr {
         std::string filename;
 
         struct data : vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type;
-            buffer_usage_type normals_type;
-            buffer_usage_type indices_type;
-            buffer_usage_type colours_type;
+            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
+            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
+            buffer_usage_type indices_type = buffer_usage_type::STATIC_DRAW;
+            buffer_usage_type colours_type = buffer_usage_type::STATIC_DRAW;
 
             std::vector<float> vertices;
             std::vector<float> normals;

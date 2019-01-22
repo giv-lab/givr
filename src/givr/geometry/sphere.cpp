@@ -27,7 +27,7 @@ sphere::data givr::generate_geometry(sphere const &s) {
                 data.indices.push_back((alt + 1) + (azi + 1)*s.altitudePoints);
                 data.indices.push_back(alt + (azi + 1)*s.altitudePoints);
             }
-            else {
+            else if(alt < s.altitudePoints - 1){
                 data.indices.push_back(alt + azi * s.altitudePoints);
                 data.indices.push_back((alt + 1) + azi * s.altitudePoints);
                 data.indices.push_back((alt + 1));

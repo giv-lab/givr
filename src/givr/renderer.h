@@ -48,12 +48,14 @@ namespace givr {
         ctx.shader_program->set_mat4("view", view);
         ctx.shader_program->set_mat4("projection", projection);
         set_uniforms(ctx.shader_program);
-
+		//
         ctx.vao->bind();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         GLenum mode = givr::get_mode(ctx.primitive);
         if (ctx.number_of_indices > 0) {
-            glDrawElements(mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0);
+            //glDrawElements(mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0);
+			glDrawElementsInstanced(
+				mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, 1);
         } else {
             glDrawArrays(mode, ctx.start_index, ctx.end_index);
         }

@@ -176,6 +176,7 @@ namespace givr {
             unified_index_mesh.uvs = unified_uvs;
         }
 
+        //unified_index_mesh.uvs.resize(unified_index_mesh.vertices.size() * 2 / 3);
         return unified_index_mesh;
 
     }
