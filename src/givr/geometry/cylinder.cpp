@@ -42,8 +42,8 @@ cylinder::data givr::generate_geometry(cylinder const &l) {
     data.normals.reserve(l.points*6);
     float step = 360.0f/static_cast<float>(l.points);
     for (float x = 0.f; x < 360.0f; x+= step) {
-        x = x*0.01745329252f; // convert to radians
-        vec3f normal = glm::rotate(radius_vec, x, axis);
+        float angle = x * 0.01745329252f; // convert to radians
+        vec3f normal = glm::rotate(radius_vec, angle, axis);
         add(data.vertices, l.p2 + normal);
         add(data.vertices, l.p1 + normal);
         add(data.normals, normal);
