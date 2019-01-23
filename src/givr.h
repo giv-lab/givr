@@ -17,6 +17,7 @@
 #include "givr/geometry/triangle.h"
 #include "givr/geometry/multiline.h"
 #include "givr/geometry/polyline.h"
+#include "givr/geometry/cylinder.h"
 #include "givr/geometry/mesh.h"
 #include "givr/geometry/custom.h"
 #include "givr/styles/flatfill.h"
