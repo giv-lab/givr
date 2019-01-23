@@ -1,6 +1,7 @@
 #include "multiline.h"
 
 using multiline = givr::multiline;
+using line = givr::line;
 
 void multiline::add_line(line l) {
     segments.push_back(l);

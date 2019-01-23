@@ -39,8 +39,7 @@ std::string phong_vertex_source(std::string model_source) {
             mat4 mv = view * model;
             mat4 mvp = projection * mv;
             gl_Position = mvp * vec4(position, 1.0);
-            vec4 model_vert = mv * vec4(position, 1.0);
-            original_pos = vec3(mv);
+            original_pos = vec3(model * vec4(position, 1.0));
             frag_normal = vec3(model*vec4(normal, 0));
             frag_colour = colour;
         }
