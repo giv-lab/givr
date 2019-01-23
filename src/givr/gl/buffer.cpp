@@ -38,6 +38,9 @@ void buffer::bind(GLenum target, GLuint i) {
     assert(i < m_number_buffers);
     glBindBuffer(target, m_buffer_ids[i]);
 }
+void buffer::unbind(GLenum target) {
+    glBindBuffer(target, 0);
+}
 
 buffer::~buffer() {
     dealloc();

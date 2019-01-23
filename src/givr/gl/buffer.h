@@ -25,6 +25,7 @@ namespace givr {
             void dealloc();
             void bind(GLenum target);
             void bind(GLenum target, GLuint i);
+            void unbind(GLenum target);
             template <typename T>
             void data(GLenum target, const std::vector<T> &data, GLenum usage) {
                 glBufferData(target, sizeof(T) * data.size(), data.data(), usage);
