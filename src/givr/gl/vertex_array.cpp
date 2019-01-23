@@ -17,6 +17,7 @@ void vertex_array::alloc(GLuint num) {
     m_vertex_array_ids = new GLuint[m_number_arrays];
     glGenVertexArrays(m_number_arrays, m_vertex_array_ids);
 }
+
 void vertex_array::dealloc() {
     if (m_vertex_array_ids) {
         glDeleteVertexArrays(m_number_arrays, m_vertex_array_ids);

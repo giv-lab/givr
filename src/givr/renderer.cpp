@@ -27,16 +27,20 @@ namespace givr {
         render_context &ctx,
         buffer_data const &data
     ) {
+        // Start by setting the appropriate context variables for rendering.
+        ctx.number_of_indices = data.indices.size();
+        ctx.start_index = 0;
+        ctx.end_index =  data.vertices.size() / 3;
+
         std::uint16_t va_index = 0;
         ctx.vao->bind();
 
         std::unique_ptr<buffer> &indices = ctx.array_buffers[0];
         indices->bind(GL_ELEMENT_ARRAY_BUFFER);
-        indices->data(GL_ELEMENT_ARRAY_BUFFER, data.indices, GL_STATIC_DRAW);
-        ctx.number_of_indices = data.indices.size();
-
-        ctx.start_index = 0;
-        ctx.end_index =  data.vertices.size() / 3;
+        indices->data(
+                GL_ELEMENT_ARRAY_BUFFER,
+                data.indices,
+                get_buffer_usage_type(data.indices_type));
 
         std::uint16_t buffer_index = 1;
         auto apply_buffer = [&ctx, &va_index, &buffer_index](
@@ -45,6 +49,11 @@ namespace givr {
             GLenum buffer_type,
             std::vector<float> const &data
         ) {
+            // if this data piece is empty
+            if (data.size() == 0) {
+                ++buffer_index;
+                return;
+            }
             std::unique_ptr<buffer> &vbo = ctx.array_buffers[buffer_index];
             vbo->bind(type);
             vbo->data(type, data, buffer_type);
@@ -61,5 +70,11 @@ namespace givr {
         apply_buffer(GL_ARRAY_BUFFER, 3, get_buffer_usage_type(data.colours_type), data.colours);
 
         ctx.vao->unbind();
+
+        ctx.array_buffers[0]->unbind(GL_ELEMENT_ARRAY_BUFFER);
+        if (ctx.array_buffers.size() > 1) {
+            ctx.array_buffers[1]->unbind(GL_ARRAY_BUFFER);
+        }
+
     }
 };// end namespace givr
