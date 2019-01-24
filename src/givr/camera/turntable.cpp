@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 
+using mat4f = givr::mat4f;
+using vec3f = givr::vec3f;
 using turntable = givr::turntable;
 
 float angle_to_x(float r, float theta, float phi) {

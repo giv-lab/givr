@@ -4,11 +4,12 @@
 
 #include "gl.h"
 
-using vec2f = glm::vec2;
-using vec3f = glm::vec3;
-using mat4f = glm::mat4;
-
 namespace givr {
+
+    using vec2f = glm::vec2;
+    using vec3f = glm::vec3;
+    using mat4f = glm::mat4;
+
     enum class primitive_type {
         POINTS,
         LINES,

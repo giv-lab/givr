@@ -39,7 +39,7 @@ namespace givr {
         std::uint16_t va_index = 0;
         ctx.vao->bind();
 
-        // Map - but don't upload framing data.
+        // Upload framing data.
         ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
         auto vec4_size = sizeof(mat4f)/4;
         for (std::uint16_t i = 0; i < 4; ++i) {

@@ -75,6 +75,5 @@ namespace givr {
         if (ctx.array_buffers.size() > 1) {
             ctx.array_buffers[1]->unbind(GL_ARRAY_BUFFER);
         }
-
     }
 };// end namespace givr
