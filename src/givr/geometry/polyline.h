@@ -12,9 +12,8 @@ namespace givr {
 
         static_assert(
             LineType != primitive_type::LINE_LOOP ||
-            LineType != primitive_type::LINE_STRIP ||
-            LineType != primitive_type::LINE_STRIP_ADJACENCY,
-            "polyline only supports LINE_LOOP, LINE_STRIP or LINE_STRIP_ADJACENCY"
+            LineType != primitive_type::LINE_STRIP,
+            "polyline only supports LINE_LOOP or LINE_STRIP"
         );
 
         struct data : public vertex_array_data<LineType> {

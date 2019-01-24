@@ -22,7 +22,6 @@ namespace givr {
         LINE_STRIP_ADJACENCY,
         TRIANGLES_ADJACENCY,
         TRIANGLE_STRIP_ADJACENCY
-
     };
 
     GLenum get_mode(primitive_type const &t);

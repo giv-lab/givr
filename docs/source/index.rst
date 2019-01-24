@@ -12,6 +12,8 @@ Welcome to GIVR's documentation!
 
    quickstart
    overview
+   styles
+   geometry
 
 
 Indices and tables
