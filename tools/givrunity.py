@@ -40,7 +40,8 @@ def unity_build():
     headers = [h for h in headers if h.name not in exclude]
     header_dict = dict((h.name, h) for h in headers)
 
-    with open("givr.h", "w") as out_fd:
+    with open("src/givr.h", "w") as out_fd:
+        out_fd.write('#pragma once\n')
         while headers:
             written = []
             for h in headers:

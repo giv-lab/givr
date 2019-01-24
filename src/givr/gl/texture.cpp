@@ -41,23 +41,19 @@ void texture::bind(GLenum target)
     bind(target, 0);
 }
 
-// TODO: target generates an unused paramater warning.
-//       this is probably a bug or a bad design.
 void texture::bind(GLenum target, GLuint i)
 {
     assert(i < m_number_textures);
-    glBindTexture(GL_TEXTURE_2D, m_texture_ids[i]);
+    glBindTexture(target, m_texture_ids[i]);
 }
 
-// TODO: level generates an unused paramater warning.
-//       this is probably a bug or a bad design.
 void texture::load(GLenum target, std::string filename, GLint level, GLenum format)
 {
     // load and generate the texture
     int width, height, channels;
     unsigned char *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
     if (data) {
-        glTexImage2D(target, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(target, level, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(target);
     } else {
         throw std::runtime_error("Failed to load texture");
