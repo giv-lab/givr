@@ -72,6 +72,9 @@ Custom Geometry is instantiated like this::
 custom geometry classes also have fields for normals, colours,
 uv coordinates, and indices if this is indexed geometry.
 
+See :ref:`givr-geometry` for more details on all of the types of geometry
+that are supported.
+
 4. Instantiate Style
 --------------------
 givr comes with two different styles. A smooth shaded phong style and a line
@@ -83,7 +86,8 @@ Phong style instantiation::
    phong_style.colour = vec3f{1.0, 1.0, 0.1529};
    phong_style.light_position = vec3f{2.0, 2.0, 15.0};
 
-To see the other parameters for the styles, view the style documentation.
+See :ref:`givr-styles` for more details on all of the types of styles
+that are supported.
 
 5. Create the renderable
 ------------------------

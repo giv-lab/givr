@@ -14,6 +14,7 @@ Welcome to GIVR's documentation!
    overview
    styles
    geometry
+   camera_and_projection
 
 
 Indices and tables
