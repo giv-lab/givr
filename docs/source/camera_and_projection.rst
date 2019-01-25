@@ -42,15 +42,38 @@ so you must do four things:
 
 1. Create a custom type (struct/class) that represents your camera.
 2. Define a `mat4f get_view_matrix(MyCameraT const &camera)` function which
-   generates the view matrix from the camera instance.
+   within that class generates the view matrix from the camera instance.
 3. Define a `mat4f get_view_position(MyCameraT const &camera)` function which
-   generates the view position for given camera instance.
+   within that claass generates the view position for given camera instance.
 4. Specify this type of camera for your view context
 
 The actual struct/class that you define may have as many attributes and
 methods as needed. None of them will be used by givr directly. Whenever the
 style needs the view position and view matrix, it will call the appropriate
 method defined above.
+
+Example
+*******
+::
+
+   struct MyCamera {
+       static mat4f get_view_matrix(MyCamera const &c) {
+           auto normal = ...;
+           auto pos =  ...;
+           return lookAt(
+               pos,
+               t.p2,
+               glm::normalize(t.p2-t.p1)
+           );
+       }
+
+       static vec3f get_view_position(MyCamera const &c) {
+           auto pos = ...;
+           return pos;
+       }
+   };
+   ...
+   givr::view_context<MyCamera, givr::perspective_view> view;
 
 Projection
 --------------------------------------------------------------------------------
@@ -59,5 +82,6 @@ you need do 3 things for the project class
 
 1. Create a custom type (struct/class) that represents your projection.
 2. Define a `mat4f get_projection_matrix(MyProjectionT const &camera)`
-   function which generates the view matrix from the projection instance.
+   within that class function which generates the view matrix from the
+   projection instance.
 3. Specify this type of projection for your view context
