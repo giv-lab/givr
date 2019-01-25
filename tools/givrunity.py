@@ -40,7 +40,7 @@ def unity_build():
     headers = [h for h in headers if h.name not in exclude]
     header_dict = dict((h.name, h) for h in headers)
 
-    with open("src/givr.h", "w") as out_fd:
+    with open("libs/givr.h", "w") as out_fd:
         out_fd.write('#pragma once\n')
         while headers:
             written = []
@@ -67,7 +67,7 @@ def unity_build():
         "tiny_obj_loader.cpp",
     ]
     implementations = [i for i in implementations if i.name not in exclude]
-    with open("src/givr.cpp", "w") as out_fd:
+    with open("libs/givr.cpp", "w") as out_fd:
         out_fd.write('#define TINYOBJLOADER_IMPLEMENTATION\n')
         out_fd.write('#define STB_IMAGE_IMPLEMENTATION\n')
         out_fd.write('#include "givr.h"\n\n')
