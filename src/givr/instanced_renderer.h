@@ -7,7 +7,7 @@
 #include "gl/buffer.h"
 #include "gl/vertex_array.h"
 
-#include <glad/glad.h>
+#include "gl.h"
 
 #include <functional>
 #include <memory>
@@ -25,7 +25,10 @@ namespace givr {
         // Keep references to the GL_ARRAY_BUFFERS so that
         // the stay in scope for this context.
         std::vector<std::unique_ptr<buffer>> array_buffers;
+
         GLuint number_of_indices;
+        GLuint start_index;
+        GLuint end_index;
 
         primitive_type primitive;
     };
@@ -53,9 +56,15 @@ namespace givr {
         ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
         ctx.model_transforms_buffer->data(GL_ARRAY_BUFFER, ctx.model_transforms, GL_DYNAMIC_DRAW);
 
-        glDrawElementsInstanced(
-            mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, ctx.model_transforms.size()
-        );
+        if (ctx.number_of_indices > 0) {
+            glDrawElementsInstanced(
+                mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, ctx.model_transforms.size()
+            );
+        } else {
+            glDrawArraysInstanced(
+                mode, ctx.start_index, ctx.end_index, ctx.model_transforms.size()
+            );
+        }
 
         ctx.vao->unbind();
 

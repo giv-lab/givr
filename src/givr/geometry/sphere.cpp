@@ -15,7 +15,7 @@ sphere::data givr::generate_geometry(sphere const &s) {
     auto sphereFunc = [](float azi, float alt) {
         return point{ std::cos(azi)*std::sin(alt), std::cos(alt), std::sin(azi)*std::sin(alt) };
     };
-    
+
     for (size_t azi = 0; azi < s.azimuthPoints; azi++) {
         for (size_t alt = 0; alt < s.altitudePoints; alt++) {
             if (azi < s.azimuthPoints - 1 && alt < s.altitudePoints - 1) {
@@ -27,7 +27,7 @@ sphere::data givr::generate_geometry(sphere const &s) {
                 data.indices.push_back((alt + 1) + (azi + 1)*s.altitudePoints);
                 data.indices.push_back(alt + (azi + 1)*s.altitudePoints);
             }
-            else {
+            else if(alt < s.altitudePoints - 1){
                 data.indices.push_back(alt + azi * s.altitudePoints);
                 data.indices.push_back((alt + 1) + azi * s.altitudePoints);
                 data.indices.push_back((alt + 1));
@@ -52,8 +52,6 @@ sphere::data givr::generate_geometry(sphere const &s) {
 
             data.uvs.push_back(u);
             data.uvs.push_back(v);
-
-
         }
     }
 

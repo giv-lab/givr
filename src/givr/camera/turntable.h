@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include "../types.h"
-#include "givm.h"
 
 namespace givr {
     constexpr const float LONGITUDE_MAX = 2. * M_PI;

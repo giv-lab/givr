@@ -1,6 +1,7 @@
 #include "types.h"
 
-using namespace givr;
+using primitive_type = givr::primitive_type;
+using buffer_usage_type = givr::buffer_usage_type;
 
 GLenum givr::get_mode(primitive_type const &t) {
     switch(t) {

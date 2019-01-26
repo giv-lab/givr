@@ -1,19 +1,28 @@
 #include "phong.h"
 
-using phong = givr::phong;
+using pirc = givr::phong_instanced_render_context;
+using prc = givr::phong_render_context;
 
-void phong::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    p->set_vec3("colour", colour);
-    p->set_bool("per_vertex_colour", per_vertex_colour);
-    p->set_vec3("light_position", light_position);
-    p->set_float("ambient_factor", ambient_factor);
-    p->set_float("specular_factor", specular_factor);
-    p->set_float("phong_exponent", phong_exponent);
+template <typename RenderContextT>
+void set_phong_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
+    p->set_vec3("colour", ctx.colour);
+    p->set_bool("per_vertex_colour", ctx.per_vertex_colour);
+    p->set_vec3("light_position", ctx.light_position);
+    p->set_float("ambient_factor", ctx.ambient_factor);
+    p->set_float("specular_factor", ctx.specular_factor);
+    p->set_float("phong_exponent", ctx.phong_exponent);
 }
 
-std::string phong::get_vertex_shader_source() const {
-    return std::string(R"shader(
-        attribute mat4 model;
+void pirc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
+    set_phong_uniforms(*this, p);
+}
+void prc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
+    set_phong_uniforms(*this, p);
+}
+
+std::string phong_vertex_source(std::string model_source) {
+    return
+        model_source + std::string(R"shader( mat4 model;
         attribute vec3 position;
         attribute vec3 normal;
         attribute vec2 uvs;
@@ -30,8 +39,7 @@ std::string phong::get_vertex_shader_source() const {
             mat4 mv = view * model;
             mat4 mvp = projection * mv;
             gl_Position = mvp * vec4(position, 1.0);
-            vec4 model_vert = mv * vec4(position, 1.0);
-            original_pos = vec3(mv);
+            original_pos = vec3(model * vec4(position, 1.0));
             frag_normal = vec3(model*vec4(normal, 0));
             frag_colour = colour;
         }
@@ -40,7 +48,7 @@ std::string phong::get_vertex_shader_source() const {
     );
 }
 
-std::string phong::get_fragment_shader_source() const {
+std::string phong_fragment_source() {
     return std::string(R"shader(
         uniform vec3 colour;
         uniform bool per_vertex_colour;
@@ -85,3 +93,20 @@ std::string phong::get_fragment_shader_source() const {
     );
 }
 
+// TODO: these shaders are near duplicates of each other, we need to deal
+//       with this.
+std::string pirc::get_vertex_shader_source() const {
+    return phong_vertex_source("attribute");
+}
+
+std::string pirc::get_fragment_shader_source() const {
+    return phong_fragment_source();
+}
+
+std::string prc::get_vertex_shader_source() const {
+    return phong_vertex_source("uniform");
+}
+
+std::string prc::get_fragment_shader_source() const {
+    return phong_fragment_source();
+}

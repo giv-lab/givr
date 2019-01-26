@@ -1,6 +1,6 @@
 #pragma once
 
-#include "givm.h"
+#include <glm/glm.hpp>
 
 #include "givr/draw.h"
 #include "givr/buffer_data.h"
@@ -13,8 +13,15 @@
 #include "givr/gl/buffer.h"
 #include "givr/gl/vertex_array.h"
 #include "givr/geometry/sphere.h"
+#include "givr/geometry/line.h"
+#include "givr/geometry/triangle.h"
+#include "givr/geometry/multiline.h"
 #include "givr/geometry/polyline.h"
+#include "givr/geometry/cylinder.h"
+#include "givr/geometry/triangle_soup.h"
+#include "givr/geometry/mesh.h"
+#include "givr/geometry/custom.h"
 #include "givr/styles/flatfill.h"
-#include "givr/styles/linestyle.h"
+#include "givr/styles/lines.h"
 #include "givr/styles/phong.h"
 

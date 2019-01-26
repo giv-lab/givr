@@ -1,4 +1,5 @@
 #include "program.h"
+#include <glm/gtc/type_ptr.hpp>
 
 using program = givr::program;
 
@@ -52,6 +53,10 @@ void program::use() {
     glUseProgram(m_program_id);
 }
 
+void program::set_vec2(const std::string &name, vec2f const &value) const
+{
+    glUniform2fv(glGetUniformLocation(m_program_id, name.c_str()), 1, value_ptr(value));
+}
 void program::set_vec3(const std::string &name, vec3f const &value) const
 {
     glUniform3fv(glGetUniformLocation(m_program_id, name.c_str()), 1, value_ptr(value));

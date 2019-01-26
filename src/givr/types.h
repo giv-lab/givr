@@ -1,13 +1,15 @@
 #pragma once
 
-#include "givm.h"
+#include <glm/glm.hpp>
 
-#include <glad/glad.h>
-
-using vec3f = givm::vec3f;
-using mat4f = givm::mat4f;
+#include "gl.h"
 
 namespace givr {
+
+    using vec2f = glm::vec2;
+    using vec3f = glm::vec3;
+    using mat4f = glm::mat4;
+
     enum class primitive_type {
         POINTS,
         LINES,
@@ -20,7 +22,6 @@ namespace givr {
         LINE_STRIP_ADJACENCY,
         TRIANGLES_ADJACENCY,
         TRIANGLE_STRIP_ADJACENCY
-
     };
 
     GLenum get_mode(primitive_type const &t);

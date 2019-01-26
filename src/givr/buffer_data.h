@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <glad/glad.h>
+#include "gl.h"
 #include "types.h"
 
 namespace givr {
