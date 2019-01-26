@@ -44,7 +44,7 @@ so you must do four things:
 2. Define a `mat4f get_view_matrix(MyCameraT const &camera)` function which
    within that class generates the view matrix from the camera instance.
 3. Define a `mat4f get_view_position(MyCameraT const &camera)` function which
-   within that claass generates the view position for given camera instance.
+   within that class generates the view position for given camera instance.
 4. Specify this type of camera for your view context
 
 The actual struct/class that you define may have as many attributes and
@@ -58,13 +58,10 @@ Example
 
    struct MyCamera {
        static mat4f get_view_matrix(MyCamera const &c) {
-           auto normal = ...;
+           auto up = ...;
            auto pos =  ...;
-           return lookAt(
-               pos,
-               t.p2,
-               glm::normalize(t.p2-t.p1)
-           );
+           auto lookAtPoint =  ...;
+           return lookAt(pos, up, lookAtPoint);
        }
 
        static vec3f get_view_position(MyCamera const &c) {

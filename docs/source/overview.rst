@@ -5,8 +5,8 @@ Overview
 
 givr provides a simple and safe API for rendering geometry.  It does nothing
 to setup your windowing system or OpenGL context. You must do these things
-yourself.  In addition it doesn't do a couple of other things lke clearing
-the screen or seting the glViewport. You must still do those things on your
+yourself.  In addition it doesn't do a couple of other things like clearing
+the screen or setting the glViewport. You must still do those things on your
 own. The following gives you an overview of how you use givr to draw things.
 
 There are 5 things that need to be in place for givr to render things to
@@ -53,7 +53,7 @@ A sphere is instantiated like this::
 
    auto sphere = givr::sphere{};
 
-by default it is a unit sphere centered at the origin. See the geometry
+by default it is a unit sphere centred at the origin. See the geometry
 documentation for how to change its parameters.
 
 A mesh is instantiated like this::
@@ -61,7 +61,7 @@ A mesh is instantiated like this::
     auto palm_tree = givr::mesh{"./models/Palm_Tree.obj"};
 
 meshes are placed wherever their obj file places them. Usually this is
-centered at the origin, but it's not guaranteed.
+centred at the origin, but it's not guaranteed.
 
 Custom Geometry is instantiated like this::
 
