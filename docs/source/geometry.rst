@@ -73,7 +73,7 @@ Multiline
 --------------------------------------------------------------------------------
 
 A multiline is simply a series of line segments which may or may not
-be connected. It is analagous to the GL_LINES rendering type.
+be connected. It is analogous to the GL_LINES rendering type.
 
 Parameters
 ************
@@ -83,7 +83,7 @@ It takes a list of lines as its parameters::
         std::vector<line> segments;
     }
 
-You can also add line segments using the following api::
+You can also add line segments using the following API::
 
     multiline l;
     l.add_line(givr::line{p1, p2});
@@ -149,7 +149,7 @@ Sphere
 --------------------------------------------------------------------------------
 
 The sphere geometry is used to generate a set of triangles which approximate
-a sphere.  By default the sphere is a unit sphere, centered around the
+a sphere.  By default the sphere is a unit sphere, centred around the
 origin. In order to change its radius and position, you will need to use
 the model matrix provided to the draw call or the or to the add_instance call.
 
@@ -185,7 +185,7 @@ Typically you will just use the sphere as is and scale it when you draw it::
    givr::sphere s;
    auto ctx = create_renderable(s, phong_style);
    ...
-   givr::matr4f m{1.f}; // identity matrix
+   givr::mat4f m{1.f}; // identity matrix
    m = scale(m, vec3f{2.f, 2.f, 2.f});
    givr::draw(s, view, m);
 
