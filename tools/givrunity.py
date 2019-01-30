@@ -36,7 +36,7 @@ def unity_build():
         source(filename)
         for filename in glob.iglob('givr/src/**/*.h', recursive=True)
     ]
-    exclude = ["givr.h", "tiny_obj_loader.h", "stb_image.h"]
+    exclude = ["givr.h"]#, "tiny_obj_loader.h", "stb_image.h"]
     headers = [h for h in headers if h.name not in exclude]
     header_dict = dict((h.name, h) for h in headers)
 
