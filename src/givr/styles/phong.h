@@ -48,14 +48,15 @@ namespace givr {
 
     template <typename GeometryT>
     buffer_data fill_buffers(GeometryT const &g, phong const &) {
-        buffer_data data;
-        typename GeometryT::data d = generate_geometry(g);
         static_assert(
             givr::is_triangle_based<GeometryT>(),
             "The phong style requires TRIANGLES, TRIANGLE_STRIP, TRIANGLE_FAN, TRIANGLES_ADJACENCY, or TRIANGLE_STRIP_ADJACENCY for the primitive type. The geometry you use is not of this type"
         );
         static_assert(has_vertices<GeometryT>::value, "The phong style requires vertices. The geometry you are using does not provide them.");
         static_assert(has_normals<GeometryT>::value, "The phong style requires normals. The geometry you are using does not provide them.");
+
+        buffer_data data;
+        typename GeometryT::data d = generate_geometry(g);
         data.vertices_type = d.vertices_type;
         data.add_vertices(d.vertices);
         data.normals_type = d.normals_type;
