@@ -11,13 +11,13 @@ givr provides the following types of geometry:
 Triangle
 --------------------------------------------------------------------------------
 
-The triangle geometry is used to create a single triangle.
+The Triangle geometry is used to create a single triangle.
 
 Parameters
 **********
 It has 3 parameters, one for each point of the triangle::
 
-    struct triangle {
+    struct Triangle {
         vec3f p1;
         vec3f p2;
         vec3f p3;
@@ -36,7 +36,7 @@ Example
    vec3f p1 = ...;
    vec3f p2 = ...;
    vec3f p3 = ...;
-   givr::triangle t{p1, p2, p3};
+   givr::Triangle t{p1, p2, p3};
 
 
 
@@ -69,36 +69,36 @@ Example
    l.p2 = vec3f{...};
 
 
-Multiline
+MultiLine
 --------------------------------------------------------------------------------
 
-A multiline is simply a series of line segments which may or may not
+A MultiLine is simply a series of line segments which may or may not
 be connected. It is analogous to the GL_LINES rendering type.
 
 Parameters
 ************
 It takes a list of lines as its parameters::
 
-    struct multiline {
+    struct MultiLine {
         std::vector<line> segments;
     }
 
 You can also add line segments using the following API::
 
-    multiline l;
-    l.add_line(givr::line{p1, p2});
-    l.add_line(p1, p2);
+    MultiLine l;
+    l.addLine(givr::line{p1, p2});
+    l.addLine(p1, p2);
 
 Data
 ******
-The multiline geometry provides this data to the style:
+The MultiLine geometry provides this data to the style:
   * vertices 
 
 Example
 *******
 ::
 
-   givr::multiline ml;
+   givr::MultiLine ml;
    ml.segments.push_back(givr::line{p1, p2});
    ml.segments.push_back(givr::line{p3, p4});
 
@@ -112,11 +112,11 @@ points greater than 1.
 
 Parameters
 ************
-It is a templated class, which takes givr::primitive_type as the template
+It is a templated class, which takes givr::PrimitiveType as the template
 parameter. This template parameter may be set to one of two values:
 
-  * `givr::primitive_type::LINE_LOOP`
-  * `givr::primitive_type::LINE_STRIP`
+  * `givr::PrimitiveType::LINE_LOOP`
+  * `givr::PrimitiveType::LINE_STRIP`
 
 If you use `LINE_LOOP`, the final point will be connected by a line segment with
 the first point. If you use `LINE_STRIP` then it will not be. This parameter
@@ -125,21 +125,21 @@ set to the right value.
 
 The class takes a list of points as parameters::
 
-    template <primitive_type LineType>
-    struct polyline {
+    template <PrimitiveType LineType>
+    struct Polyline {
         std::vector<vec3f> vertices;
     }
 
 Data
 ******
-The multiline geometry provides this data to the style:
+The PolyLine geometry provides this data to the style:
   * vertices 
 
 Example
 *******
 ::
 
-   givr::polyline<givr::primitive_type::LINE_LOOP> pl;
+   givr::Polyline<givr::PrimitiveType::LINE_LOOP> pl;
    pl.vertices.push_back(vec3f{...});
    pl.vertices.push_back(vec3f{...});
    pl.vertices.push_back(vec3f{...});
@@ -151,7 +151,7 @@ Sphere
 The sphere geometry is used to generate a set of triangles which approximate
 a sphere.  By default the sphere is a unit sphere, centred around the
 origin. In order to change its radius and position, you will need to use
-the model matrix provided to the draw call or the or to the add_instance call.
+the model matrix provided to the draw call or the or to the addInstance call.
 
 
 Parameters
@@ -162,7 +162,7 @@ They are used to control how often we sample the sphere along the latitude and l
 in order to generate triangles. They are set to 20 by default, and can be
 increased if you want a higher quality sphere::
 
-    struct sphere {
+    struct Sphere {
         std::size_t azimuthPoints = 20;
         std::size_t altitudePoints = 20;
     }
@@ -182,8 +182,8 @@ Example
 *******
 Typically you will just use the sphere as is and scale it when you draw it::
 
-   givr::sphere s;
-   auto ctx = create_renderable(s, phong_style);
+   givr::Sphere s;
+   auto ctx = createRenderable(s, phongStyle);
    ...
    givr::mat4f m{1.f}; // identity matrix
    m = scale(m, vec3f{2.f, 2.f, 2.f});
@@ -193,7 +193,7 @@ Typically you will just use the sphere as is and scale it when you draw it::
 
 Cylinder
 --------------------------------------------------------------------------------
-The cylinder geometry allows you to place a cylinder that connects two points.
+The Cylinder geometry allows you to place a cylinder that connects two points.
 It's often used in place of GL_LINES as it is actually a 3D object, while GL_LINES
 are not. The current implementation is an open-faced cylinder.
 
@@ -203,7 +203,7 @@ It requires two parameters, the end points. It has two additional parameters
 which control its radius and the number of times to sample when generating
 the triangles::
 
-    struct cylinder {
+    struct Cylinder {
         vec3f p1;
         vec3f p2;
         float radius = 1.0f;
@@ -221,12 +221,12 @@ It generates this data for the style to use:
 Example
 *******
 ::
-   givr::cylinder cyl = givr::cylinder{p1, p2};
+   givr::Cylinder cyl = givr::Cylinder{p1, p2};
 
 
 Mesh
 --------------------------------------------------------------------------------
-The mesh geometry allows you to load arbitrary meshes from .obj files and then
+The Mesh geometry allows you to load arbitrary meshes from .obj files and then
 render them.
 
 Parameters
@@ -239,13 +239,13 @@ that your application is always run in the same directory. If you use absolute
 paths then you will need to ensure there is a way to easily change that when
 you move the program between machines::
 
-    struct mesh {
+    struct Mesh {
         std::string filename;
     }
 
 Data
 ******
-The mesh object will produce the following data for the style to use:
+The Mesh object will produce the following data for the style to use:
    - vertices
    - normals
    - indices
@@ -255,7 +255,7 @@ Example
 *******
 ::
 
-    givr::mesh palm_tree{"./models/Palm_Tree.obj"};
+    givr::Mesh palm_tree{"./models/Palm_Tree.obj"};
 
 Triangle Soup
 --------------------------------------------------------------------------------
@@ -273,14 +273,14 @@ that normal to each vertex of that triangle.  In addition, each vertex of the
 triangle is explicitly represented in the vertices array regardless of whether
 other triangles share the same vertex. The result of this is that they shading
 will not be smooth across the edges of triangles. If you want custom geometry
-with smooth shading, you will need to use givr::custom_geometry (see below).
+with smooth shading, you will need to use givr::CustomGeometry (see below).
 
 Parameters
 ************
 It has a single parameter which is a vector of triangles::
 
-    struct triangle_soup {
-        std::vector<triangle> triangles;
+    struct TriangleSoup {
+        std::vector<Triangle> triangles;
     }
 
 Data
@@ -294,10 +294,10 @@ Example
 ********
 ::
 
-   triangle t1 = ...;
-   triangle t2 = ...;
-   triangle t3 = ...;
-   givr::triangle_soup ts;
+   Triangle t1 = ...;
+   Triangle t2 = ...;
+   Triangle t3 = ...;
+   givr::TriangleSoup ts;
    ts.triangles.push_back(t1);
    ts.triangles.push_back(t2);
    ts.triangles.push_back(t3);
@@ -306,15 +306,15 @@ Example
 Or more likely you will loop over the elements in your animation/simulation
 and turn them into a series of triangles::
 
-   givr::triangle_soup ts;
+   givr::TriangleSoup ts;
    // Loop over all objects in your simulation/animation
    for(int i = 0; i < my_simulation.objects.size(); ++i) {
 
       // Get a reference to the object
       object const &o = my_simulation.objects[i];
 
-      // Turn that object into a triangle (or triangles!)
-      triangle_soup t{
+      // Turn that object into a Triangle (or triangles!)
+      TriangleSoup t{
          o.get_point1(),
          o.get_point2(),
          o.get_point3()
@@ -329,7 +329,7 @@ of my jelly cube for the mass springs assignment.  I stored my particle masses
 in a 1D vector, and then I painstakingly did all of the index math to generate
 triangles. It wasn't fun, I'm sure there are better ways::
 
-   givr::triangle_soup jelly_geometry;
+   givr::TriangleSoup jelly_geometry;
 
    void update_jelly_geometry() {
        // This gets called for every frame, so it's not hyper efficient, but
@@ -340,7 +340,7 @@ triangles. It wasn't fun, I'm sure there are better ways::
            return jelly.particles[(i*(resolution*resolution)) + (j*resolution) + k].position;
        };
        auto add_triangle = [&](vec3f const &p1, vec3f const &p2, vec3f const &p3) {
-           jelly_geometry.triangles.push_back(givr::triangle{p1, p2, p3});
+           jelly_geometry.triangles.push_back(givr::Triangle{p1, p2, p3});
        };
 
        for (std::size_t i = 0; i < resolution; ++i) {
@@ -405,11 +405,11 @@ you do not provide indices it will not be rendered as indexed geometry.
 
 Parameters
 ************
-The `custom_geometry` is a templated class, which takes givr::primitive_type
+The `CustomGeometry` is a templated class, which takes givr::PrimitiveType
 as the template parameter. This template parameter may be set to any of the
-`givr::primitive_type` values::
+`givr::PrimitiveType` values::
 
-    enum class primitive_type {
+    enum class PrimitiveType {
         POINTS,
         LINES,
         LINE_LOOP,
@@ -424,12 +424,12 @@ as the template parameter. This template parameter may be set to any of the
     };
 
 
-The `custom_geometry` class provides lists of `vec3f` for vertices, normals
+The `CustomGeometry` class provides lists of `vec3f` for vertices, normals
 and colours, a list of `vec2f` 
 ::
 
-    template <primitive_type PrimitiveT>
-    struct custom_geometry {
+    template <PrimitiveType PrimitiveT>
+    struct CustomGeometry {
         std::vector<vec3f> vertices;
         std::vector<vec3f> normals;
         std::vector<std::uint32_t> indices;

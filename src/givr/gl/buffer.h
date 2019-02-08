@@ -8,23 +8,21 @@
 
 namespace givr {
 
-    class buffer
+    class Buffer
     {
         public:
-            buffer();
-            explicit buffer(GLuint num);
+            Buffer();
             // TODO(lw): make a version that just receives the source directly.
-            buffer(const buffer&) = delete;
-            buffer(buffer&&) = delete;
-            buffer& operator=(const buffer&) = delete;
-            buffer& operator=(buffer&&) = delete;
-            ~buffer();
+            Buffer(const Buffer&) = delete;
+            Buffer(Buffer&&) = delete;
+            Buffer& operator=(const Buffer&) = delete;
+            Buffer& operator=(Buffer&&) = delete;
+            ~Buffer();
 
-            operator GLuint() const { return m_buffer_ids[0]; }
-            void alloc(GLuint num);
+            operator GLuint() const { return m_bufferID; }
+            void alloc();
             void dealloc();
             void bind(GLenum target);
-            void bind(GLenum target, GLuint i);
             void unbind(GLenum target);
             template <typename T>
             void data(GLenum target, const std::vector<T> &data, GLenum usage) {
@@ -35,14 +33,7 @@ namespace givr {
                 glBufferData(target, sizeof(T) * Size, data.data(), usage);
             }
 
-            void debug() {
-                for (GLuint i = 0; i < m_number_buffers; ++i) {
-                    std::cout << "#" << i << " -> " << m_buffer_ids[i] << std::endl;
-                }
-            }
-
         private:
-            GLuint m_number_buffers = 0;
-            GLuint *m_buffer_ids = nullptr;
+            GLuint m_bufferID = 0;
     };
 };// end namespace givr

@@ -9,18 +9,18 @@
 
 namespace givr {
 
-class shader
+class Shader
 {
     public:
-        shader(const std::string &source, GLenum shader_type);
+        Shader(const std::string &source, GLenum shaderType);
         // TODO(lw): make a version that just receives the source directly.
-        ~shader();
+        ~Shader();
 
-        operator GLuint() const { return m_shader_id; }
+        operator GLuint() const { return m_shaderID; }
 
 
     private:
-        GLuint m_shader_id;
+        GLuint m_shaderID;
 
 };
 };// end namespace givr

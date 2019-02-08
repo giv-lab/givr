@@ -8,13 +8,13 @@
 #include "../vertex_array_data.h"
 
 namespace givr {
-    struct mesh {
+    struct Mesh {
         std::string filename;
 
-        struct data : vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
-            buffer_usage_type indices_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : VertextArrayData<PrimitiveType::TRIANGLES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType indicesType = BufferUsageType::STATIC_DRAW;
 
             std::vector<float> vertices;
             std::vector<float> normals;
@@ -23,6 +23,6 @@ namespace givr {
         };
     };
 
-    mesh::data generate_geometry(const mesh& m);
+    Mesh::Data generateGeometry(const Mesh& m);
 
 };// end namespace givr

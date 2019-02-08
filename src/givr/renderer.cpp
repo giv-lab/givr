@@ -1,79 +1,79 @@
 #include "renderer.h"
 
 namespace givr {
-    void allocate_buffers(render_context &ctx) {
-        ctx.vao = std::make_unique<vertex_array>();
-        ctx.vao->alloc(1);
+    void allocateBuffers(RenderContext &ctx) {
+        ctx.vao = std::make_unique<VertexArray>();
+        ctx.vao->alloc();
 
         // Map - but don't upload indices data
-        std::unique_ptr<buffer> indices = std::make_unique<buffer>();
-        indices->alloc(1);
-        ctx.array_buffers.push_back(std::move(indices));
+        std::unique_ptr<Buffer> indices = std::make_unique<Buffer>();
+        indices->alloc();
+        ctx.arrayBuffers.push_back(std::move(indices));
 
-        auto allocate_buffer = [&ctx]() {
-            std::unique_ptr<buffer> vbo = std::make_unique<buffer>();
-            vbo->alloc(1);
-            ctx.array_buffers.push_back(std::move(vbo));
+        auto allocateBuffer = [&ctx]() {
+            std::unique_ptr<Buffer> vbo = std::make_unique<Buffer>();
+            vbo->alloc();
+            ctx.arrayBuffers.push_back(std::move(vbo));
         };
 
         // Upload / bind / map model data
-        allocate_buffer();//data.vertices);
-        allocate_buffer();//data.normals);
-        allocate_buffer();//data.uvs);
-        allocate_buffer();//data.colours);
+        allocateBuffer();//data.vertices);
+        allocateBuffer();//data.normals);
+        allocateBuffer();//data.uvs);
+        allocateBuffer();//data.colours);
     }
 
-    void upload_buffers(
-        render_context &ctx,
-        buffer_data const &data
+    void uploadBuffers(
+        RenderContext &ctx,
+        BufferData const &data
     ) {
         // Start by setting the appropriate context variables for rendering.
-        ctx.number_of_indices = data.indices.size();
-        ctx.start_index = 0;
-        ctx.end_index =  data.vertices.size() / 3;
+        ctx.numberOfIndices = data.indices.size();
+        ctx.startIndex = 0;
+        ctx.endIndex =  data.vertices.size() / 3;
 
-        std::uint16_t va_index = 0;
+        std::uint16_t vaIndex = 0;
         ctx.vao->bind();
 
-        std::unique_ptr<buffer> &indices = ctx.array_buffers[0];
+        std::unique_ptr<Buffer> &indices = ctx.arrayBuffers[0];
         indices->bind(GL_ELEMENT_ARRAY_BUFFER);
         indices->data(
                 GL_ELEMENT_ARRAY_BUFFER,
                 data.indices,
-                get_buffer_usage_type(data.indices_type));
+                getBufferUsageType(data.indicesType));
 
-        std::uint16_t buffer_index = 1;
-        auto apply_buffer = [&ctx, &va_index, &buffer_index](
+        std::uint16_t bufferIndex = 1;
+        auto applyBuffer = [&ctx, &vaIndex, &bufferIndex](
             GLenum type,
             GLuint size,
-            GLenum buffer_type,
+            GLenum bufferType,
             std::vector<float> const &data
         ) {
             // if this data piece is empty
             if (data.size() == 0) {
-                ++buffer_index;
+                ++bufferIndex;
                 return;
             }
-            std::unique_ptr<buffer> &vbo = ctx.array_buffers[buffer_index];
+            std::unique_ptr<Buffer> &vbo = ctx.arrayBuffers[bufferIndex];
             vbo->bind(type);
-            vbo->data(type, data, buffer_type);
-            glVertexAttribPointer(va_index, size, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-            glEnableVertexAttribArray(va_index);
-            ++va_index;
-            ++buffer_index;
+            vbo->data(type, data, bufferType);
+            glVertexAttribPointer(vaIndex, size, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+            glEnableVertexAttribArray(vaIndex);
+            ++vaIndex;
+            ++bufferIndex;
         };
 
         // Upload / bind / map model data
-        apply_buffer(GL_ARRAY_BUFFER, 3, get_buffer_usage_type(data.vertices_type), data.vertices);
-        apply_buffer(GL_ARRAY_BUFFER, 3, get_buffer_usage_type(data.normals_type), data.normals);
-        apply_buffer(GL_ARRAY_BUFFER, 2, get_buffer_usage_type(data.uvs_type), data.uvs);
-        apply_buffer(GL_ARRAY_BUFFER, 3, get_buffer_usage_type(data.colours_type), data.colours);
+        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.verticesType), data.vertices);
+        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.normalsType), data.normals);
+        applyBuffer(GL_ARRAY_BUFFER, 2, getBufferUsageType(data.uvsType), data.uvs);
+        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.coloursType), data.colours);
 
         ctx.vao->unbind();
 
-        ctx.array_buffers[0]->unbind(GL_ELEMENT_ARRAY_BUFFER);
-        if (ctx.array_buffers.size() > 1) {
-            ctx.array_buffers[1]->unbind(GL_ARRAY_BUFFER);
+        ctx.arrayBuffers[0]->unbind(GL_ELEMENT_ARRAY_BUFFER);
+        if (ctx.arrayBuffers.size() > 1) {
+            ctx.arrayBuffers[1]->unbind(GL_ARRAY_BUFFER);
         }
     }
 };// end namespace givr

@@ -3,10 +3,10 @@
 #include <cassert>
 #include <cmath>
 
-using sphere = givr::sphere;
+using Sphere = givr::Sphere;
 
-sphere::data givr::generate_geometry(sphere const &s) {
-    sphere::data data;
+Sphere::Data givr::generateGeometry(Sphere const &s) {
+    Sphere::Data data;
 
     // TODO: should make this reserve the space necessary for the sphere.
 

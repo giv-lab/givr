@@ -4,14 +4,14 @@
 
 namespace givr {
 
-    struct perspective_view {
+    struct PerspectiveView {
         float fovy = 45.f;
         float aspect = 4.f / 3.f;
-        float near_distance = 0.1f;
-        float far_distance = 1000.f;
-        void update_aspect_ratio(int width, int height);
+        float nearDistance = 0.1f;
+        float farDistance = 1000.f;
+        void updateAspectRatio(int width, int height);
     };
 
-    mat4f get_projection_matrix(perspective_view const &t);
+    mat4f getProjectionMatrix(PerspectiveView const &t);
 
 };// end namespace givr

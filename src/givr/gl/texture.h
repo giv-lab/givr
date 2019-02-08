@@ -6,24 +6,21 @@
 #include <array>
 
 namespace givr {
-    class texture
+    class Texture
     {
         public:
-            texture();
-            texture(GLuint num);
+            Texture();
             // TODO(lw): make a version that just receives the source directly.
-            ~texture();
+            ~Texture();
 
-            operator GLuint() const { return m_texture_ids[0]; }
-            void alloc(GLuint num);
+            operator GLuint() const { return m_textureID; }
+            void alloc();
             void dealloc();
             void bind(GLenum target);
-            void bind(GLenum target, GLuint i);
             void load(GLenum target, std::string filename, GLint level=0, GLenum format=GL_RGB);
 
         private:
-            GLuint m_number_textures = 0;
-            GLuint *m_texture_ids = nullptr;
+            GLuint m_textureID = 0;
 
     };
 };// end namespace givr

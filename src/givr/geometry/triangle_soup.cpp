@@ -1,9 +1,9 @@
 #include "triangle_soup.h"
 
-using triangle_soup = givr::triangle_soup;
+using TriangleSoup = givr::TriangleSoup;
 
-triangle_soup::data givr::generate_geometry(triangle_soup const &t) {
-    typename triangle_soup::data data;
+TriangleSoup::Data givr::generateGeometry(TriangleSoup const &t) {
+    typename TriangleSoup::Data data;
     data.vertices.reserve(9 * t.triangles.size());
     auto push_vertex = [&](std::vector<float> &v, vec3f const &p) {
         for(std::size_t i = 0; i < 3; ++i) {

@@ -11,92 +11,92 @@
 
 namespace givr {
 
-    struct flatfill_params {
+    struct FlatfillParams {
         vec3f colour;
     };
 
-    struct flatfill_instanced_render_context
-        : public instanced_render_context,
-          public flatfill_params
+    struct FlatfillInstancedRenderContext
+        : public InstancedRenderContext,
+          public FlatfillParams
     {
-        void set_uniforms(std::unique_ptr<program> const &p) const;
+        void setUniforms(std::unique_ptr<Program> const &p) const;
 
-        std::string get_vertex_shader_source() const;
-        std::string get_fragment_shader_source() const;
+        std::string getVertexShaderSource() const;
+        std::string getFragmentShaderSource() const;
     };
 
-    struct flatfill_render_context
-        : public render_context,
-          public flatfill_params
+    struct FlatfillRenderContext
+        : public RenderContext,
+          public FlatfillParams
     {
-        void set_uniforms(std::unique_ptr<program> const &p) const;
+        void setUniforms(std::unique_ptr<Program> const &p) const;
 
-        std::string get_vertex_shader_source() const;
-        std::string get_fragment_shader_source() const;
+        std::string getVertexShaderSource() const;
+        std::string getFragmentShaderSource() const;
     };
 
-    struct flatfill : public flatfill_params {
-        using instanced_render_context = flatfill_instanced_render_context;
-        using render_context = flatfill_render_context;
+    struct flatfill : public FlatfillParams {
+        using InstancedRenderContext = FlatfillInstancedRenderContext;
+        using RenderContext = FlatfillRenderContext;
     };
 
 
     template <typename GeometryT>
-    buffer_data fill_buffers(GeometryT const &g, flatfill const &) {
-        buffer_data data;
-        typename GeometryT::data d = generate_geometry(g);
-        static_assert(has_vertices<GeometryT>::value, "The flatfill style requires vertices. The geometry you are using does not provide them.");
-        data.vertices_type = d.vertices_type;
-        data.add_vertices(d.vertices);
-        if constexpr (has_indices<GeometryT>::value) {
-            data.indices_type = d.indices_type;
-            data.add_indices(d.indices);
+    BufferData fillBuffers(GeometryT const &g, flatfill const &) {
+        BufferData data;
+        typename GeometryT::Data d = generateGeometry(g);
+        static_assert(hasVertices<GeometryT>::value, "The flatfill style requires vertices. The geometry you are using does not provide them.");
+        data.verticesType = d.verticesType;
+        data.addVertices(d.vertices);
+        if constexpr (hasIndices<GeometryT>::value) {
+            data.indicesType = d.indicesType;
+            data.addIndices(d.indices);
         }
         // TODO: this could probably have per vertex colouring too.
         return std::move(data);
     }
 
     template <typename RenderContextT, typename GeometryT>
-    RenderContextT get_context(GeometryT &, flatfill const &f) {
+    RenderContextT getContext(GeometryT &, flatfill const &f) {
         auto ctx = RenderContextT{};
-        ctx.shader_program = std::make_unique<program>(
-            shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
-            shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
+        ctx.shaderProgram = std::make_unique<Program>(
+            Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
+            Shader{ctx.getFragmentShaderSource(), GL_FRAGMENT_SHADER}
         );
-        ctx.primitive = get_primitive<GeometryT>();
-        update_style(ctx, f);
+        ctx.primitive = getPrimitive<GeometryT>();
+        updateStyle(ctx, f);
         return ctx;
     }
 
     template <typename GeometryT>
-    flatfill::instanced_render_context
-    get_instanced_context(GeometryT &g, flatfill const &f) {
-        return get_context<flatfill::instanced_render_context, GeometryT>(g, f);
+    flatfill::InstancedRenderContext
+    getInstancedContext(GeometryT &g, flatfill const &f) {
+        return getContext<flatfill::InstancedRenderContext, GeometryT>(g, f);
     }
 
     template <typename GeometryT>
-    flatfill::render_context
-    get_context(GeometryT &g, flatfill const &f) {
-        return get_context<flatfill::render_context, GeometryT>(g, f);
+    flatfill::RenderContext
+    getContext(GeometryT &g, flatfill const &f) {
+        return getContext<flatfill::RenderContext, GeometryT>(g, f);
     }
 
     template <typename RenderContextT>
-    void update_style(RenderContextT &ctx, flatfill const &f) {
+    void updateStyle(RenderContextT &ctx, flatfill const &f) {
         ctx.colour = f.colour;
     }
 
     template <typename ViewContextT>
-    void draw(flatfill::instanced_render_context &ctx, ViewContextT const &view_ctx) {
-        draw_instanced(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
-            ctx.set_uniforms(program);
+    void draw(flatfill::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
+        drawInstanced(ctx, viewCtx, [&ctx](std::unique_ptr<Program> const &program) {
+            ctx.setUniforms(program);
         });
     }
 
     template <typename ViewContextT>
-    void draw(flatfill::render_context &ctx, ViewContextT const &view_ctx, mat4f model=mat4f(1.f)) {
-        draw_array(ctx, view_ctx, [&ctx, &model](std::unique_ptr<program> const &program) {
-            ctx.set_uniforms(program);
-            program->set_mat4("model", model);
+    void draw(flatfill::RenderContext &ctx, ViewContextT const &viewCtx, mat4f model=mat4f(1.f)) {
+        drawArray(ctx, viewCtx, [&ctx, &model](std::unique_ptr<Program> const &program) {
+            ctx.setUniforms(program);
+            program->setMat4("model", model);
         });
     }
 };// end namespace givr

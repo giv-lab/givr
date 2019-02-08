@@ -1,42 +1,42 @@
 #include "types.h"
 
-using primitive_type = givr::primitive_type;
-using buffer_usage_type = givr::buffer_usage_type;
+using PrimitiveType = givr::PrimitiveType;
+using BufferUsageType = givr::BufferUsageType;
 
-GLenum givr::get_mode(primitive_type const &t) {
+GLenum givr::getMode(PrimitiveType const &t) {
     switch(t) {
-        case primitive_type::POINTS:
+        case PrimitiveType::POINTS:
             return GL_POINTS;
-        case primitive_type::LINES:
+        case PrimitiveType::LINES:
             return GL_LINES;
-        case primitive_type::LINE_LOOP:
+        case PrimitiveType::LINE_LOOP:
             return GL_LINE_LOOP;
-        case primitive_type::LINE_STRIP:
+        case PrimitiveType::LINE_STRIP:
             return GL_LINE_STRIP;
-        case primitive_type::TRIANGLES:
+        case PrimitiveType::TRIANGLES:
             return GL_TRIANGLES;
-        case primitive_type::TRIANGLE_STRIP:
+        case PrimitiveType::TRIANGLE_STRIP:
             return GL_TRIANGLE_STRIP;
-        case primitive_type::TRIANGLE_FAN:
+        case PrimitiveType::TRIANGLE_FAN:
             return GL_TRIANGLE_FAN;
-        case primitive_type::LINES_ADJACENCY:
+        case PrimitiveType::LINES_ADJACENCY:
             return GL_LINES_ADJACENCY;
-        case primitive_type::LINE_STRIP_ADJACENCY:
+        case PrimitiveType::LINE_STRIP_ADJACENCY:
             return GL_LINE_STRIP_ADJACENCY;
-        case primitive_type::TRIANGLES_ADJACENCY:
+        case PrimitiveType::TRIANGLES_ADJACENCY:
             return GL_TRIANGLES_ADJACENCY;
-        case primitive_type::TRIANGLE_STRIP_ADJACENCY:
+        case PrimitiveType::TRIANGLE_STRIP_ADJACENCY:
             return GL_TRIANGLE_STRIP_ADJACENCY;
         default:
             return GL_TRIANGLES;
     }
 }
 
-GLenum givr::get_buffer_usage_type(buffer_usage_type const &d) {
+GLenum givr::getBufferUsageType(BufferUsageType const &d) {
     switch(d) {
-        case buffer_usage_type::STATIC_DRAW:
+        case BufferUsageType::STATIC_DRAW:
             return GL_STATIC_DRAW;
-        case buffer_usage_type::DYNAMIC_DRAW:
+        case BufferUsageType::DYNAMIC_DRAW:
             return GL_DYNAMIC_DRAW;
         default:
             return GL_STATIC_DRAW;

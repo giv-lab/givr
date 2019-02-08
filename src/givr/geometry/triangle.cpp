@@ -1,9 +1,9 @@
 #include "triangle.h"
 
-using triangle = givr::triangle;
+using Triangle = givr::Triangle;
 
-triangle::data givr::generate_geometry(triangle const &t) {
-    triangle::data data;
+Triangle::Data givr::generateGeometry(Triangle const &t) {
+    Triangle::Data data;
     vec3f normal = glm::normalize(glm::cross(t.p2-t.p1, t.p3-t.p1));
     data.normals.reserve(9);
     data.vertices.reserve(9);

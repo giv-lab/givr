@@ -6,23 +6,23 @@
 
 namespace givr {
 
-    struct cylinder {
+    struct Cylinder {
         vec3f p1;
         vec3f p2;
         float radius = 1.0f;
         std::size_t points = 20;
 
-        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
 
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
+            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
             std::vector<float> normals;
 
-            buffer_usage_type indices_type = buffer_usage_type::STATIC_DRAW;
+            BufferUsageType indicesType = BufferUsageType::STATIC_DRAW;
             std::vector<std::uint32_t> indices;
         };
     };
 
-    cylinder::data generate_geometry(cylinder const &l);
+    Cylinder::Data generateGeometry(Cylinder const &l);
 };// end namespace givr

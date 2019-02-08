@@ -31,19 +31,19 @@ Just like all C++ libraries, you must include it before you use it::
 --------------------------
 givr comes with a builtin camera and projection class::
 
-    givr::view_context<givr::turntable, givr::perspective_view> view;
+    givr::ViewContext<givr::TurnTable, givr::PerspectiveView> view;
 
 When your window changes size, you will want to inform the projection class
 of the change in aspect ratio. In GLFW::
 
      int width, height;
      glfwGetFramebufferSize(window, &width, &height);
-     view.projection.update_aspect_ratio(width, height);
+     view.projection.updateAspectRatio(width, height);
 
 3. Instantiate Geometry
 -----------------------
 givr comes with a number of different types of geometry.  For example a sphere,
-a mesh loaded from an OBJ file, lines, triangles and custom geometry.  
+a Mesh loaded from an OBJ file, lines, triangles and custom geometry.  
 
 Note that when you instantiate the geometry object, you are not actually
 building the geometry. It isn't until you create the renderable that the
@@ -51,23 +51,23 @@ geometry is created.
 
 A sphere is instantiated like this::
 
-   auto sphere = givr::sphere{};
+   auto sphere = givr::Sphere{};
 
 by default it is a unit sphere centred at the origin. See the geometry
 documentation for how to change its parameters.
 
-A mesh is instantiated like this::
+A Mesh is instantiated like this::
 
-    auto palm_tree = givr::mesh{"./models/Palm_Tree.obj"};
+    auto palm_tree = givr::Mesh{"./models/Palm_Tree.obj"};
 
 meshes are placed wherever their obj file places them. Usually this is
 centred at the origin, but it's not guaranteed.
 
 Custom Geometry is instantiated like this::
 
-    givr::custom_geometry line_geometry;
-    line_geometry.vertices.push_back(vec3f{10.0, 10.0, 0.0});
-    line_geometry.vertices.push_back(vec3f{-10.0, -10.0, 0.0});
+    givr::CustomGeometry customGeometry;
+    customGeometry.vertices.push_back(vec3f{10.0, 10.0, 0.0});
+    customGeometry.vertices.push_back(vec3f{-10.0, -10.0, 0.0});
 
 custom geometry classes also have fields for normals, colours,
 uv coordinates, and indices if this is indexed geometry.
@@ -82,9 +82,9 @@ style for rendering lines.
 
 Phong style instantiation::
 
-   givr::phong phong_style;
-   phong_style.colour = vec3f{1.0, 1.0, 0.1529};
-   phong_style.light_position = vec3f{2.0, 2.0, 15.0};
+   givr::Phong phongStyle;
+   phongStyle.colour = vec3f{1.0, 1.0, 0.1529};
+   phongStyle.lightPosition = vec3f{2.0, 2.0, 15.0};
 
 See :ref:`givr-styles` for more details on all of the types of styles
 that are supported.
@@ -99,16 +99,16 @@ for each instance.
 
 An example of creating the non-instanced renderable::
 
-   auto lines = create_renderable(line_geometry, linestyle);
+   auto lines = createRenderable(customGeometry, lineStyle);
 
 An example of creating the instanced renderable::
 
-   auto lines = create_instanced_renderable(line_geometry, linestyle);
+   auto lines = createInstancedRenderable(customGeometry, lineStyle);
 
 6. (Optional) Add instances
 ---------------------------
 If you are using the instanced renderable, then you must add individual
-instances using the `add_instance` function.  It takes the renderable as
+instances using the `addInstance` function.  It takes the renderable as
 the first parameter and a 4x4 model matrix as the second renderable.
 
 You can use glm matrix transform functions to instantiate the matrix:
@@ -118,7 +118,7 @@ Adding instances looks approximately like this::
 
    // Use GLM TO translate to a specific location.
    mat4f m = translate(mat4f{1.f}, vec3f{0., 5.0, 0.});
-   add_instance(instanced_spheres, m);
+   addInstance(instanced_spheres, m);
 
 7. Draw
 -------
@@ -136,7 +136,7 @@ identical with one minor difference.  The following syntax works with both::
 In this version you pass in only your renderable and the view you created
 with the associated camera/projection objects. If your renderable is an
 instanced renderable it will draw as many instances as you setup when you
-called `add_instance`. If your renderable is not an instanced renderable
+called `addInstance`. If your renderable is not an instanced renderable
 then it will draw a single instance with the identity matrix as the model
 transform matrix. This usually places the geometry at the origin.
 

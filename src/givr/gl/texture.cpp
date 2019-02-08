@@ -2,52 +2,36 @@
 #include <cassert>
 #include "stb_image.h"
 
-using texture = givr::texture;
+using Texture = givr::Texture;
 
-texture::texture(
-) : m_number_textures{0}
-  , m_texture_ids{nullptr}
+Texture::Texture(
+) : m_textureID{0}
 {
-}
-texture::texture(
-    GLuint num
-) : m_number_textures{num}
-  , m_texture_ids{nullptr}
-{
-    alloc(num);
+    alloc();
 }
 // TODO(lw): make a version that just receives the source directly.
-texture::~texture() {
+Texture::~Texture() {
+    dealloc();
 }
 
-void texture::alloc(GLuint num)
+void Texture::alloc()
 {
     dealloc();
-    m_number_textures = num;
-    m_texture_ids = new GLuint[m_number_textures];
-    glGenTextures(m_number_textures, m_texture_ids);
+    glGenTextures(1, &m_textureID);
 }
-void texture::dealloc()
+void Texture::dealloc()
 {
-    if (m_texture_ids) {
-        glDeleteBuffers(m_number_textures, m_texture_ids);
-        delete[] m_texture_ids;
-        m_number_textures = 0;
+    if (m_textureID) {
+        glDeleteBuffers(1, &m_textureID);
     }
 }
 
-void texture::bind(GLenum target)
+void Texture::bind(GLenum target)
 {
-    bind(target, 0);
+    glBindTexture(target, m_textureID);
 }
 
-void texture::bind(GLenum target, GLuint i)
-{
-    assert(i < m_number_textures);
-    glBindTexture(target, m_texture_ids[i]);
-}
-
-void texture::load(GLenum target, std::string filename, GLint level, GLenum format)
+void Texture::load(GLenum target, std::string filename, GLint level, GLenum format)
 {
     // load and generate the texture
     int width, height, channels;

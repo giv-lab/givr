@@ -11,62 +11,62 @@
 
 namespace givr {
 
-    struct lines_params {
+    struct LinesParams {
         vec3f colour;
-        float line_width = 1.f;
+        float lineWidth = 1.f;
     };
 
-    struct lines_render_context
-        : public render_context,
-          public lines_params
+    struct LinesRenderContext
+        : public RenderContext,
+          public LinesParams
     {
 
-        void set_uniforms(std::unique_ptr<program> const &p) const;
+        void setUniforms(std::unique_ptr<Program> const &p) const;
 
-        std::string get_vertex_shader_source() const;
-        std::string get_fragment_shader_source() const;
+        std::string getVertexShaderSource() const;
+        std::string getFragmentShaderSource() const;
     };
 
-    struct lines_instanced_render_context
-        : public instanced_render_context,
-          public lines_params
+    struct LinesInstancedRenderContext
+        : public InstancedRenderContext,
+          public LinesParams
     {
 
-        void set_uniforms(std::unique_ptr<program> const &p) const;
+        void setUniforms(std::unique_ptr<Program> const &p) const;
 
-        std::string get_vertex_shader_source() const;
-        std::string get_fragment_shader_source() const;
+        std::string getVertexShaderSource() const;
+        std::string getFragmentShaderSource() const;
     };
 
-    struct lines : public lines_params {
-        using render_context = lines_render_context;
-        using instanced_render_context = lines_instanced_render_context;
+    struct Lines : public LinesParams {
+        using RenderContext = LinesRenderContext;
+        using InstancedRenderContext = LinesInstancedRenderContext;
     };
 
     template <typename GeometryT>
-    buffer_data fill_buffers(GeometryT const &g, lines const &) {
+    BufferData fillBuffers(GeometryT const &g, Lines const &) {
         static_assert(
-            givr::is_line_based<GeometryT>(),
+            givr::isLineBased<GeometryT>(),
             R"error(
-            The lines style requires LINES, LINE_LOOP, LINE_STRIP,
+            The Lines style requires LINES, LINE_LOOP, LINE_STRIP,
             LINES_ADJACENCY, or LINE_STRIP_ADJACENCY for the primitive
             type. The geometry you use is not of this type"
             )error"
         );
         static_assert(
-            has_vertices<GeometryT>::value,
+            hasVertices<GeometryT>::value,
             R"error(
-            The lines style requires vertices. The geometry you are using
+            The Lines style requires vertices. The geometry you are using
             does not provide them.
             )error"
         );
-        buffer_data data;
-        typename GeometryT::data d = generate_geometry(g);
-        data.add_vertices(d.vertices);
+        BufferData data;
+        typename GeometryT::Data d = generateGeometry(g);
+        data.addVertices(d.vertices);
 
-        if constexpr (has_indices<GeometryT>::value) {
-            data.indices_type = d.indices_type;
-            data.add_indices(d.indices);
+        if constexpr (hasIndices<GeometryT>::value) {
+            data.indicesType = d.indicesType;
+            data.addIndices(d.indices);
         }
 
         // TODO: This could optionally support per vertex colouring too.
@@ -74,52 +74,52 @@ namespace givr {
     }
 
     template <typename RenderContextT, typename GeometryT>
-    RenderContextT get_context(GeometryT &, lines const &l) {
+    RenderContextT getContext(GeometryT &, Lines const &l) {
         auto ctx = RenderContextT{};
-        ctx.shader_program = std::make_unique<program>(
-            shader{ctx.get_vertex_shader_source(), GL_VERTEX_SHADER},
-            shader{ctx.get_fragment_shader_source(), GL_FRAGMENT_SHADER}
+        ctx.shaderProgram = std::make_unique<Program>(
+            Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
+            Shader{ctx.getFragmentShaderSource(), GL_FRAGMENT_SHADER}
         );
         // TODO: Want a compile time guard to ensure geometry and style are compatible.
-        ctx.primitive = get_primitive<GeometryT>();
-        update_style(ctx, l);
+        ctx.primitive = getPrimitive<GeometryT>();
+        updateStyle(ctx, l);
         return ctx;
     }
 
     template <typename GeometryT>
-    lines::render_context
-    get_context(GeometryT &g, lines const &l) {
-        return get_context<lines::render_context, GeometryT>(g, l);
+    Lines::RenderContext
+    getContext(GeometryT &g, Lines const &l) {
+        return getContext<Lines::RenderContext, GeometryT>(g, l);
     }
 
     template <typename GeometryT>
-    lines::instanced_render_context
-    get_instanced_context(GeometryT &g, lines const &l) {
-        return get_context<lines::instanced_render_context, GeometryT>(g, l);
+    Lines::InstancedRenderContext
+    getInstancedContext(GeometryT &g, Lines const &l) {
+        return getContext<Lines::InstancedRenderContext, GeometryT>(g, l);
     }
 
     template <typename RenderContextT>
-    void update_style(RenderContextT &ctx, lines const &l) {
+    void updateStyle(RenderContextT &ctx, Lines const &l) {
         ctx.colour = l.colour;
-        ctx.line_width = l.line_width;
+        ctx.lineWidth = l.lineWidth;
     }
 
     template <typename ViewContextT>
-    void draw(lines::instanced_render_context &ctx, ViewContextT const &view_ctx) {
+    void draw(Lines::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
         glEnable(GL_LINE_SMOOTH);
-        glLineWidth(ctx.line_width);
-        draw_instanced(ctx, view_ctx, [&ctx](std::unique_ptr<program> const &program) {
-            ctx.set_uniforms(program);
+        glLineWidth(ctx.lineWidth);
+        drawInstanced(ctx, viewCtx, [&ctx](std::unique_ptr<Program> const &program) {
+            ctx.setUniforms(program);
         });
     }
 
     template <typename ViewContextT>
-    void draw(lines::render_context &ctx, ViewContextT const &view_ctx, mat4f model=mat4f(1.f)) {
+    void draw(Lines::RenderContext &ctx, ViewContextT const &viewCtx, mat4f model=mat4f(1.f)) {
         glEnable(GL_LINE_SMOOTH);
-        glLineWidth(ctx.line_width);
-        draw_array(ctx, view_ctx, [&ctx, &model](std::unique_ptr<program> const &program) {
-            ctx.set_uniforms(program);
-            program->set_mat4("model", model);
+        glLineWidth(ctx.lineWidth);
+        drawArray(ctx, viewCtx, [&ctx, &model](std::unique_ptr<Program> const &program) {
+            ctx.setUniforms(program);
+            program->setMat4("model", model);
         });
     }
 

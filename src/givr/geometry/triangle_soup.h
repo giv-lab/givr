@@ -7,24 +7,24 @@
 
 namespace givr {
 
-    struct triangle_soup {
-        std::vector<triangle> triangles;
+    struct TriangleSoup {
+        std::vector<Triangle> triangles;
 
-        void add_line(triangle t) {
+        void addLine(Triangle t) {
             triangles.push_back(t);
         }
-        void add_line(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
-            triangles.push_back(triangle{p1, p2, p3});
+        void addLine(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
+            triangles.push_back(Triangle{p1, p2, p3});
         }
 
-        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
 
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
+            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
             std::vector<float> normals;
         };
     };
 
-    triangle_soup::data generate_geometry(triangle_soup const &t);
+    TriangleSoup::Data generateGeometry(TriangleSoup const &t);
 };// end namespace givr

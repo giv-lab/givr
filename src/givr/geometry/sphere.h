@@ -7,15 +7,15 @@
 
 namespace givr {
 
-    struct sphere {
+    struct Sphere {
         std::size_t azimuthPoints = 20;
         std::size_t altitudePoints = 20;
 
-        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
-            buffer_usage_type indices_type = buffer_usage_type::STATIC_DRAW;
-            buffer_usage_type uvs_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType indicesType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType uvsType = BufferUsageType::STATIC_DRAW;
 
             std::vector<float> vertices;
             std::vector<float> normals;
@@ -26,6 +26,6 @@ namespace givr {
     };
 
 
-    sphere::data generate_geometry(sphere const &s);
+    Sphere::Data generateGeometry(Sphere const &s);
 
 };// end namespace givr

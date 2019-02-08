@@ -1,22 +1,22 @@
 #include "flatfill.h"
 
-using frc = givr::flatfill_render_context;
-using firc = givr::flatfill_instanced_render_context;
+using frc = givr::FlatfillRenderContext;
+using firc = givr::FlatfillInstancedRenderContext;
 
 template <typename RenderContextT>
-void set_flatfill_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
-    p->set_vec3("colour", ctx.colour);
+void setFlatfillUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
+    p->setVec3("colour", ctx.colour);
 }
 
-void frc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_flatfill_uniforms(*this, p);
+void frc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
+    setFlatfillUniforms(*this, p);
 }
-void firc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_flatfill_uniforms(*this, p);
+void firc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
+    setFlatfillUniforms(*this, p);
 }
 
-std::string flatfill_vertex_source(std::string model_source) {
-    return model_source + std::string(R"shader( mat4 model;
+std::string flatfillVertexSource(std::string modelSource) {
+    return modelSource + std::string(R"shader( mat4 model;
         attribute vec3 position;
 
         uniform mat4 view;
@@ -32,7 +32,7 @@ std::string flatfill_vertex_source(std::string model_source) {
     );
 }
 
-std::string flatfill_fragment_source() {
+std::string flatfillFragmentSource() {
     return std::string(R"shader(
         uniform vec3 colour;
 
@@ -45,15 +45,15 @@ std::string flatfill_fragment_source() {
     );
 }
 
-std::string frc::get_vertex_shader_source() const {
-    return flatfill_vertex_source("uniform");
+std::string frc::getVertexShaderSource() const {
+    return flatfillVertexSource("uniform");
 }
-std::string frc::get_fragment_shader_source() const {
-    return flatfill_fragment_source();
+std::string frc::getFragmentShaderSource() const {
+    return flatfillFragmentSource();
 }
-std::string firc::get_vertex_shader_source() const {
-    return flatfill_vertex_source("attribute");
+std::string firc::getVertexShaderSource() const {
+    return flatfillVertexSource("attribute");
 }
-std::string firc::get_fragment_shader_source() const {
-    return flatfill_fragment_source();
+std::string firc::getFragmentShaderSource() const {
+    return flatfillFragmentSource();
 }

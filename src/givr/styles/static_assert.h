@@ -5,31 +5,31 @@ namespace givr {
 
     // Checking for normals
     template <typename T, typename = int>
-    struct has_normals : std::false_type { };
+    struct hasNormals : std::false_type { };
     template <typename T>
-    struct has_normals <T, decltype((void) T::data::normals, 0)> : std::true_type { };
+    struct hasNormals <T, decltype((void) T::Data::normals, 0)> : std::true_type { };
 
     // Checking for vertices
     template <typename T, typename = int>
-    struct has_vertices : std::false_type { };
+    struct hasVertices : std::false_type { };
     template <typename T>
-    struct has_vertices <T, decltype((void) T::data::vertices, 0)> : std::true_type { };
+    struct hasVertices <T, decltype((void) T::Data::vertices, 0)> : std::true_type { };
 
     // Checking for indices
     template <typename T, typename = int>
-    struct has_indices : std::false_type { };
+    struct hasIndices : std::false_type { };
     template <typename T>
-    struct has_indices <T, decltype((void) T::data::indices, 0)> : std::true_type { };
+    struct hasIndices <T, decltype((void) T::Data::indices, 0)> : std::true_type { };
 
     // Checking for colours
     template <typename T, typename = int>
-    struct has_colours : std::false_type { };
+    struct hasColours : std::false_type { };
     template <typename T>
-    struct has_colours <T, decltype((void) T::data::colours, 0)> : std::true_type { };
+    struct hasColours <T, decltype((void) T::Data::colours, 0)> : std::true_type { };
 
     // Checking for uvs
     template <typename T, typename = int>
-    struct has_uvs : std::false_type { };
+    struct hasUvs : std::false_type { };
     template <typename T>
-    struct has_uvs <T, decltype((void) T::data::uvs, 0)> : std::true_type { };
+    struct hasUvs <T, decltype((void) T::Data::uvs, 0)> : std::true_type { };
 };

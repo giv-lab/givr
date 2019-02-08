@@ -1,48 +1,48 @@
 #include "lines.h"
 
-using lrc = givr::lines_render_context;
-using lirc = givr::lines_instanced_render_context;
+using lrc = givr::LinesRenderContext;
+using lirc = givr::LinesInstancedRenderContext;
 
 template <typename RenderContextT>
-void set_lines_uniforms(RenderContextT const &ctx, std::unique_ptr<givr::program> const &p) {
-    p->set_vec3("colour", ctx.colour);
+void setLinesUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
+    p->setVec3("colour", ctx.colour);
 }
 
-void lrc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_lines_uniforms(*this, p);
+void lrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
+    setLinesUniforms(*this, p);
 }
-void lirc::set_uniforms(std::unique_ptr<givr::program> const &p) const {
-    set_lines_uniforms(*this, p);
+void lirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
+    setLinesUniforms(*this, p);
 }
 
-std::string lines_vertex_source(std::string model_source) {
-    return model_source + std::string(R"shader( mat4 model;
+std::string linesVertexSource(std::string modelSource) {
+    return modelSource + std::string(R"shader( mat4 model;
         attribute vec3 position;
 
         uniform mat4 view;
         uniform mat4 projection;
 
-        varying vec3 frag_pos;
+        varying vec3 fragPosition;
 
         void main(){
             mat4 modelview = model * view;
             mat4 mvp = projection * modelview;
             gl_Position = mvp * vec4(position, 1.0);
-            vec4 model_vert = modelview * vec4(position, 1.0);
-            frag_pos = vec3(model_vert);
+            vec4 modelVert = modelview * vec4(position, 1.0);
+            fragPosition = vec3(modelVert);
         }
 
         )shader"
     );
 }
 
-std::string lines_fragment_source() {
+std::string linesFragmentSource() {
     return std::string(R"shader(
         uniform vec3 colour;
-        uniform vec3 light_position;
-        uniform vec3 view_pos;
+        uniform vec3 lightPosition;
+        uniform vec3 viewPosition;
 
-        varying vec3 frag_pos;
+        varying vec3 fragPosition;
 
         void main()
         {
@@ -54,19 +54,19 @@ std::string lines_fragment_source() {
     );
 }
 
-std::string lrc::get_vertex_shader_source() const {
-    return lines_vertex_source("uniform");
+std::string lrc::getVertexShaderSource() const {
+    return linesVertexSource("uniform");
 }
 
-std::string lrc::get_fragment_shader_source() const {
-    return lines_fragment_source();
+std::string lrc::getFragmentShaderSource() const {
+    return linesFragmentSource();
 }
 
-std::string lirc::get_vertex_shader_source() const {
-    return lines_vertex_source("attribute");
+std::string lirc::getVertexShaderSource() const {
+    return linesVertexSource("attribute");
 }
 
-std::string lirc::get_fragment_shader_source() const {
-    return lines_fragment_source();
+std::string lirc::getFragmentShaderSource() const {
+    return linesFragmentSource();
 }
 

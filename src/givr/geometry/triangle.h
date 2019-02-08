@@ -6,19 +6,19 @@
 
 namespace givr {
 
-    struct triangle {
+    struct Triangle {
         vec3f p1;
         vec3f p2;
         vec3f p3;
 
-        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
 
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
+            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
             std::vector<float> normals;
         };
     };
 
-    triangle::data generate_geometry(triangle const &t);
+    Triangle::Data generateGeometry(Triangle const &t);
 };// end namespace givr

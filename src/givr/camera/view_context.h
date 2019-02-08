@@ -4,20 +4,20 @@
 
 namespace givr {
     template <typename CameraT, typename ProjectionT>
-    struct view_context {
+    struct ViewContext {
         CameraT camera;
         ProjectionT projection;
     };
     template <typename CameraT>
-    mat4f get_view_matrix(CameraT const &c) {
-        return CameraT::get_view_matrix(c);
+    mat4f getViewMatrix(CameraT const &c) {
+        return CameraT::getViewMatrix(c);
     }
     template <typename CameraT>
-    vec3f get_view_position(CameraT const &c) {
-        return CameraT::get_view_position(c);
+    vec3f getViewPosition(CameraT const &c) {
+        return CameraT::getViewPosition(c);
     }
     template <typename ProjectionT>
-    vec3f get_projection_matrix(ProjectionT const &p) {
-        return ProjectionT::get_projection_matrix(p);
+    vec3f getProjectionMatrix(ProjectionT const &p) {
+        return ProjectionT::getProjectionMatrix(p);
     }
 };// end namespace givr

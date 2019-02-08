@@ -1,8 +1,8 @@
 #include "line.h"
 
-using line = givr::line;
-line::data givr::generate_geometry(line const &l) {
-    line::data data;
+using Line = givr::Line;
+Line::Data givr::generateGeometry(Line const &l) {
+    Line::Data data;
     data.vertices.reserve(6);
     data.vertices.push_back(l.p1[0]);
     data.vertices.push_back(l.p1[1]);

@@ -8,9 +8,9 @@
 #include <utility>
 #include <iostream>
 
-using cylinder = givr::cylinder;
-cylinder::data givr::generate_geometry(cylinder const &l) {
-    cylinder::data data;
+using Cylinder = givr::Cylinder;
+Cylinder::Data givr::generateGeometry(Cylinder const &l) {
+    Cylinder::Data data;
 
     auto add = [&](std::vector<float> &v, vec3f const &p) {
         v.push_back(p[0]);

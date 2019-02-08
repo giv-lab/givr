@@ -3,23 +3,20 @@
 #include "../gl.h"
 
 namespace givr {
-    class vertex_array {
+    class VertexArray {
         public:
-            vertex_array() = default;
-            vertex_array(GLuint num);
+            VertexArray();
             // TODO(lw): make a version that just receives the source directly.
-            ~vertex_array();
+            ~VertexArray();
 
-            operator GLuint() const { return m_vertex_array_ids[0]; }
-            void alloc(GLuint num);
+            operator GLuint() const { return m_vertexArrayID; }
+            void alloc();
             void dealloc();
             void bind();
-            void bind(GLuint i);
             void unbind();
 
         private:
-            GLuint m_number_arrays = 0;
-            GLuint *m_vertex_array_ids = nullptr;
+            GLuint m_vertexArrayID = 0;
 
     };
 };// end namespace givr

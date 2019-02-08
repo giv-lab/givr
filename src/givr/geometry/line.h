@@ -6,15 +6,15 @@
 
 namespace givr {
 
-    struct line {
+    struct Line {
         vec3f p1;
         vec3f p2;
 
-        struct data : public vertex_array_data<primitive_type::LINES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
+        struct Data : public VertextArrayData<PrimitiveType::LINES> {
+            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
         };
     };
 
-    line::data generate_geometry(line const &l);
+    Line::Data generateGeometry(Line const &l);
 };// end namespace givr
