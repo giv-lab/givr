@@ -21,14 +21,14 @@ namespace givr {
         BufferUsageType coloursType;
         std::vector<float> colours;
 
-        void addIndices(std::vector<GLuint> const &new_indices);
-        void addVertices(std::vector<float> const &new_vertices);
-        void addVertices(std::vector<vec3f> const &new_vertices);
-        void addNormals(std::vector<float> const &new_normals);
-        void addNormals(std::vector<vec3f> const &new_normals);
-        void addUvs(std::vector<float> const &new_uvs);
-        //TODO: void addUvs(std::vector<vec2f> const &new_uvs);
-        void addColours(std::vector<float> const &new_colours);
-        void addColours(std::vector<vec3f> const &new_colours);
+        void addIndices(std::vector<GLuint> const &newIndices);
+        void addVertices(std::vector<float> const &newVertices);
+        void addVertices(std::vector<vec3f> const &newVertices);
+        void addNormals(std::vector<float> const &newNormals);
+        void addNormals(std::vector<vec3f> const &newNormals);
+        void addUvs(std::vector<float> const &newUvs);
+        //TODO: void addUvs(std::vector<vec2f> const &newUvs);
+        void addColours(std::vector<float> const &newColours);
+        void addColours(std::vector<vec3f> const &newColours);
     }; // end struct BufferData
 };// end namespace givr
