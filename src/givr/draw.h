@@ -5,7 +5,7 @@
 
 //------------------------------------------------------------------------------
 // Example Code:
-// flatfill style{.colour=yellow};
+// FlatShading style{.colour=yellow};
 // Sphere geom{.radius=1};
 // auto spheres = createInstancedRenderable(geom, style);
 // for (..) {

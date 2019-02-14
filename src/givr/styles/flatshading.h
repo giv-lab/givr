@@ -11,13 +11,13 @@
 
 namespace givr {
 
-    struct FlatfillParams {
+    struct FlatShadingParams {
         vec3f colour;
     };
 
-    struct FlatfillInstancedRenderContext
+    struct FlatShadingInstancedRenderContext
         : public InstancedRenderContext,
-          public FlatfillParams
+          public FlatShadingParams
     {
         void setUniforms(std::unique_ptr<Program> const &p) const;
 
@@ -25,9 +25,9 @@ namespace givr {
         std::string getFragmentShaderSource() const;
     };
 
-    struct FlatfillRenderContext
+    struct FlatShadingRenderContext
         : public RenderContext,
-          public FlatfillParams
+          public FlatShadingParams
     {
         void setUniforms(std::unique_ptr<Program> const &p) const;
 
@@ -35,17 +35,17 @@ namespace givr {
         std::string getFragmentShaderSource() const;
     };
 
-    struct flatfill : public FlatfillParams {
-        using InstancedRenderContext = FlatfillInstancedRenderContext;
-        using RenderContext = FlatfillRenderContext;
+    struct FlatShading : public FlatShadingParams {
+        using InstancedRenderContext = FlatShadingInstancedRenderContext;
+        using RenderContext = FlatShadingRenderContext;
     };
 
 
     template <typename GeometryT>
-    BufferData fillBuffers(GeometryT const &g, flatfill const &) {
+    BufferData fillBuffers(GeometryT const &g, FlatShading const &) {
         BufferData data;
         typename GeometryT::Data d = generateGeometry(g);
-        static_assert(hasVertices<GeometryT>::value, "The flatfill style requires vertices. The geometry you are using does not provide them.");
+        static_assert(hasVertices<GeometryT>::value, "The FlatShading style requires vertices. The geometry you are using does not provide them.");
         data.verticesType = d.verticesType;
         data.addVertices(d.vertices);
         if constexpr (hasIndices<GeometryT>::value) {
@@ -57,7 +57,7 @@ namespace givr {
     }
 
     template <typename RenderContextT, typename GeometryT>
-    RenderContextT getContext(GeometryT &, flatfill const &f) {
+    RenderContextT getContext(GeometryT &, FlatShading const &f) {
         auto ctx = RenderContextT{};
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
@@ -69,31 +69,31 @@ namespace givr {
     }
 
     template <typename GeometryT>
-    flatfill::InstancedRenderContext
-    getInstancedContext(GeometryT &g, flatfill const &f) {
-        return getContext<flatfill::InstancedRenderContext, GeometryT>(g, f);
+    FlatShading::InstancedRenderContext
+    getInstancedContext(GeometryT &g, FlatShading const &f) {
+        return getContext<FlatShading::InstancedRenderContext, GeometryT>(g, f);
     }
 
     template <typename GeometryT>
-    flatfill::RenderContext
-    getContext(GeometryT &g, flatfill const &f) {
-        return getContext<flatfill::RenderContext, GeometryT>(g, f);
+    FlatShading::RenderContext
+    getContext(GeometryT &g, FlatShading const &f) {
+        return getContext<FlatShading::RenderContext, GeometryT>(g, f);
     }
 
     template <typename RenderContextT>
-    void updateStyle(RenderContextT &ctx, flatfill const &f) {
+    void updateStyle(RenderContextT &ctx, FlatShading const &f) {
         ctx.colour = f.colour;
     }
 
     template <typename ViewContextT>
-    void draw(flatfill::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
+    void draw(FlatShading::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
         drawInstanced(ctx, viewCtx, [&ctx](std::unique_ptr<Program> const &program) {
             ctx.setUniforms(program);
         });
     }
 
     template <typename ViewContextT>
-    void draw(flatfill::RenderContext &ctx, ViewContextT const &viewCtx, mat4f model=mat4f(1.f)) {
+    void draw(FlatShading::RenderContext &ctx, ViewContextT const &viewCtx, mat4f model=mat4f(1.f)) {
         drawArray(ctx, viewCtx, [&ctx, &model](std::unique_ptr<Program> const &program) {
             ctx.setUniforms(program);
             program->setMat4("model", model);
