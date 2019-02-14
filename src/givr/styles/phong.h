@@ -6,18 +6,21 @@
 #include "../renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
+#include "style.h"
 
 #include <string>
 
 namespace givr {
-    struct PhongParameters {
-        vec3f colour;
-        vec3f lightPosition;
-        bool perVertexColour = false;
-        float ambientFactor = 0.05f;
-        float specularFactor = 0.3f;
-        float phongExponent = 8.0f;
+namespace style {
+    struct PhongParameters : public Style<
+        Colour,
+        LightPosition,
+        SpecularFactor,
+        AmbientFactor,
+        PhongExponent,
+        PerVertexColour> {
     };
+
 
     struct PhongInstancedRenderContext
         :
@@ -41,19 +44,59 @@ namespace givr {
         std::string getFragmentShaderSource() const;
     };
 
-    struct Phong : PhongParameters {
+    struct PhongStyle : PhongParameters {
         using InstancedRenderContext = PhongInstancedRenderContext;
         using RenderContext = PhongRenderContext;
     };
 
+    template <typename... Args> PhongStyle Phong(Args &&... args) {
+        using required_args =
+                std::tuple<LightPosition, Colour>;
+
+        using namespace utility;
+        static_assert(!has_duplicate_types<Args...>,
+            "The arguments you passed in have duplicate parameters");
+
+        static_assert(is_subset_of<required_args, std::tuple<Args...>>,
+            "LightPosition, Colour, SpecularFactor, AmbientFactor, and "
+            "PhongExponent are required parameters for phong. Please "
+            "provide them.");
+        static_assert(is_subset_of<std::tuple<Args...>, PhongStyle::Args>,
+            "You have provided incorrect parameters for phong. "
+            "LightPosition, Colour, SpecularFactor and AmbientFactor are "
+            "required. PhongExponent and PerVertexColor are optional.");
+        static_assert(sizeof...(args) <= std::tuple_size<PhongStyle::Args>::value,
+            "You have provided incorrect parameters for phong. "
+            "LightPosition, Colour, SpecularFactor and AmbientFactor are "
+            "required. PhongExponent and PerVertexColor are optional.");
+        PhongStyle p;
+        // Default values
+        p.set(PerVertexColour(false));
+        p.set(AmbientFactor(0.05f));
+        p.set(SpecularFactor(0.3f));
+        p.set(PhongExponent(8.0f));
+        p.set(std::forward<Args>(args)...);
+        return p;
+    }
+
     template <typename GeometryT>
-    BufferData fillBuffers(GeometryT const &g, Phong const &) {
+    BufferData fillBuffers(GeometryT const &g, PhongStyle const &) {
         static_assert(
             givr::isTriangleBased<GeometryT>(),
-            "The Phong style requires TRIANGLES, TRIANGLE_STRIP, TRIANGLE_FAN, TRIANGLES_ADJACENCY, or TRIANGLE_STRIP_ADJACENCY for the primitive type. The geometry you use is not of this type"
+            "The PhongStyle requires TRIANGLES, TRIANGLE_STRIP, TRIANGLE_FAN, "
+            "TRIANGLES_ADJACENCY, or TRIANGLE_STRIP_ADJACENCY for the primitive "
+            "type. The geometry you use is not of this type"
         );
-        static_assert(hasVertices<GeometryT>::value, "The Phong style requires vertices. The geometry you are using does not provide them.");
-        static_assert(hasNormals<GeometryT>::value, "The Phong style requires normals. The geometry you are using does not provide them.");
+        static_assert(
+            hasVertices<GeometryT>::value,
+            "The Phong style requires vertices. The geometry you are using does "
+            "not provide them."
+        );
+        static_assert(
+            hasNormals<GeometryT>::value,
+            "The Phong style requires normals. The geometry you are using does "
+            "not provide them."
+        );
 
         BufferData data;
         typename GeometryT::Data d = generateGeometry(g);
@@ -74,8 +117,8 @@ namespace givr {
     }
 
     template <typename RenderContextT, typename GeometryT>
-    RenderContextT getContext(GeometryT &, Phong const &p) {
-        auto ctx = RenderContextT{};
+    RenderContextT getContext(GeometryT &, PhongStyle const &p) {
+        RenderContextT ctx;
         // TODO: this probably belongs in the constructor
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
@@ -87,30 +130,25 @@ namespace givr {
     }
 
     template <typename GeometryT>
-    Phong::InstancedRenderContext
-    getInstancedContext(GeometryT &g, Phong const &p) {
-        return getContext<Phong::InstancedRenderContext, GeometryT>(g, p);
+    PhongStyle::InstancedRenderContext
+    getInstancedContext(GeometryT &g, PhongStyle const &p) {
+        return getContext<PhongStyle::InstancedRenderContext, GeometryT>(g, p);
     }
 
     template <typename GeometryT>
-    Phong::RenderContext
-    getContext(GeometryT &g, Phong const &p) {
-        return getContext<Phong::RenderContext, GeometryT>(g, p);
+    PhongStyle::RenderContext
+    getContext(GeometryT &g, PhongStyle const &p) {
+        return getContext<PhongStyle::RenderContext, GeometryT>(g, p);
     }
 
     template <typename RenderContextT>
-    void updateStyle(RenderContextT &ctx, Phong const &p) {
-        ctx.colour = p.colour;
-        ctx.lightPosition = p.lightPosition;
-        ctx.perVertexColour = p.perVertexColour;
-        ctx.ambientFactor = p.ambientFactor;
-        ctx.specularFactor = p.specularFactor;
-        ctx.phongExponent = p.phongExponent;
+    void updateStyle(RenderContextT &ctx, PhongStyle const &p) {
+        ctx.set(p.args);
     }
 
     // TODO: come up with a better way to not duplicate OpenGL state setup
     template <typename ViewContextT>
-    void draw(Phong::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
+    void draw(PhongStyle::InstancedRenderContext &ctx, ViewContextT const &viewCtx) {
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
@@ -122,7 +160,7 @@ namespace givr {
     }
 
     template <typename ViewContextT>
-    void draw(Phong::RenderContext &ctx, ViewContextT const &viewCtx, mat4f const model=mat4f(1.f)) {
+    void draw(PhongStyle::RenderContext &ctx, ViewContextT const &viewCtx, mat4f const model=mat4f(1.f)) {
         glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
@@ -134,5 +172,6 @@ namespace givr {
         });
     }
 
-};// end namespace
+}// end namespace style
+}// end namespace givr
 

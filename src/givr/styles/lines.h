@@ -75,7 +75,7 @@ namespace givr {
 
     template <typename RenderContextT, typename GeometryT>
     RenderContextT getContext(GeometryT &, Lines const &l) {
-        auto ctx = RenderContextT{};
+        RenderContextT ctx;
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
             Shader{ctx.getFragmentShaderSource(), GL_FRAGMENT_SHADER}

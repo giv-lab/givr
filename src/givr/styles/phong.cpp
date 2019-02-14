@@ -1,16 +1,17 @@
 #include "phong.h"
 
-using prc = givr::PhongRenderContext;
-using pirc = givr::PhongInstancedRenderContext;
+using prc = givr::style::PhongRenderContext;
+using pirc = givr::style::PhongInstancedRenderContext;
+using namespace givr::style;
 
 template <typename RenderContextT>
 void setPhongUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.colour);
-    p->setBool("perVertexColour", ctx.perVertexColour);
-    p->setVec3("lightPosition", ctx.lightPosition);
-    p->setFloat("ambientFactor", ctx.ambientFactor);
-    p->setFloat("specularFactor", ctx.specularFactor);
-    p->setFloat("phongExponent", ctx.phongExponent);
+    p->setVec3("colour", ctx.template value<Colour>());
+    p->setVec3("lightPosition", ctx.template value<LightPosition>());
+    p->setFloat("ambientFactor", ctx.template value<AmbientFactor>());
+    p->setFloat("specularFactor", ctx.template value<SpecularFactor>());
+    p->setFloat("phongExponent", ctx.template value<PhongExponent>());
+    p->setBool("perVertexColour", ctx.template value<PerVertexColour>());
 }
 
 void pirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
