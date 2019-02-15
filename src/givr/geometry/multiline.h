@@ -3,22 +3,36 @@
 
 #include "../vertex_array_data.h"
 #include "../types.h"
+#include "geometry.h"
 #include "line.h"
 
 namespace givr {
+namespace geometry {
 
-    struct MultiLine {
-        std::vector<Line> segments;
+    struct MultiLineGeometry {
+        private:
+            std::vector<LineGeometry> m_segments;
 
-        void addLine(Line l);
-        void addLine(vec3f const &p1, vec3f const &p2);
+        public:
+            std::vector<LineGeometry> &segments() { return m_segments; }
+            std::vector<LineGeometry> const &segments() const { return m_segments; }
+            std::vector<LineGeometry> &operator*() { return m_segments; }
 
+            void push_back(LineGeometry l);
 
-        struct Data : public VertextArrayData<PrimitiveType::LINES> {
-            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
-            std::vector<float> vertices;
-        };
+            struct Data : public VertextArrayData<PrimitiveType::LINES> {
+                BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> vertices;
+            };
     };
 
-    MultiLine::Data generateGeometry(MultiLine const &l);
-};// end namespace givr
+    template <typename... Args>
+    MultiLineGeometry MultiLine(Args &&... args) {
+        MultiLineGeometry geometry;
+        geometry.segments() = {args...};
+        return geometry;
+    }
+
+    MultiLineGeometry::Data generateGeometry(MultiLineGeometry const &l);
+}// end namespace geometry
+}// end namespace givr

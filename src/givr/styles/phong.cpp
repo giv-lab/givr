@@ -6,6 +6,7 @@ using namespace givr::style;
 
 template <typename RenderContextT>
 void setPhongUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
+    using namespace givr::style;
     p->setVec3("colour", ctx.template value<Colour>());
     p->setVec3("lightPosition", ctx.template value<LightPosition>());
     p->setFloat("ambientFactor", ctx.template value<AmbientFactor>());

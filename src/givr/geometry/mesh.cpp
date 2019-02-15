@@ -26,6 +26,7 @@ namespace std {
 };
 
 namespace givr {
+namespace geometry {
 
     template<typename V1, typename V2>
     std::tuple<std::vector<unsigned int>, V1, V2> two_index_unifier(
@@ -112,7 +113,7 @@ namespace givr {
         return { unified_indices, unified_dataA, unified_dataB, unified_dataC };
     }
 
-    Mesh::Data loadMeshFile(const char *file_name) {
+    MeshGeometry::Data loadMeshFile(const char *file_name) {
 
         //Tiny obj loading
         tinyobj::attrib_t attrib;
@@ -123,7 +124,7 @@ namespace givr {
 
         if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &errors, file_name)) {
             std::cerr << errors << std::endl;
-            return Mesh::Data{};
+            return MeshGeometry::Data{};
         }
 
         std::vector<float> multi_index_vertex_data = attrib.vertices;
@@ -138,7 +139,7 @@ namespace givr {
             normal_indices.push_back(index.normal_index);
         }
 
-        Mesh::Data unifiedIndexMesh;
+        MeshGeometry::Data unifiedIndexMesh;
 
         if (multi_index_uv_data.size() == 0 && multi_index_normal_data.size() == 0) {
             unifiedIndexMesh.indices = vertex_indices;
@@ -181,8 +182,9 @@ namespace givr {
 
     }
 
-    Mesh::Data generateGeometry(const Mesh& m) {
-        return loadMeshFile(m.filename.c_str());
+    MeshGeometry::Data generateGeometry(const MeshGeometry& m) {
+        return loadMeshFile(m.value<Filename>().value().c_str());
     }
 
-};
+}// namespace geometry
+}// namespace givr

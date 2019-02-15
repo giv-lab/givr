@@ -19,6 +19,13 @@ namespace style {
         AmbientFactor,
         PhongExponent,
         PerVertexColour> {
+        PhongParameters() {
+            // Default values
+            set(PerVertexColour(false));
+            set(AmbientFactor(0.05f));
+            set(SpecularFactor(0.3f));
+            set(PhongExponent(8.0f));
+        }
     };
 
 
@@ -70,11 +77,6 @@ namespace style {
             "LightPosition, Colour, SpecularFactor and AmbientFactor are "
             "required. PhongExponent and PerVertexColor are optional.");
         PhongStyle p;
-        // Default values
-        p.set(PerVertexColour(false));
-        p.set(AmbientFactor(0.05f));
-        p.set(SpecularFactor(0.3f));
-        p.set(PhongExponent(8.0f));
         p.set(std::forward<Args>(args)...);
         return p;
     }

@@ -7,6 +7,7 @@
 #include "../types.h"
 
 namespace givr {
+namespace geometry {
 
     template <PrimitiveType PrimitiveT>
     struct CustomGeometry {
@@ -56,4 +57,5 @@ namespace givr {
         return data;
     }
 
-};// end namespace givr
+}// end namespace geometry
+}// end namespace givr

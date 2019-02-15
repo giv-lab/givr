@@ -1,11 +1,11 @@
 #include "flatshading.h"
 
-using fsrc = givr::FlatShadingRenderContext;
-using fsirc = givr::FlatShadingInstancedRenderContext;
+using fsrc = givr::style::FlatShadingRenderContext;
+using fsirc = givr::style::FlatShadingInstancedRenderContext;
 
 template <typename RenderContextT>
 void setFlatShadingUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.colour);
+    p->setVec3("colour", ctx.template value<givr::style::Colour>());
 }
 
 void fsrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {

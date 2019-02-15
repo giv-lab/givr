@@ -2,10 +2,10 @@
 #include "../types.h"
 
 namespace givr {
-namespace style {
+namespace camera {
     template <typename... Types>
-    struct Style
+    struct Camera
         : public utility::TypedStruct<Types...> {
     };
-} // end namespace style
+} // end namespace geometry
 } // end namespace givr
