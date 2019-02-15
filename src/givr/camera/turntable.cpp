@@ -20,25 +20,25 @@ float angle_to_z(float r, float theta, float phi) {
 }
 
 
-mat4f TurnTableCamera::getViewMatrix(TurnTableCamera const & t) {
+mat4f TurnTableCamera::viewMatrix() const {
     vec3f camera_position{
-        angle_to_x(t.zoom(), t.longitude(), t.latitude()),
-        angle_to_y(t.zoom(), t.latitude()),
-        angle_to_z(t.zoom(), t.longitude(), t.latitude())
+        angle_to_x(zoom(), longitude(), latitude()),
+        angle_to_y(zoom(), latitude()),
+        angle_to_z(zoom(), longitude(), latitude())
     };
-    camera_position += t.translation();
+    camera_position += translation();
     vec3f up{ 0., 1., 0. };
     vec3f binormal = cross(camera_position, up);
     up = glm::normalize(cross(binormal, camera_position));
 
-    return glm::lookAt(camera_position, t.translation(), up);
+    return glm::lookAt(camera_position, translation(), up);
 }
 
-vec3f TurnTableCamera::getViewPosition(TurnTableCamera const & t) {
+vec3f TurnTableCamera::viewPosition() const {
     return vec3f{
-        angle_to_x(t.zoom(), t.longitude(), t.latitude()),
-        angle_to_y(t.zoom(), t.latitude()),
-        angle_to_z(t.zoom(), t.longitude(), t.latitude()) };
+        angle_to_x(zoom(), longitude(), latitude()),
+        angle_to_y(zoom(), latitude()),
+        angle_to_z(zoom(), longitude(), latitude()) };
 }
 
 void TurnTableCamera::rotateAroundXPercent(float perc) {

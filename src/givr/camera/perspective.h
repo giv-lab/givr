@@ -7,10 +7,10 @@
 namespace givr {
 namespace camera {
 
-    struct PerspectiveViewProjection
+    struct PerspectiveProjection
         : public Projection<FieldOfViewY, AspectRatio, NearDistance, FarDistance>
     {
-        PerspectiveViewProjection() {
+        PerspectiveProjection() {
             set(FieldOfViewY(45.f));
             set(AspectRatio(4.f/3.f));
             set(NearDistance(0.1f));
@@ -27,20 +27,22 @@ namespace camera {
         float &nearDistance() { return value<NearDistance>().value(); }
         float &farDistance() { return value<FarDistance>().value(); }
         void updateAspectRatio(int width, int height);
+
+        mat4f projectionMatrix() const;
     };
 
     template <typename... Args>
-    PerspectiveViewProjection PerspectiveView(Args &&... args) {
+    PerspectiveProjection Perspective(Args &&... args) {
         using namespace utility;
         static_assert(!has_duplicate_types<Args...>,
             "The arguments you passed in have duplicate parameters");
 
         static_assert(
-            is_subset_of<std::tuple<Args...>, PerspectiveViewProjection::Args> &&
-            sizeof...(args) <= std::tuple_size<PerspectiveViewProjection::Args>::value,
-            "You have provided incorrect parameters for PerspectiveView. "
+            is_subset_of<std::tuple<Args...>, PerspectiveProjection::Args> &&
+            sizeof...(args) <= std::tuple_size<PerspectiveProjection::Args>::value,
+            "You have provided incorrect parameters for Perspective. "
             "FieldOfViewY, AspectRatio, NearDistance, FarDistance are optional.");
-        PerspectiveViewProjection pv;
+        PerspectiveProjection pv;
 
         if constexpr (sizeof...(args) > 0) {
             pv.set(std::forward<Args>(args)...);
@@ -49,7 +51,6 @@ namespace camera {
     }
 
 
-    mat4f getProjectionMatrix(PerspectiveViewProjection const &t);
 
 }// end namespace camera
 }// end namespace givr

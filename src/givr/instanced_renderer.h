@@ -41,9 +41,9 @@ namespace givr {
     ) {
         ctx.shaderProgram->use();
 
-        mat4f view = getViewMatrix(viewCtx.camera);
-        mat4f projection = getProjectionMatrix(viewCtx.projection);
-        vec3f viewPosition = getViewPosition(viewCtx.camera);
+        mat4f view = viewCtx.camera.viewMatrix();
+        mat4f projection = viewCtx.projection.projectionMatrix();
+        vec3f viewPosition = viewCtx.camera.viewPosition();
 
         ctx.shaderProgram->setVec3("viewPosition", viewPosition);
         ctx.shaderProgram->setMat4("view", view);

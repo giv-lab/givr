@@ -20,6 +20,10 @@ namespace camera {
     using Longitude = utility::Type<float, struct Longitude_Tag>;
     using Zoom = utility::Type<float, struct Zoom_Tag>;
     using Translation = utility::Type<vec3f, struct Translation_Tag>;
+    using Left = utility::Type<float, struct Left_Tag>;
+    using Right = utility::Type<float, struct Right_Tag>;
+    using Bottom = utility::Type<float, struct Bottom_Tag>;
+    using Top = utility::Type<float, struct Top_Tag>;
 
 } // end namespace geometry
 } // end namespace givr

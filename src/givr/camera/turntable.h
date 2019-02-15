@@ -37,8 +37,8 @@ namespace camera {
         void zoom(float amount);
         void translate(vec3f amount);
 
-        static mat4f getViewMatrix(TurnTableCamera const & t);
-        static vec3f getViewPosition(TurnTableCamera const & t);
+        mat4f viewMatrix() const;
+        vec3f viewPosition() const;
     };
 
     template <typename... Args>
