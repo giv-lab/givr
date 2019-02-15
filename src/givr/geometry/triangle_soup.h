@@ -6,25 +6,41 @@
 #include "triangle.h"
 
 namespace givr {
+namespace geometry {
 
-    struct TriangleSoup {
-        std::vector<Triangle> triangles;
+    struct TriangleSoupGeometry {
+        private:
+            std::vector<TriangleGeometry> m_triangles;
+        public:
+            std::vector<TriangleGeometry> &triangles() { return m_triangles; }
+            std::vector<TriangleGeometry> const &triangles() const { return m_triangles; }
 
-        void addLine(Triangle t) {
-            triangles.push_back(t);
-        }
-        void addLine(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
-            triangles.push_back(Triangle{p1, p2, p3});
-        }
+            void addLine(TriangleGeometry t) {
+                m_triangles.push_back(t);
+            }
+            void addLine(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
+                m_triangles.push_back(Triangle(Point1(p1), Point2(p2), Point3(p3)));
+            }
 
-        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
-            BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
-            std::vector<float> vertices;
+            struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+                BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> vertices;
 
-            BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
-            std::vector<float> normals;
-        };
+                BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> normals;
+            };
     };
 
-    TriangleSoup::Data generateGeometry(TriangleSoup const &t);
-};// end namespace givr
+    template <typename... Args>
+    TriangleSoupGeometry TriangleSoup(Args &&... args) {
+        TriangleSoupGeometry geometry;
+        TriangleGeometry tris[] = {args...};
+        for (auto &t : tris) {
+            geometry.triangles().push_back(t);
+        }
+        return geometry;
+    }
+
+    TriangleSoupGeometry::Data generateGeometry(TriangleSoupGeometry const &t);
+}// end namespace geometry
+}// end namespace givr

@@ -3,13 +3,18 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
-#include <string>
 #include "../types.h"
 #include "../vertex_array_data.h"
 
 namespace givr {
-    struct Mesh {
-        std::string filename;
+namespace geometry {
+    struct MeshGeometry
+        : public Geometry<Filename>
+          // TODO: Add other parameters like smooth shading etc.
+    {
+
+        std::string const &filename() const { return value<Filename>().value(); }
+        std::string &filename() { return value<Filename>().value(); }
 
         struct Data : VertextArrayData<PrimitiveType::TRIANGLES> {
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
@@ -23,6 +28,29 @@ namespace givr {
         };
     };
 
-    Mesh::Data generateGeometry(const Mesh& m);
+    template <typename... Args>
+    MeshGeometry Mesh(Args &&... args) {
+        using required_args = std::tuple<Filename>;
 
-};// end namespace givr
+        using namespace utility;
+        static_assert(!has_duplicate_types<Args...>,
+            "The arguments you passed in have duplicate parameters");
+
+        static_assert(is_subset_of<required_args, std::tuple<Args...>>,
+            "Filename is a required parameter for Mesh. "
+            "Please provide them.");
+        static_assert(is_subset_of<std::tuple<Args...>, MeshGeometry::Args>,
+            "You have provided incorrect parameters for Mesh. "
+            "Filename is required.");
+        static_assert(sizeof...(args) <= std::tuple_size<MeshGeometry::Args>::value,
+            "You have provided incorrect parameters for Mesh. "
+            "Filename is required.");
+        MeshGeometry m;
+        m.set(std::forward<Args>(args)...);
+        return m;
+    }
+
+    MeshGeometry::Data generateGeometry(const MeshGeometry& m);
+
+}// end namespace geometry
+}// end namespace givr

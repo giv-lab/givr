@@ -2,7 +2,7 @@
 #include "../types.h"
 
 //------------------------------------------------------------------------------
-// Holds all of the parameters to style functions.
+// Defines all of the parameters to style functions.
 //
 // Uses custom types for each name so that we can pass them in as "named"
 // parameters.

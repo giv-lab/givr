@@ -8,9 +8,10 @@
 #include <utility>
 #include <iostream>
 
-using Cylinder = givr::Cylinder;
-Cylinder::Data givr::generateGeometry(Cylinder const &l) {
-    Cylinder::Data data;
+using CylinderGeometry = givr::geometry::CylinderGeometry;
+
+CylinderGeometry::Data givr::geometry::generateGeometry(CylinderGeometry const &c) {
+    CylinderGeometry::Data data;
 
     auto add = [&](std::vector<float> &v, vec3f const &p) {
         v.push_back(p[0]);
@@ -20,7 +21,7 @@ Cylinder::Data givr::generateGeometry(Cylinder const &l) {
 
     // Calculate the axis around which we will rotate and a
     // vector which is perpindicular to that axis.
-    vec3f axis = l.p2 - l.p1;
+    vec3f axis = c.p2() - c.p1();
     // Find the x,y,z axis along which the axis vector is the shortest
     std::vector<std::size_t> indices{0, 1, 2};
     std::size_t min_i = *std::min_element(
@@ -34,18 +35,17 @@ Cylinder::Data givr::generateGeometry(Cylinder const &l) {
     vec3f radius_vec = vec3f{0.0, 0.0, 0.0};
     radius_vec[min_i] = 1.0f;
     // Use cross product, normalize and then scale by radius to get our vector
-    radius_vec = l.radius * glm::normalize(glm::cross(axis, radius_vec));
+    radius_vec = c.radius() * glm::normalize(glm::cross(axis, radius_vec));
 
-    // Next, rotate the vector around that axis by l.points times.
-    // Start by inserting the first two points
-    data.vertices.reserve(l.points*6);
-    data.normals.reserve(l.points*6);
-    float step = 360.0f/static_cast<float>(l.points);
+    // Next, rotate the vector around that axis by c.azimuthPoints() times.
+    data.vertices.reserve(c.azimuthPoints()*6);
+    data.normals.reserve(c.azimuthPoints()*6);
+    float step = 360.0f/static_cast<float>(c.azimuthPoints());
     for (float x = 0.f; x < 360.0f; x+= step) {
         float angle = x * 0.01745329252f; // convert to radians
         vec3f normal = glm::rotate(radius_vec, angle, axis);
-        add(data.vertices, l.p2 + normal);
-        add(data.vertices, l.p1 + normal);
+        add(data.vertices, c.p2() + normal);
+        add(data.vertices, c.p1() + normal);
         add(data.normals, normal);
         add(data.normals, normal);
     }
