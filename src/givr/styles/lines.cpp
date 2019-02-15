@@ -1,18 +1,18 @@
 #include "lines.h"
 
-using lrc = givr::LinesRenderContext;
-using lirc = givr::LinesInstancedRenderContext;
+using lrc = givr::style::LineRenderContext;
+using lirc = givr::style::LineInstancedRenderContext;
 
 template <typename RenderContextT>
-void setLinesUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.colour);
+void setLineUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
+    p->setVec3("colour", ctx.template value<Colour>());
 }
 
 void lrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
-    setLinesUniforms(*this, p);
+    setLineUniforms(*this, p);
 }
 void lirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
-    setLinesUniforms(*this, p);
+    setLineUniforms(*this, p);
 }
 
 std::string linesVertexSource(std::string modelSource) {

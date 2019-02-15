@@ -1,11 +1,11 @@
 #include "noshading.h"
 
-using nsrc = givr::NoShadingRenderContext;
-using nsirc = givr::NoShadingInstancedRenderContext;
+using nsrc = givr::style::NoShadingRenderContext;
+using nsirc = givr::style::NoShadingInstancedRenderContext;
 
 template <typename RenderContextT>
 void setNoShadingUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.colour);
+    p->setVec3("colour", ctx.template value<Colour>());
 }
 
 void nsrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {

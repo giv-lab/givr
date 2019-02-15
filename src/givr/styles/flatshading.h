@@ -6,18 +6,19 @@
 #include "../instanced_renderer.h"
 #include "../gl/program.h"
 #include "static_assert.h"
+#include "style.h"
 
 #include <string>
 
 namespace givr {
+namespace style {
 
-    struct FlatShadingParams {
-        vec3f colour;
+    struct FlatShadingParameters : public Style<Colour> {
     };
 
     struct FlatShadingInstancedRenderContext
         : public InstancedRenderContext,
-          public FlatShadingParams
+          public FlatShadingParameters
     {
         void setUniforms(std::unique_ptr<Program> const &p) const;
 
@@ -27,7 +28,7 @@ namespace givr {
 
     struct FlatShadingRenderContext
         : public RenderContext,
-          public FlatShadingParams
+          public FlatShadingParameters
     {
         void setUniforms(std::unique_ptr<Program> const &p) const;
 
@@ -35,7 +36,7 @@ namespace givr {
         std::string getFragmentShaderSource() const;
     };
 
-    struct FlatShading : public FlatShadingParams {
+    struct FlatShading : public FlatShadingParameters {
         using InstancedRenderContext = FlatShadingInstancedRenderContext;
         using RenderContext = FlatShadingRenderContext;
     };
@@ -82,7 +83,7 @@ namespace givr {
 
     template <typename RenderContextT>
     void updateStyle(RenderContextT &ctx, FlatShading const &f) {
-        ctx.colour = f.colour;
+        ctx.set(f.args);
     }
 
     template <typename ViewContextT>
@@ -99,4 +100,5 @@ namespace givr {
             program->setMat4("model", model);
         });
     }
-};// end namespace givr
+}// end namespace style
+}// end namespace givr
