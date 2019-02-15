@@ -5,7 +5,7 @@ using nsirc = givr::style::NoShadingInstancedRenderContext;
 
 template <typename RenderContextT>
 void setNoShadingUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.template value<Colour>());
+    p->setVec3("colour", ctx.template value<givr::style::Colour>());
 }
 
 void nsrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {

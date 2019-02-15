@@ -14,6 +14,9 @@ namespace givr {
 namespace style {
 
     struct LineParameters : public Style<Colour, Width> {
+        LineParameters() {
+            set(Width(1.0));
+        }
     };
 
     struct LineRenderContext
@@ -59,7 +62,6 @@ namespace style {
             "You have provided incorrect parameters for LineStyle. "
             "Colour is required. Width is optional.");
         LineStyle ns;
-        ns.set(Width(1.0));
         ns.set(std::forward<Args>(args)...);
         return ns;
     }

@@ -10,6 +10,13 @@ namespace camera {
     struct PerspectiveViewProjection
         : public Projection<FieldOfViewY, AspectRatio, NearDistance, FarDistance>
     {
+        PerspectiveViewProjection() {
+            set(FieldOfViewY(45.f));
+            set(AspectRatio(4.f/3.f));
+            set(NearDistance(0.1f));
+            set(FarDistance(1000.f));
+        }
+
         float const &fieldOfViewY() const { return value<FieldOfViewY>().value(); }
         float const &aspectRatio() const { return value<AspectRatio>().value(); }
         float const &nearDistance() const { return value<NearDistance>().value(); }
@@ -35,10 +42,6 @@ namespace camera {
             "FieldOfViewY, AspectRatio, NearDistance, FarDistance are optional.");
         PerspectiveViewProjection pv;
 
-        pv.set(FieldOfViewY(45.f));
-        pv.set(AspectRatio(4.f/3.f));
-        pv.set(NearDistance(0.1f));
-        pv.set(FarDistance(1000.f));
         if constexpr (sizeof...(args) > 0) {
             pv.set(std::forward<Args>(args)...);
         }

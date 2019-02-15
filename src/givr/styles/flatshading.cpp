@@ -5,7 +5,7 @@ using fsirc = givr::style::FlatShadingInstancedRenderContext;
 
 template <typename RenderContextT>
 void setFlatShadingUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
-    p->setVec3("colour", ctx.template value<Colour>());
+    p->setVec3("colour", ctx.template value<givr::style::Colour>());
 }
 
 void fsrc::setUniforms(std::unique_ptr<givr::Program> const &p) const {

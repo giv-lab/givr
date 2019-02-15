@@ -18,6 +18,8 @@ namespace camera {
     using FarDistance = utility::Type<float, struct FarDistance_Tag>;
     using Latitude = utility::Type<float, struct Latitude_Tag>;
     using Longitude = utility::Type<float, struct Longitude_Tag>;
+    using Zoom = utility::Type<float, struct Zoom_Tag>;
+    using Translation = utility::Type<vec3f, struct Translation_Tag>;
 
 } // end namespace geometry
 } // end namespace givr
