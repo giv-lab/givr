@@ -3,15 +3,18 @@
 #include "../types.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-using mat4f = givr::mat4f;
-
-mat4f givr::getProjectionMatrix(PerspectiveView const & p) {
-    return glm::perspective(glm::radians(p.fovy), p.aspect, p.nearDistance, p.farDistance);
+givr::mat4f givr::camera::getProjectionMatrix(PerspectiveViewProjection const & p) {
+    return glm::perspective(
+        glm::radians(p.fieldOfViewY()),
+        p.aspectRatio(),
+        p.nearDistance(),
+        p.farDistance()
+    );
 }
 
-void givr::PerspectiveView::updateAspectRatio(int width, int height) {
+void givr::camera::PerspectiveViewProjection::updateAspectRatio(int width, int height) {
     float w = static_cast<float>(width);
     float h = static_cast<float>(height);
 
-    aspect = w / h;
+    set(AspectRatio(w / h));
 }
