@@ -20,6 +20,7 @@ namespace geometry {
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
             BufferUsageType indicesType = BufferUsageType::STATIC_DRAW;
+            BufferUsageType uvsType = BufferUsageType::STATIC_DRAW;
 
             std::vector<float> vertices;
             std::vector<float> normals;

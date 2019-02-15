@@ -16,6 +16,7 @@ namespace geometry {
     using Point1 = utility::Type<vec3f, struct Point1_Tag>;
     using Point2 = utility::Type<vec3f, struct Point2_Tag>;
     using Point3 = utility::Type<vec3f, struct Point3_Tag>;
+    using Point4 = utility::Type<vec3f, struct Point4_Tag>;
     using Centroid = utility::Type<vec3f, struct Centroid_Tag>;
     using Radius = utility::Type<float, struct Point3_Tag>;
     using AzimuthPoints = utility::Type<std::size_t, struct AzimuthPoints_Tag>;
