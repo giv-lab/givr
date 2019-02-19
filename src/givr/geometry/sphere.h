@@ -5,6 +5,7 @@
 #include "../types.h"
 #include "../vertex_array_data.h"
 #include "geometry.h"
+#include "parameters.h"
 
 namespace givr {
 namespace geometry {

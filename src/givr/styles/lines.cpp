@@ -2,6 +2,7 @@
 
 using lrc = givr::style::LineRenderContext;
 using lirc = givr::style::LineInstancedRenderContext;
+using Colour = givr::style::Colour;
 
 template <typename RenderContextT>
 void setLineUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
