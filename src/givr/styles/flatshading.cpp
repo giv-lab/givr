@@ -16,8 +16,8 @@ void fsirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
 }
 
 std::string flatShadingVertexSource(std::string modelSource) {
-    return modelSource + std::string(R"shader( mat4 model;
-        attribute vec3 position;
+    return "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
+        in vec3 position;
 
         uniform mat4 view;
         uniform mat4 projection;
@@ -33,12 +33,14 @@ std::string flatShadingVertexSource(std::string modelSource) {
 }
 
 std::string flatShadingFragmentSource() {
-    return std::string(R"shader(
+    return std::string(R"shader(#version 330 core
         uniform vec3 colour;
+
+        out vec4 outColour;
 
         void main()
         {
-            gl_FragColor = vec4(colour, 1.0);
+            outColour = vec4(colour, 1.0);
         }
 
         )shader"
@@ -52,7 +54,7 @@ std::string fsrc::getFragmentShaderSource() const {
     return flatShadingFragmentSource();
 }
 std::string fsirc::getVertexShaderSource() const {
-    return flatShadingVertexSource("attribute");
+    return flatShadingVertexSource("in");
 }
 std::string fsirc::getFragmentShaderSource() const {
     return flatShadingFragmentSource();

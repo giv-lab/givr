@@ -16,8 +16,8 @@ void nsirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
 }
 
 std::string noShadingVertexSource(std::string modelSource) {
-    return modelSource + std::string(R"shader( mat4 model;
-        attribute vec3 position;
+    return "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
+        in vec3 position;
 
         uniform mat4 view;
         uniform mat4 projection;
@@ -33,12 +33,14 @@ std::string noShadingVertexSource(std::string modelSource) {
 }
 
 std::string noShadingFragmentSource() {
-    return std::string(R"shader(
+    return std::string(R"shader(#version 330 core
         uniform vec3 colour;
+
+        out vec4 outColour;
 
         void main()
         {
-            gl_FragColor = vec4(colour, 1.0);
+            outColour = vec4(colour, 1.0);
         }
 
         )shader"
@@ -52,7 +54,7 @@ std::string nsrc::getFragmentShaderSource() const {
     return noShadingFragmentSource();
 }
 std::string nsirc::getVertexShaderSource() const {
-    return noShadingVertexSource("attribute");
+    return noShadingVertexSource("in");
 }
 std::string nsirc::getFragmentShaderSource() const {
     return noShadingFragmentSource();

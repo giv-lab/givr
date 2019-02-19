@@ -16,13 +16,13 @@ void lirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
 }
 
 std::string linesVertexSource(std::string modelSource) {
-    return modelSource + std::string(R"shader( mat4 model;
-        attribute vec3 position;
+    return "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
+        in vec3 position;
 
         uniform mat4 view;
         uniform mat4 projection;
 
-        varying vec3 fragPosition;
+        out vec3 fragPosition;
 
         void main(){
             mat4 modelview = model * view;
@@ -37,16 +37,18 @@ std::string linesVertexSource(std::string modelSource) {
 }
 
 std::string linesFragmentSource() {
-    return std::string(R"shader(
+    return std::string(R"shader(#version 330 core
         uniform vec3 colour;
         uniform vec3 lightPosition;
         uniform vec3 viewPosition;
 
-        varying vec3 fragPosition;
+        in vec3 fragPosition;
+
+        out vec4 outColour;
 
         void main()
         {
-            gl_FragColor = vec4(colour, 1.);
+            outColour = vec4(colour, 1.);
         }
 
 
@@ -63,7 +65,7 @@ std::string lrc::getFragmentShaderSource() const {
 }
 
 std::string lirc::getVertexShaderSource() const {
-    return linesVertexSource("attribute");
+    return linesVertexSource("in");
 }
 
 std::string lirc::getFragmentShaderSource() const {

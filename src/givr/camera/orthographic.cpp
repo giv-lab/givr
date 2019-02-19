@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 using OrthographicProjection = givr::camera::OrthographicProjection;
+using mat4f = givr::mat4f;
 
 mat4f OrthographicProjection::projectionMatrix() const {
     // TODO: This assumes a view centred on the origin
