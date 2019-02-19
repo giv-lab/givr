@@ -24,18 +24,19 @@ void prc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
 
 std::string phongVertexSource(std::string modelSource) {
     return
-        modelSource + std::string(R"shader( mat4 model;
-        attribute vec3 position;
-        attribute vec3 normal;
-        attribute vec2 uvs;
-        attribute vec3 colour;
+        "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
+        in vec3 position;
+        in vec3 normal;
+        in vec2 uvs;
+        in vec3 colour;
 
         uniform mat4 view;
         uniform mat4 projection;
 
-        varying vec3 fragNormal;
-        varying vec3 originalPosition;
-        varying vec3 fragColour;
+        out vec3 fragNormal;
+        out vec3 originalPosition;
+        out vec2 fragUv;
+        out vec3 fragColour;
 
         void main(){
             mat4 mv = view * model;
@@ -51,7 +52,7 @@ std::string phongVertexSource(std::string modelSource) {
 }
 
 std::string phongFragmentSource() {
-    return std::string(R"shader(
+    return std::string(R"shader(#version 330 core
         uniform vec3 colour;
         uniform bool perVertexColour;
         uniform vec3 lightPosition;
@@ -60,10 +61,12 @@ std::string phongFragmentSource() {
         uniform float phongExponent;
         uniform vec3 viewPosition;
 
-        varying vec3 fragNormal;
-        varying vec3 originalPosition;
-        varying vec2 fragUv;
-        varying vec3 fragColour;
+        in vec3 fragNormal;
+        in vec3 originalPosition;
+        in vec2 fragUv;
+        in vec3 fragColour;
+
+        out vec4 outColour;
 
         void main()
         {
@@ -87,7 +90,7 @@ std::string phongFragmentSource() {
             spec = pow(max(dot(viewDirection, reflectDirection), 0.0), phongExponent);
             vec3 specular = vec3(specularFactor) * spec; // assuming bright white light colour
 
-            gl_FragColor = vec4(ambient + diffuse + specular, 1.0);
+            outColour = vec4(ambient + diffuse + specular, 1.0);
         }
 
 
@@ -98,7 +101,7 @@ std::string phongFragmentSource() {
 // TODO: these shaders are near duplicates of each other, we need to deal
 //       with this.
 std::string pirc::getVertexShaderSource() const {
-    return phongVertexSource("attribute");
+    return phongVertexSource("in");
 }
 
 std::string pirc::getFragmentShaderSource() const {

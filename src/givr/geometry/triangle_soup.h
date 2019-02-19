@@ -34,7 +34,7 @@ namespace geometry {
     template <typename... Args>
     TriangleSoupGeometry TriangleSoup(Args &&... args) {
         TriangleSoupGeometry geometry;
-        TriangleGeometry tris[] = {args...};
+        std::vector<TriangleGeometry> tris{args...};
         for (auto &t : tris) {
             geometry.triangles().push_back(t);
         }

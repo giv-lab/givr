@@ -1,6 +1,7 @@
 #include "buffer_data.h"
 
 using BufferData = givr::BufferData;
+using vec3f = givr::vec3f;
 
 void BufferData::addIndices(std::vector<GLuint> const &newIndices) {
     indices.insert(indices.end(), newIndices.begin(), newIndices.end());

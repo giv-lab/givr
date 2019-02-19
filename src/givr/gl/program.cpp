@@ -2,6 +2,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 using Program = givr::Program;
+using vec2f = givr::vec2f;
+using vec3f = givr::vec3f;
+using mat4f = givr::mat4f;
 
 Program::Program(
     GLuint vertex,
