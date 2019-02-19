@@ -64,18 +64,13 @@ namespace style {
         static_assert(!has_duplicate_types<Args...>,
             "The arguments you passed in have duplicate parameters");
 
-        static_assert(is_subset_of<required_args, std::tuple<Args...>>,
-            "LightPosition, Colour, SpecularFactor, AmbientFactor, and "
-            "PhongExponent are required parameters for phong. Please "
-            "provide them.");
-        static_assert(is_subset_of<std::tuple<Args...>, PhongStyle::Args>,
+        static_assert(
+            is_subset_of<required_args, std::tuple<Args...>> &&
+            is_subset_of<std::tuple<Args...>, PhongStyle::Args> &&
+            sizeof...(args) <= std::tuple_size<PhongStyle::Args>::value,
             "You have provided incorrect parameters for phong. "
-            "LightPosition, Colour, SpecularFactor and AmbientFactor are "
-            "required. PhongExponent and PerVertexColor are optional.");
-        static_assert(sizeof...(args) <= std::tuple_size<PhongStyle::Args>::value,
-            "You have provided incorrect parameters for phong. "
-            "LightPosition, Colour, SpecularFactor and AmbientFactor are "
-            "required. PhongExponent and PerVertexColor are optional.");
+            "LightPosition, Colour are required. SpecularFactor, AmbientFactor, "
+            "PhongExponent and PerVertexColor are optional.");
         PhongStyle p;
         p.set(std::forward<Args>(args)...);
         return p;

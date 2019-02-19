@@ -13,7 +13,21 @@
 namespace givr {
 namespace style {
 
-    struct FlatShadingParameters : public Style<Colour> {
+    struct FlatShadingParameters : public Style<
+        Colour,
+        LightPosition,
+        SpecularFactor,
+        AmbientFactor,
+        PhongExponent,
+        PerVertexColour
+    > {
+        FlatShadingParameters() {
+            // Default values
+            set(PerVertexColour(false));
+            set(AmbientFactor(0.05f));
+            set(SpecularFactor(0.3f));
+            set(PhongExponent(8.0f));
+        }
     };
 
     struct FlatShadingInstancedRenderContext
@@ -42,20 +56,20 @@ namespace style {
     };
 
     template <typename... Args> FlatShadingStyle FlatShading(Args &&... args) {
-        using required_args = std::tuple<Colour>;
+        using required_args =
+                std::tuple<LightPosition, Colour>;
 
         using namespace utility;
         static_assert(!has_duplicate_types<Args...>,
             "The arguments you passed in have duplicate parameters");
 
-        static_assert(is_subset_of<required_args, std::tuple<Args...>>,
-            "Colour is a required parameter for FlatShadingStyle. Please provide it.");
-        static_assert(is_subset_of<std::tuple<Args...>, FlatShadingStyle::Args>,
+        static_assert(
+            is_subset_of<required_args, std::tuple<Args...>> &&
+            is_subset_of<std::tuple<Args...>, FlatShadingStyle::Args> &&
+            sizeof...(args) <= std::tuple_size<FlatShadingStyle::Args>::value,
             "You have provided incorrect parameters for FlatShadingStyle. "
-            "Colour is required.");
-        static_assert(sizeof...(args) <= std::tuple_size<FlatShadingStyle::Args>::value,
-            "You have provided incorrect parameters for FlatShadingStyle. "
-            "Colour is required.");
+            "LightPosition, Colour are required. SpecularFactor, AmbientFactor, "
+            "PhongExponent and PerVertexColor are optional.");
         FlatShadingStyle fs;
         fs.set(std::forward<Args>(args)...);
         return fs;
