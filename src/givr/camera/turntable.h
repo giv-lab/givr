@@ -3,6 +3,7 @@
 
 #include "../types.h"
 #include "camera.h"
+#include "parameters.h"
 
 namespace givr {
 namespace camera {
@@ -10,7 +11,7 @@ namespace camera {
     constexpr const float LATITUDE_MAX = M_PI;
 
     struct TurnTableCamera
-        : public Projection<Longitude, Latitude, Zoom, Translation>
+        : public Camera<Longitude, Latitude, Zoom, Translation>
     {
         // TODO: ensure these are in the right ranges.
         TurnTableCamera() {

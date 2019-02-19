@@ -7,6 +7,7 @@
 #include "../gl/program.h"
 #include "static_assert.h"
 #include "style.h"
+#include "parameters.h"
 
 #include <string>
 

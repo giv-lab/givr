@@ -3,6 +3,8 @@
 
 #include "../vertex_array_data.h"
 #include "../types.h"
+#include "geometry.h"
+#include "parameters.h"
 
 namespace givr {
 namespace geometry {

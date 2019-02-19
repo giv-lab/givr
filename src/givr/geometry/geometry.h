@@ -1,3 +1,4 @@
+#pragma once
 #include "../utility.h"
 #include "../types.h"
 
