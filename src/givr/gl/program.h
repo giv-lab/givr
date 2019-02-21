@@ -12,13 +12,8 @@ namespace givr {
     class Program
     {
     public:
-        struct ShaderArgs {
-            std::string path;
-            GLenum type;
-        };
-        Program(GLuint vertex, GLuint shader);
-        Program(GLuint vertex, GLuint geometry, GLuint shader);
-        explicit Program(std::initializer_list<ShaderArgs> shaders);
+        Program(GLuint vertex, GLuint fragment);
+        Program(GLuint vertex, GLuint geometry, GLuint fragment);
         ~Program();
 
         operator GLuint() const { return m_programID; }
@@ -42,6 +37,7 @@ namespace givr {
 
 
         private:
+            void linkAndErrorCheck();
             GLuint m_programID;
 
     };

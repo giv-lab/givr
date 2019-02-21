@@ -13,19 +13,9 @@ Program::Program(
 {
     glAttachShader(m_programID, vertex);
     glAttachShader(m_programID, fragment);
-    glLinkProgram(m_programID);
-
-    GLint success;
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &success);
-    if (!success) {
-        GLchar infoLog[512];
-        glGetProgramInfoLog(m_programID, 512, NULL, infoLog);
-        std::ostringstream out;
-        out << "Unable to link Program: " << infoLog;
-        // TODO(lw): Consider a better exception here
-        throw std::runtime_error(out.str());
-    }
+    linkAndErrorCheck();
 }
+
 Program::Program(
     GLuint vertex,
     GLuint geometry,
@@ -35,27 +25,10 @@ Program::Program(
     glAttachShader(m_programID, vertex);
     glAttachShader(m_programID, geometry);
     glAttachShader(m_programID, fragment);
-    glLinkProgram(m_programID);
-
-    GLint success;
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &success);
-    if (!success) {
-        GLchar infoLog[512];
-        glGetProgramInfoLog(m_programID, 512, NULL, infoLog);
-        std::ostringstream out;
-        out << "Unable to link Program: " << infoLog;
-        // TODO(lw): Consider a better exception here
-        throw std::runtime_error(out.str());
-    }
+    linkAndErrorCheck();
 }
-Program::Program(
-    std::initializer_list<ShaderArgs> shaders
-) : m_programID{glCreateProgram()}
-{
-    for (const auto &args : shaders) {
-        Shader shader{args.path, args.type};
-        glAttachShader(m_programID, shader);
-    }
+
+void Program::linkAndErrorCheck() {
 
     glLinkProgram(m_programID);
     GLint success;
