@@ -50,6 +50,8 @@ std::string flatShadingVertexSource(std::string modelSource) {
 
 std::string flatShadingFragmentSource() {
     return std::string(R"shader(#version 330 core
+        #define M_PI 3.1415926535897932384626433832795
+
         uniform vec3 colour;
         uniform bool perVertexColour;
         uniform vec3 lightPosition;
@@ -81,9 +83,9 @@ std::string flatShadingFragmentSource() {
 
             // specular
             vec3 viewDirection = normalize(viewPosition - originalPosition);
-            vec3 reflectDirection = max(2.0*dot(lightDirection, normal), 0.0)*normal - lightDirection;
-            float spec = 0.0;
-            spec = pow(max(dot(viewDirection, reflectDirection), 0.0), phongExponent);
+            vec3 reflectDirection = normalize(2.0*dot(lightDirection, normal)*normal - lightDirection);
+            float normalization = (phongExponent+2.0)/(2.0*M_PI);
+            float spec = normalization*diff*pow(max(dot(viewDirection, reflectDirection), 0.0), phongExponent);
             vec3 specular = vec3(specularFactor) * spec; // assuming bright white light colour
 
             outColour = vec4(ambient + diffuse + specular, 1.0);

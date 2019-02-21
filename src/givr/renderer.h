@@ -49,7 +49,7 @@ namespace givr {
         ctx.shaderProgram->setMat4("projection", projection);
         setUniforms(ctx.shaderProgram);
         ctx.vao->bind();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT, GL_FILL);
         GLenum mode = givr::getMode(ctx.primitive);
         if (ctx.numberOfIndices > 0) {
             glDrawElements(mode, ctx.numberOfIndices, GL_UNSIGNED_INT, 0);

@@ -17,6 +17,7 @@ namespace givr {
             GLenum type;
         };
         Program(GLuint vertex, GLuint shader);
+        Program(GLuint vertex, GLuint geometry, GLuint shader);
         explicit Program(std::initializer_list<ShaderArgs> shaders);
         ~Program();
 

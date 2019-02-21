@@ -16,6 +16,9 @@ namespace style {
     using Colour = utility::Type<vec3f, struct Colour_Tag>;
     using LightPosition = utility::Type<vec3f, struct LightPosition_Tag>;
     using PerVertexColour = utility::Type<bool, struct PerVertexColor_Tag>;
+    using ShowWireFrame = utility::Type<bool, struct ShowWireFrame_Tag>;
+    using WireFrameColour = utility::Type<vec3f, struct WireFrameColour_Tag>;
+    using WireFramePercent = utility::Type<float, struct WireFramePercent_Tag>;
     using PhongExponent = utility::Type<float, struct PhongExponent_Tag>;
     using SpecularFactor = utility::Type<float, struct SpecularFactor_Tag>;
     using Width = utility::Type<float, struct Width_Tag>;

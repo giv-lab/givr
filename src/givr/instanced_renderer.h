@@ -51,7 +51,7 @@ namespace givr {
         setUniforms(ctx.shaderProgram);
 
         ctx.vao->bind();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT, GL_FILL);
         GLenum mode = givr::getMode(ctx.primitive);
         ctx.modelTransformsBuffer->bind(GL_ARRAY_BUFFER);
         ctx.modelTransformsBuffer->data(GL_ARRAY_BUFFER, ctx.modelTransforms, GL_DYNAMIC_DRAW);

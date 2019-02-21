@@ -13,46 +13,53 @@
 
 namespace givr {
 namespace style {
-    struct PhongParameters : public Style<
+    struct PhongBase : public Style<
         Colour,
         LightPosition,
         SpecularFactor,
         AmbientFactor,
         PhongExponent,
-        PerVertexColour> {
-        PhongParameters() {
+        PerVertexColour,
+        ShowWireFrame,
+        WireFrameColour,
+        WireFramePercent
+    > {
+        PhongBase() {
             // Default values
             set(PerVertexColour(false));
             set(AmbientFactor(0.05f));
             set(SpecularFactor(0.3f));
             set(PhongExponent(8.0f));
+            set(ShowWireFrame(false));
+            set(WireFrameColour(0.f, 0.f, 0.f));
+            set(WireFramePercent(0.02f));
         }
+        void setUniforms(std::unique_ptr<Program> const &p) const;
     };
 
 
     struct PhongInstancedRenderContext
         :
-            public PhongParameters,
+            public PhongBase,
             public InstancedRenderContext
     {
-        void setUniforms(std::unique_ptr<Program> const &p) const;
 
         std::string getVertexShaderSource() const;
+        std::string getGeometryShaderSource() const;
         std::string getFragmentShaderSource() const;
     };
 
     struct PhongRenderContext
         :
-            public PhongParameters,
+            public PhongBase,
             public RenderContext
     {
-        void setUniforms(std::unique_ptr<Program> const &p) const;
-
         std::string getVertexShaderSource() const;
+        std::string getGeometryShaderSource() const;
         std::string getFragmentShaderSource() const;
     };
 
-    struct PhongStyle : PhongParameters {
+    struct PhongStyle : PhongBase {
         using InstancedRenderContext = PhongInstancedRenderContext;
         using RenderContext = PhongRenderContext;
     };
@@ -120,6 +127,7 @@ namespace style {
         // TODO: this probably belongs in the constructor
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{ctx.getVertexShaderSource(), GL_VERTEX_SHADER},
+            Shader{ctx.getGeometryShaderSource(), GL_GEOMETRY_SHADER},
             Shader{ctx.getFragmentShaderSource(), GL_FRAGMENT_SHADER}
         );
         ctx.primitive = getPrimitive<GeometryT>();
