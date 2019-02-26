@@ -28,6 +28,7 @@ namespace givr {
         void setMat4(const std::string &name, mat4f const &mat) const;
         void setBool(const std::string &name, bool value) const;
         void setFloat(const std::string &name, float value) const;
+		void setInt(const std::string &name, int value) const;
 
         // TODO: make these work for our math library
         /*
