@@ -27,6 +27,8 @@ namespace geometry {
             void clear() { m_points.clear(); }
 
         struct Data : public VertextArrayData<LineType> {
+            std::uint16_t dimensions = 3;
+
             BufferUsageType verticesType;
             std::vector<float> vertices;
         };

@@ -22,6 +22,7 @@ namespace style {
     using PhongExponent = utility::Type<float, struct PhongExponent_Tag>;
     using SpecularFactor = utility::Type<float, struct SpecularFactor_Tag>;
     using Width = utility::Type<float, struct Width_Tag>;
+    using GenerateNormals = utility::Type<bool, struct GenerateNormals_Tag>;
 
 } // end namespace style
 } // end namespace givr

@@ -21,6 +21,8 @@ namespace geometry {
             void push_back(LineGeometry l);
 
             struct Data : public VertextArrayData<PrimitiveType::LINES> {
+                std::uint16_t dimensions = 3;
+
                 BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
                 std::vector<float> vertices;
             };

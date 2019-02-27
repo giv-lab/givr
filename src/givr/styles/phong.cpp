@@ -16,6 +16,7 @@ void phong::setUniforms(std::unique_ptr<givr::Program> const &p) const {
     p->setBool("showWireFrame", value<ShowWireFrame>());
     p->setVec3("wireFrameColour", value<WireFrameColour>());
     p->setFloat("wireFramePercent", value<WireFramePercent>());
+    p->setBool("generateNormals", value<GenerateNormals>());
 }
 
 std::string phongVertexSource(std::string modelSource) {
@@ -53,8 +54,7 @@ std::string phongGeometrySource() {
         layout (triangles) in;
         layout (triangle_strip, max_vertices = 3) out;
 
-        uniform bool showWireFrame;
-        uniform vec3 wireFrameColour;
+        uniform bool generateNormals;
 
         in vec3 geomNormal[];
         in vec3 geomOriginalPosition[];
@@ -68,8 +68,22 @@ std::string phongGeometrySource() {
         out vec3 fragBarycentricCoords;
 
         void main() {
+            vec3 normal;
+            if (generateNormals) {
+                normal =
+                    cross(
+                        vec3(gl_in[1].gl_Position - gl_in[0].gl_Position),
+                        vec3(gl_in[2].gl_Position - gl_in[0].gl_Position)
+                    );
+            }
+
+
             gl_Position = gl_in[0].gl_Position;
-            fragNormal = geomNormal[0];
+            if (!generateNormals) {
+                fragNormal = geomNormal[0];
+            } else {
+                fragNormal = normal;
+            }
             originalPosition = geomOriginalPosition[0];
             fragUv = geomUv[0];
             fragColour = geomColour[0];
@@ -77,7 +91,11 @@ std::string phongGeometrySource() {
             EmitVertex();
 
             gl_Position = gl_in[1].gl_Position;
-            fragNormal = geomNormal[1];
+            if (!generateNormals) {
+                fragNormal = geomNormal[1];
+            } else {
+                fragNormal = normal;
+            }
             originalPosition = geomOriginalPosition[1];
             fragUv = geomUv[1];
             fragColour = geomColour[1];
@@ -85,7 +103,11 @@ std::string phongGeometrySource() {
             EmitVertex();
 
             gl_Position = gl_in[2].gl_Position;
-            fragNormal = geomNormal[2];
+            if (!generateNormals) {
+                fragNormal = geomNormal[2];
+            } else {
+                fragNormal = normal;
+            }
             originalPosition = geomOriginalPosition[2];
             fragUv = geomUv[2];
             fragColour = geomColour[2];
@@ -143,6 +165,7 @@ std::string phongFragmentSource() {
             // diffuse
             vec3 lightDirection = normalize(lightPosition - originalPosition);
             vec3 normal = normalize(fragNormal);
+            if (!gl_FrontFacing) normal = -normal;
             float diff = max(dot(lightDirection, normal), 0.0);
             vec3 diffuse = diff * finalColour;
 
@@ -153,11 +176,11 @@ std::string phongFragmentSource() {
             float spec = normalization*diff*pow(max(dot(viewDirection, reflectDirection), 0.0), phongExponent);
             vec3 specular = vec3(specularFactor) * spec; // assuming bright white light colour
 
+            vec3 shadedColour = ambient + diffuse + specular;
             if(showWireFrame && any(lessThan(fragBarycentricCoords, vec3(wireFramePercent)))){
-                outColour = vec4(mix(vec3(0.0), wireFrameColour, edgeFactor(fragBarycentricCoords)), 1.0);
-            } else{
-                outColour = vec4(ambient + diffuse + specular, 1.0);
+                shadedColour = mix(wireFrameColour, shadedColour, edgeFactor(fragBarycentricCoords));
             }
+            outColour = vec4(shadedColour, 1.0);
         }
 
 

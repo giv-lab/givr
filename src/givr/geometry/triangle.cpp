@@ -4,7 +4,7 @@ using TriangleGeometry = givr::geometry::TriangleGeometry;
 
 TriangleGeometry::Data givr::geometry::generateGeometry(TriangleGeometry const &t) {
     TriangleGeometry::Data data;
-    vec3f normal = glm::normalize(glm::cross(t.p3()-t.p1(), t.p2()-t.p1()));
+    vec3f normal = glm::normalize(glm::cross(t.p2()-t.p1(), t.p3()-t.p1()));
     data.normals.reserve(9);
     data.vertices.reserve(9);
     auto push_vertex = [&](vec3f const &p) {

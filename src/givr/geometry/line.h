@@ -19,6 +19,8 @@ namespace geometry {
         vec3f &p2() { return value<Point2>().value(); }
 
         struct Data : public VertextArrayData<PrimitiveType::LINES> {
+            std::uint16_t dimensions = 3;
+
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
         };

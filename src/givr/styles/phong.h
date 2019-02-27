@@ -22,7 +22,8 @@ namespace style {
         PerVertexColour,
         ShowWireFrame,
         WireFrameColour,
-        WireFramePercent
+        WireFramePercent,
+        GenerateNormals
     > {
         PhongBase() {
             // Default values
@@ -33,6 +34,7 @@ namespace style {
             set(ShowWireFrame(false));
             set(WireFrameColour(0.f, 0.f, 0.f));
             set(WireFramePercent(0.02f));
+            set(GenerateNormals(false));
         }
         void setUniforms(std::unique_ptr<Program> const &p) const;
     };
@@ -97,18 +99,22 @@ namespace style {
             "The Phong style requires vertices. The geometry you are using does "
             "not provide them."
         );
-        static_assert(
-            hasNormals<GeometryT>::value,
-            "The Phong style requires normals. The geometry you are using does "
-            "not provide them."
-        );
+        //static_assert(
+            //hasNormals<GeometryT>::value,
+            //"The Phong style requires normals. The geometry you are using does "
+            //"not provide them."
+        //);
 
         BufferData data;
         typename GeometryT::Data d = generateGeometry(g);
+        data.dimensions = d.dimensions;
         data.verticesType = d.verticesType;
         data.addVertices(d.vertices);
-        data.normalsType = d.normalsType;
-        data.addNormals(d.normals);
+
+        if constexpr (hasNormals<GeometryT>::value) {
+            data.normalsType = d.normalsType;
+            data.addNormals(d.normals);
+        }
 
         if constexpr (hasIndices<GeometryT>::value) {
             data.indicesType = d.indicesType;

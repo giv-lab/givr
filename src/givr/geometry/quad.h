@@ -24,6 +24,8 @@ namespace geometry {
         vec3f &p4() { return value<Point4>().value(); }
 
         struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            std::uint16_t dimensions = 3;
+
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             std::vector<float> vertices;
 

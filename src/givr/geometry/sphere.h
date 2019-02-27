@@ -15,6 +15,8 @@ namespace geometry {
     {
 
         struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            std::uint16_t dimensions = 3;
+
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
             BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
             BufferUsageType indicesType = BufferUsageType::STATIC_DRAW;

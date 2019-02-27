@@ -8,14 +8,28 @@ using mat4f = givr::mat4f;
 
 mat4f OrthographicProjection::projectionMatrix() const {
     // TODO: This assumes a view centred on the origin
-    return glm::ortho(
-        left() * aspectRatio(),
-        right() * aspectRatio(),
-        bottom(),
-        top(),
-        nearDistance(),
-        farDistance()
-    );
+    auto ar = aspectRatio();
+    if (ar < 1) {
+        // taller than we are wide
+        return glm::ortho(
+            left(),
+            right(),
+            bottom() / ar,
+            top() / ar,
+            nearDistance(),
+            farDistance()
+        );
+    } else {
+        // Wider than we are tall
+        return glm::ortho(
+            left() * ar,
+            right() * ar,
+            bottom(),
+            top(),
+            nearDistance(),
+            farDistance()
+        );
+    }
 }
 void OrthographicProjection::updateAspectRatio(int width, int height) {
     float w = static_cast<float>(width);

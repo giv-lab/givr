@@ -20,6 +20,8 @@ namespace geometry {
         // TODO: add simpler ways to construct this.
 
         struct Data : public VertextArrayData<PrimitiveT> {
+            std::uint16_t dimensions = 3;
+
             BufferUsageType verticesType;
             BufferUsageType normalsType;
             BufferUsageType indicesType;

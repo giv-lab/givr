@@ -30,7 +30,7 @@ namespace givr {
         // Start by setting the appropriate context variables for rendering.
         ctx.numberOfIndices = data.indices.size();
         ctx.startIndex = 0;
-        ctx.endIndex =  data.vertices.size() / 3;
+        ctx.endIndex =  data.vertices.size() / data.dimensions;
 
         std::uint16_t vaIndex = 0;
         ctx.vao->bind();
@@ -64,8 +64,8 @@ namespace givr {
         };
 
         // Upload / bind / map model data
-        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.verticesType), data.vertices);
-        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.normalsType), data.normals);
+        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.verticesType), data.vertices);
+        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.normalsType), data.normals);
         applyBuffer(GL_ARRAY_BUFFER, 2, getBufferUsageType(data.uvsType), data.uvs);
         applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.coloursType), data.colours);
 

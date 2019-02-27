@@ -81,6 +81,7 @@ namespace style {
     BufferData fillBuffers(GeometryT const &g, FlatShadingStyle const &) {
         BufferData data;
         typename GeometryT::Data d = generateGeometry(g);
+        data.dimensions = d.dimensions;
         static_assert(hasVertices<GeometryT>::value, "The FlatShadingStyle requires vertices. The geometry you are using does not provide them.");
         data.verticesType = d.verticesType;
         data.addVertices(d.vertices);

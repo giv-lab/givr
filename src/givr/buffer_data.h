@@ -9,6 +9,7 @@ namespace givr {
     struct BufferData {
         // Holds the necessary vertex buffer data
         // if the size is zero, then it is not used and will not be supplied to the shader
+        std::uint16_t dimensions = 3;
 
         BufferUsageType indicesType;
         std::vector<GLuint> indices;

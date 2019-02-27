@@ -86,6 +86,7 @@ namespace style {
         );
         BufferData data;
         typename GeometryT::Data d = generateGeometry(g);
+        data.dimensions = d.dimensions;
         data.addVertices(d.vertices);
 
         if constexpr (hasIndices<GeometryT>::value) {
