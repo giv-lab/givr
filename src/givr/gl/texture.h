@@ -17,7 +17,7 @@ namespace givr {
             void alloc();
             void dealloc();
             void bind(GLenum target);
-            void load(GLenum target, std::string filename, GLint level=0, GLenum format=GL_RGB);
+            void load(GLenum target, std::string filename, GLint level=0);
 
         private:
             GLuint m_textureID = 0;

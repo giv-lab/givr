@@ -1,30 +1,22 @@
 #include "phong.h"
 
-using phong = givr::style::PhongBase;
-using prc = givr::style::PhongRenderContext;
-using pirc = givr::style::PhongInstancedRenderContext;
+template<typename ColorSrc>
+using prc = givr::style::T_PhongRenderContext<ColorSrc>;
+template<typename ColorSrc>
+using pirc = givr::style::T_PhongInstancedRenderContext<ColorSrc>;
 using namespace givr::style;
 
-void phong::setUniforms(std::unique_ptr<givr::Program> const &p) const {
-    using namespace givr::style;
-    p->setVec3("colour", value<Colour>());
-    p->setVec3("lightPosition", value<LightPosition>());
-    p->setFloat("ambientFactor", value<AmbientFactor>());
-    p->setFloat("specularFactor",value<SpecularFactor>());
-    p->setFloat("phongExponent", value<PhongExponent>());
-    p->setBool("perVertexColour", value<PerVertexColour>());
-    p->setBool("showWireFrame", value<ShowWireFrame>());
-    p->setVec3("wireFrameColour", value<WireFrameColour>());
-    p->setFloat("wireFramePercent", value<WireFramePercent>());
-    p->setBool("generateNormals", value<GenerateNormals>());
-}
-
-std::string phongVertexSource(std::string modelSource) {
+std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture) {
     return
-        "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
+        "#version 330 core\n" +
+        std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        modelSource +
+        std::string(R"shader( mat4 model;
         in vec3 position;
         in vec3 normal;
-        in vec2 uvs;
+        #ifdef USING_TEXTURE
+            in vec2 uvs;
+        #endif
         in vec3 colour;
 
         uniform mat4 view;
@@ -33,6 +25,9 @@ std::string phongVertexSource(std::string modelSource) {
         out vec3 geomNormal;
         out vec3 geomOriginalPosition;
         out vec2 geomUv;
+        #ifdef USING_TEXTURE
+            out vec2 geomUv;
+        #endif
         out vec3 geomColour;
 
         void main(){
@@ -41,8 +36,10 @@ std::string phongVertexSource(std::string modelSource) {
             gl_Position = mvp * vec4(position, 1.0);
             geomOriginalPosition = vec3(model * vec4(position, 1.0));
             geomNormal = vec3(model*vec4(normal, 0));
-            geomUv = uvs;
             geomColour = colour;
+            #ifdef USING_TEXTURE
+                geomUv = uvs;
+            #endif
         }
 
         )shader"
@@ -118,13 +115,16 @@ std::string phongGeometrySource() {
         }
 
         )shader"
-    );
+        );
 }
 
 // Using wireframe technique from:
 // http://codeflow.org/entries/2012/aug/02/easy-wireframe-display-with-barycentric-coordinates/
-std::string phongFragmentSource() {
-    return std::string(R"shader(#version 330 core
+std::string givr::style::phongFragmentSource(bool usingTexture) {
+    return
+        "#version 330 core\n" +
+        std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(R"shader(
         #define M_PI 3.1415926535897932384626433832795
 
         float edgeFactor(vec3 vBC){
@@ -144,9 +144,17 @@ std::string phongFragmentSource() {
         uniform vec3 wireFrameColour;
         uniform float wireFramePercent;
 
+        #ifdef USING_TEXTURE
+            uniform sampler2D colorTexture;
+            in vec2 fragUv;
+
+            vec3 getColor(){ return texture(colorTexture, fragUv).rgb; }
+        #else
+            vec3 getColor(){ return colour; }
+        #endif
+
         in vec3 fragNormal;
         in vec3 originalPosition;
-        in vec2 fragUv;
         in vec3 fragColour;
         in vec3 fragBarycentricCoords;
 
@@ -154,7 +162,7 @@ std::string phongFragmentSource() {
 
         void main()
         {
-            vec3 finalColour = colour;
+            vec3 finalColour = getColor();
             if (perVertexColour) {
                 finalColour = fragColour;
             }
@@ -185,31 +193,5 @@ std::string phongFragmentSource() {
 
 
         )shader"
-    );
-}
-
-// TODO: these shaders are near duplicates of each other, we need to deal
-//       with this.
-std::string pirc::getVertexShaderSource() const {
-    return phongVertexSource("in");
-}
-
-std::string pirc::getGeometryShaderSource() const {
-    return phongGeometrySource();
-}
-
-std::string pirc::getFragmentShaderSource() const {
-    return phongFragmentSource();
-}
-
-std::string prc::getVertexShaderSource() const {
-    return phongVertexSource("uniform");
-}
-
-std::string prc::getGeometryShaderSource() const {
-    return phongGeometrySource();
-}
-
-std::string prc::getFragmentShaderSource() const {
-    return phongFragmentSource();
+        );
 }

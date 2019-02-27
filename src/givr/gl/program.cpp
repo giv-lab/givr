@@ -72,6 +72,11 @@ void Program::setFloat(const std::string &name, float value) const
     glUniform1f(glGetUniformLocation(m_programID, name.c_str()), value);
 }
 
+void Program::setInt(const std::string &name, int value) const
+{
+	glUniform1i(glGetUniformLocation(m_programID, name.c_str()), value);
+}
+
 /*
 void Program::setInt(const std::string &name, int value) const
 {

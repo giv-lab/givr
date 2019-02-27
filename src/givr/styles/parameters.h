@@ -1,6 +1,7 @@
 #pragma once
 #include "../utility.h"
 #include "../types.h"
+#include "../gl/texture.h"
 
 //------------------------------------------------------------------------------
 // Defines all of the parameters to style functions.
@@ -23,6 +24,7 @@ namespace style {
     using SpecularFactor = utility::Type<float, struct SpecularFactor_Tag>;
     using Width = utility::Type<float, struct Width_Tag>;
     using GenerateNormals = utility::Type<bool, struct GenerateNormals_Tag>;
+    using ColorTexture = utility::Type<Texture, struct ColorTexture_Tag>;
 
 } // end namespace style
 } // end namespace givr
