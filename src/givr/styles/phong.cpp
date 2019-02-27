@@ -45,7 +45,7 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         )shader"
     );
 }
-std::string phongGeometrySource() {
+std::string givr::style::phongGeometrySource() {
     return std::string(R"shader(
         #version 330 core
         layout (triangles) in;

@@ -54,10 +54,10 @@ namespace givr {
             p->setFloat("specularFactor", ctx.template value<SpecularFactor>());
             p->setFloat("phongExponent", ctx.template value<PhongExponent>());
             p->setBool("perVertexColour", ctx.template value<PerVertexColour>());
-            p->setBool("showWireFrame", value<ShowWireFrame>());
-            p->setVec3("wireFrameColour", value<WireFrameColour>());
-            p->setFloat("wireFramePercent", value<WireFramePercent>());
-            p->setBool("generateNormals", value<GenerateNormals>());
+            p->setBool("showWireFrame", ctx.template value<ShowWireFrame>());
+            p->setVec3("wireFrameColour", ctx.template value<WireFrameColour>());
+            p->setFloat("wireFramePercent", ctx.template value<WireFramePercent>());
+            p->setBool("generateNormals", ctx.template value<GenerateNormals>());
         }
 
         template <typename RenderContextT>
@@ -75,10 +75,10 @@ namespace givr {
             p->setFloat("specularFactor", ctx.template value<SpecularFactor>());
             p->setFloat("phongExponent", ctx.template value<PhongExponent>());
             p->setBool("perVertexColour", ctx.template value<PerVertexColour>());
-            p->setBool("showWireFrame", value<ShowWireFrame>());
-            p->setVec3("wireFrameColour", value<WireFrameColour>());
-            p->setFloat("wireFramePercent", value<WireFramePercent>());
-            p->setBool("generateNormals", value<GenerateNormals>());
+            p->setBool("showWireFrame", ctx.template value<ShowWireFrame>());
+            p->setVec3("wireFrameColour", ctx.template value<WireFrameColour>());
+            p->setFloat("wireFramePercent", ctx.template value<WireFramePercent>());
+            p->setBool("generateNormals", ctx.template value<GenerateNormals>());
         }
 
         template<typename ColorSrc>
