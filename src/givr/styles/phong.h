@@ -24,10 +24,10 @@ namespace givr {
             PerVertexColour> {
             T_PhongParameters() {
                 // Default values
-                set(PerVertexColour(false));
-                set(AmbientFactor(0.05f));
-                set(SpecularFactor(0.3f));
-                set(PhongExponent(8.0f));
+                this->set(PerVertexColour(false));
+                this->set(AmbientFactor(0.05f));
+                this->set(SpecularFactor(0.3f));
+                this->set(PhongExponent(8.0f));
             }
         };
 
@@ -104,37 +104,28 @@ namespace givr {
             using RenderContext = T_PhongRenderContext<ColorSrc>;
         };
 
-        template <typename ColorSrc, typename... Args>
-        T_PhongStyle<ColorSrc> T_Phong(Args &&... args) {
+        template <typename ColorSrc, typename... T_PhongArgs>
+        T_PhongStyle<ColorSrc> T_Phong(T_PhongArgs &&... args) {
             using required_args =
                 std::tuple<LightPosition, ColorSrc>;
 
             using namespace style;
             using namespace utility;
 
-            static_assert(
-                is_subset_of<
-                std::tuple<LightPosition>,
-                std::tuple<Args...>>,
-                "testing is_subset_of");
-            static_assert(!has_duplicate_types<Args...>,
+            static_assert(!has_duplicate_types<T_PhongArgs...>,
                 "The arguments you passed in have duplicate parameters");
 
-            static_assert(is_subset_of<required_args, std::tuple<Args...>>,
-                "LightPosition and Colour/ColorTexture are required parameters "
-                "for T_Phong."
-                "provide them.");
-            static_assert(is_subset_of<std::tuple<Args...>, T_PhongStyle<ColorSrc>::Args>,
+            static_assert(
+                is_subset_of<required_args, std::tuple<T_PhongArgs...>> &&
+                is_subset_of<std::tuple<T_PhongArgs...>, typename T_PhongStyle<ColorSrc>::Args> &&
+                sizeof...(args) <= std::tuple_size<typename T_PhongStyle<ColorSrc>::Args>::value,
                 "You have provided incorrect parameters for phong. "
-                "LightPosition and Colour/ColorTexture are required"
-                "PhongExponent and PerVertexColor are optional.");
-            static_assert(sizeof...(args) <= std::tuple_size<T_PhongStyle<ColorSrc>::Args>::value,
-                "You have provided incorrect parameters for phong. "
-                "LightPosition and Colour/ColorTexture are required"
-                "PhongExponent and PerVertexColor are optional.");
+                "LightPosition and (Colour or ColorTexture) are required "
+                "AmbientFactor, SpecularFactor PhongExponent and PerVertexColor "
+                "are optional.");
 
             T_PhongStyle<ColorSrc> p;
-            p.set(std::forward<Args>(args)...);
+            p.set(std::forward<T_PhongArgs>(args)...);
             return p;
         }
 
@@ -201,13 +192,13 @@ namespace givr {
         template <typename GeometryT, typename ColorSrc>
         typename T_PhongStyle<ColorSrc>::InstancedRenderContext
             getInstancedContext(GeometryT &g, T_PhongStyle<ColorSrc> const &p) {
-            return getContext<T_PhongStyle<ColorSrc>::InstancedRenderContext, GeometryT>(g, p);
+            return getContext<typename T_PhongStyle<ColorSrc>::InstancedRenderContext, GeometryT>(g, p);
         }
 
         template <typename GeometryT, typename ColorSrc>
         typename T_PhongStyle<ColorSrc>::RenderContext
             getContext(GeometryT &g, T_PhongStyle<ColorSrc> const &p) {
-            return getContext<T_PhongStyle<ColorSrc>::RenderContext, GeometryT>(g, p);
+            return getContext<typename T_PhongStyle<ColorSrc>::RenderContext, GeometryT>(g, p);
         }
 
         template <typename RenderContextT, typename ColorSrc>
@@ -217,7 +208,7 @@ namespace givr {
 
         // TODO: come up with a better way to not duplicate OpenGL state setup
         template <typename ViewContextT, typename ColorSrc>
-        void draw(typename T_PhongInstancedRenderContext<ColorSrc> &ctx, ViewContextT const &viewCtx) {
+        void draw(T_PhongInstancedRenderContext<ColorSrc> &ctx, ViewContextT const &viewCtx) {
             glEnable(GL_MULTISAMPLE);
             glEnable(GL_DEPTH_TEST);
             glEnable(GL_BLEND);
@@ -244,12 +235,16 @@ namespace givr {
         using TexturedPhongRenderContext = T_PhongRenderContext<ColorTexture>;
         using TexturedPhongInstancedRenderContext = T_PhongInstancedRenderContext<ColorTexture>;
         template<typename... Args>
-        TexturedPhongStyle TexturedPhong(Args &&... args) { return T_Phong<ColorTexture>(std::forward<Args>(args)...); }
+        TexturedPhongStyle TexturedPhong(Args &&... args) {
+            return T_Phong<ColorTexture>(std::forward<Args>(args)...);
+        }
         using PhongStyle = T_PhongStyle<Colour>;
         using PhongRenderContext = T_PhongRenderContext<Colour>;
         using PhongInstancedRenderContext = T_PhongInstancedRenderContext<Colour>;
         template<typename... Args>
-        PhongStyle Phong(Args &&... args) { return T_Phong<Colour>(std::forward<Args>(args)...); }
+        PhongStyle Phong(Args &&... args) {
+            return T_Phong<Colour>(std::forward<Args>(args)...);
+        }
 
     }// end namespace style
 }// end namespace givr
