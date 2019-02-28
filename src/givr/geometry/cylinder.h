@@ -53,9 +53,13 @@ namespace geometry {
             "You have provided incorrect parameters for Cylinder. "
             "Point1 and Point2 are required. Radius and AzimuthPoints are optional.");
         CylinderGeometry c;
+        c.set(Point1(0.f, 0.5f, 0.f));
+        c.set(Point2(0.f, -0.5f, 0.f));
         c.set(Radius(1.0f));
         c.set(AzimuthPoints(20));
-        c.set(std::forward<Args>(args)...);
+        if constexpr (sizeof...(args) > 0) {
+            c.set(std::forward<Args>(args)...);
+        }
         return c;
     }
 

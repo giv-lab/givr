@@ -30,6 +30,7 @@ namespace geometry {
 
     template <typename... Args>
     MultiLineGeometry MultiLine(Args &&... args) {
+        // TODO: we could do better compile time checking here.
         MultiLineGeometry geometry;
         geometry.segments() = {args...};
         return geometry;

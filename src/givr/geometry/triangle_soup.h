@@ -15,10 +15,10 @@ namespace geometry {
             std::vector<TriangleGeometry> &triangles() { return m_triangles; }
             std::vector<TriangleGeometry> const &triangles() const { return m_triangles; }
 
-            void addLine(TriangleGeometry t) {
+            void push_back(TriangleGeometry t) {
                 m_triangles.push_back(t);
             }
-            void addLine(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
+            void push_back(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
                 m_triangles.push_back(Triangle(Point1(p1), Point2(p2), Point3(p3)));
             }
 
