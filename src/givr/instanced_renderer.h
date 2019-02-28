@@ -31,6 +31,16 @@ namespace givr {
         GLuint endIndex;
 
         PrimitiveType primitive;
+
+        // Default ctor/dtor & move operations
+        InstancedRenderContext() = default;
+        ~InstancedRenderContext() = default;
+        InstancedRenderContext(InstancedRenderContext &&) = default;
+        InstancedRenderContext &operator=(InstancedRenderContext &&) = default;
+
+        // But no copy or assignment. Bad.
+        InstancedRenderContext(const InstancedRenderContext & ) = delete;
+        InstancedRenderContext &operator=(const InstancedRenderContext &) = delete;
     };
 
     template <typename ViewContextT>

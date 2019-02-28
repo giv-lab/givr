@@ -13,10 +13,15 @@ namespace givr {
         public:
             Buffer();
             // TODO(lw): make a version that just receives the source directly.
-            Buffer(const Buffer&) = delete;
-            Buffer(Buffer&&) = delete;
-            Buffer& operator=(const Buffer&) = delete;
-            Buffer& operator=(Buffer&&) = delete;
+
+            // Default ctor/dtor & move operations
+            Buffer(Buffer &&other) = default;
+            Buffer &operator=(Buffer &&rhs) = default;
+
+            // But no copy or assignment. Bad.
+            Buffer(const Buffer & ) = delete;
+            Buffer &operator=(const Buffer &) = delete;
+
             ~Buffer();
 
             operator GLuint() const { return m_bufferID; }

@@ -24,7 +24,7 @@ namespace givr {
             PerVertexColour,
             ShowWireFrame,
             WireFrameColour,
-            WireFramePercent,
+            WireFrameWidth,
             GenerateNormals
         > {
             T_PhongParameters() {
@@ -35,7 +35,7 @@ namespace givr {
                 this->set(PhongExponent(8.0f));
                 this->set(ShowWireFrame(false));
                 this->set(WireFrameColour(0.f, 0.f, 0.f));
-                this->set(WireFramePercent(0.02f));
+                this->set(WireFrameWidth(1.5f));
                 this->set(GenerateNormals(false));
             }
         };
@@ -56,7 +56,7 @@ namespace givr {
             p->setBool("perVertexColour", ctx.template value<PerVertexColour>());
             p->setBool("showWireFrame", ctx.template value<ShowWireFrame>());
             p->setVec3("wireFrameColour", ctx.template value<WireFrameColour>());
-            p->setFloat("wireFramePercent", ctx.template value<WireFramePercent>());
+            p->setFloat("wireFrameWidth", ctx.template value<WireFrameWidth>());
             p->setBool("generateNormals", ctx.template value<GenerateNormals>());
         }
 
@@ -77,7 +77,7 @@ namespace givr {
             p->setBool("perVertexColour", ctx.template value<PerVertexColour>());
             p->setBool("showWireFrame", ctx.template value<ShowWireFrame>());
             p->setVec3("wireFrameColour", ctx.template value<WireFrameColour>());
-            p->setFloat("wireFramePercent", ctx.template value<WireFramePercent>());
+            p->setFloat("wireFrameWidth", ctx.template value<WireFrameWidth>());
             p->setBool("generateNormals", ctx.template value<GenerateNormals>());
         }
 

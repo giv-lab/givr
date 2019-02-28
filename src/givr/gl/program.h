@@ -16,6 +16,14 @@ namespace givr {
         Program(GLuint vertex, GLuint geometry, GLuint fragment);
         ~Program();
 
+        // Default ctor/dtor & move operations
+        Program(Program &&other) = default;
+        Program &operator=(Program &&rhs) = default;
+
+        // But no copy or assignment. Bad.
+        Program(const Program & ) = delete;
+        Program &operator=(const Program &) = delete;
+
         operator GLuint() const { return m_programID; }
         void use();
 
@@ -24,7 +32,7 @@ namespace givr {
         void setMat4(const std::string &name, mat4f const &mat) const;
         void setBool(const std::string &name, bool value) const;
         void setFloat(const std::string &name, float value) const;
-		void setInt(const std::string &name, int value) const;
+        void setInt(const std::string &name, int value) const;
 
         // TODO: make these work for our math library
         /*
@@ -39,7 +47,7 @@ namespace givr {
 
         private:
             void linkAndErrorCheck();
-            GLuint m_programID;
+            GLuint m_programID = 0;
 
     };
 };// end namespace givr

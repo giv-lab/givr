@@ -127,12 +127,6 @@ std::string givr::style::phongFragmentSource(bool usingTexture) {
         std::string(R"shader(
         #define M_PI 3.1415926535897932384626433832795
 
-        float edgeFactor(vec3 vBC){
-            vec3 d = fwidth(vBC);
-            vec3 a3 = smoothstep(vec3(0.0), d*1.5, vBC);
-            return min(min(a3.x, a3.y), a3.z);
-        }
-
         uniform vec3 colour;
         uniform bool perVertexColour;
         uniform vec3 lightPosition;
@@ -142,7 +136,14 @@ std::string givr::style::phongFragmentSource(bool usingTexture) {
         uniform vec3 viewPosition;
         uniform bool showWireFrame;
         uniform vec3 wireFrameColour;
-        uniform float wireFramePercent;
+        uniform float wireFrameWidth;
+
+
+        float edgeFactor(vec3 vBC){
+            vec3 d = fwidth(vBC);
+            vec3 a3 = smoothstep(vec3(0.0), d*wireFrameWidth, vBC);
+            return min(min(a3.x, a3.y), a3.z);
+        }
 
         #ifdef USING_TEXTURE
             uniform sampler2D colorTexture;
@@ -185,7 +186,7 @@ std::string givr::style::phongFragmentSource(bool usingTexture) {
             vec3 specular = vec3(specularFactor) * spec; // assuming bright white light colour
 
             vec3 shadedColour = ambient + diffuse + specular;
-            if(showWireFrame && any(lessThan(fragBarycentricCoords, vec3(wireFramePercent)))){
+            if(showWireFrame) {
                 shadedColour = mix(wireFrameColour, shadedColour, edgeFactor(fragBarycentricCoords));
             }
             outColour = vec4(shadedColour, 1.0);

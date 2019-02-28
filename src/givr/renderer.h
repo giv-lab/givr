@@ -30,6 +30,16 @@ namespace givr {
         PrimitiveType primitive;
 
         bool hasIndices = false;
+
+        // Default ctor/dtor & move operations
+        RenderContext() = default;
+        ~RenderContext() = default;
+        RenderContext(RenderContext &&) = default;
+        RenderContext &operator=(RenderContext &&) = default;
+
+        // But no copy or assignment. Bad.
+        RenderContext(const RenderContext & ) = delete;
+        RenderContext &operator=(const RenderContext &) = delete;
     };
 
     template <typename ViewContextT>
