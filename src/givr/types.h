@@ -10,7 +10,7 @@ namespace givr {
     using vec3f = glm::vec3;
     using mat4f = glm::mat4;
 
-    enum class primitive_type {
+    enum class PrimitiveType {
         POINTS,
         LINES,
         LINE_LOOP,
@@ -24,12 +24,12 @@ namespace givr {
         TRIANGLE_STRIP_ADJACENCY
     };
 
-    GLenum get_mode(primitive_type const &t);
+    GLenum getMode(PrimitiveType const &t);
 
-    enum class buffer_usage_type {
+    enum class BufferUsageType {
         STATIC_DRAW,
         DYNAMIC_DRAW
     };
-    GLenum get_buffer_usage_type(buffer_usage_type const &d);
+    GLenum getBufferUsageType(BufferUsageType const &d);
 
 };// end namespace givr

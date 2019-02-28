@@ -1,4 +1,6 @@
 .. _givr-styles:
+.. role:: cpp(code)
+   :language: cpp
 
 Styles
 ==========
@@ -8,92 +10,157 @@ Styles
 givr provides the following types of styles.
 
 
-Lines
+GL Lines
 --------------------------------------------------------------------------------
-The line style is used to render the geometry types that are just lines.
-Lines have no normals or shading. They cannot be rendered with phong shading.
-Thus the givr::lines style is necessary.
+The line style is used to render the geometry types that are rendered using
+OpenGL lines.  Lines have no normals or shading. They cannot be rendered with
+phong shading.  Thus the :cpp:`givr::styles::GL_Line` style is necessary.
 
 
 Parameters
 **********
-Lines have two parameters. The first is the colour of the line. The second
-is the width of the line::
 
-    struct lines_params {
-        vec3f colour;
-        float line_width = 1.f;
-    };
+Lines have two parameters:
 
-*NOTE:* Not all opengl implementation allow setting line width to all values.
+ - :cpp:`Colour(float, float, float)`: The colour of the line.
+
+   - **Required**
+
+ - :cpp:`Width(float)`: The width of the line.
+
+   - *Default*: :cpp:`Width(1.f)`
+
+
+*NOTE:* Not all opengl implementations allow setting line width to all values.
 When you set it to a value it doesn't support, the resulting line width is
-usually the closest supported value.
+usually the closest supported value. Some implementations only support line
+width of 1.0. If you need better control over your lines, then consider the
+cylinder class
 
 Required Data
 *************
 Lines require that the geometry you provide it uses one of the following
 primitive types:
 
-  - givr::primitive_type::LINES
-  - givr::primitive_type::LINE_LOOP
-  - givr::primitive_type::LINE_STRIP
-  - givr::primitive_type::LINES_ADJACENCY
-  - givr::primitive_type::LINE_STRIP_ADJACENCY
+  - :cpp:`givr::PrimitiveType::LINES`
+  - :cpp:`givr::PrimitiveType::LINE_LOOP`
+  - :cpp:`givr::PrimitiveType::LINE_STRIP`
+  - :cpp:`givr::PrimitiveType::LINES_ADJACENCY`
+  - :cpp:`givr::PrimitiveType::LINE_STRIP_ADJACENCY`
 
-It also requires that the gemoetry provides vertices.
+It also requires that the geometry provides vertices.
 
 Example
 ********
-::
+
+A simple example::
+
     //  make a style that renders lines as green and 15 wide.
-    auto linestyle = givr::lines{vec3f{0.0, 1.0, 0.0}, 15};
+    auto lineStyle = GL_Line(Width(15.), Colour(0.0, 1.0, 0.0));
+
+NoShading
+--------------------------------------------------------------------------------
+The NoShading style is a simple style which simply fills in geometry with
+a single colour. No shading is done. Useful for things like using cylinders
+to approximate lines in an orthographic view.
+
+Parameters
+**********
+The NoShading style provides a single parameter
+
+ - :cpp:`Colour(float, float, float)`: The colour of the object 
+
+   - **Required**
+
+
+Required Data
+*************
+It has no restrictions on the type of geometry it can render.
+
+Example
+********
+
+A simple example::
+
+    auto noshading = NoShading(Colour(1.0, 0.0, 0.0));
 
 
 Phong
 --------------------------------------------------------------------------------
-The phong style is a simple style which provides smooth 3D shaded geometry. 
+The phong style is a simple style which provides 3D shaded geometry. 
 
 *NOTE*: If you provide normals that are not smooth, then the phong shader
-will generate flat shading across the entire triangle. As an example, if you
-use the `triangle_soup` geometry with the phong shader, it will appear as
-flat shading as the normals provided by this geometry are not smooth across
-adjacent triangles.
+will generate flat shading. As an example, if you use the `TriangleSoup` geometry
+with the phong shader, it will use flat shading as the normals provided by this
+geometry are not smooth across adjacent triangles edges. 
 
 Parameters
 **********
-The phong shader provides a number of parameters::
+The phong shader provides a number of parameters
 
-    struct phong_parameters {
-        vec3f colour;
-        vec3f light_position;
-        bool per_vertex_colour = false;
-        float ambient_factor = 0.05f;
-        float specular_factor = 0.3f;
-        float phong_exponent = 8.0f;
-    };
+ - :cpp:`Colour(float, float, float)`: The colour of the object 
 
-The colour is the colour of the entire object. The light position is the
-position of the light. If you have provided `colours` as part of your geometry
-and would like to use per vertex colours, then you can set `per_vertex_colour`
-to true.  The `ambient_factor`, `specular_factor` and `phong_exponent`
-variables affect the lighting style.
+   - **Required**
+
+ - :cpp:`LightPosition(float, float, float)`: The position of the light.
+
+   - **Required**
+
+ - :cpp:`AmbientFactor(float)`: The Ambient lighting factor.
+
+   - *Default*: :cpp:`AmbientFactor(0.05f)`
+
+ - :cpp:`SpecularFactor(float)`: The Specular lighting factor.
+
+   - *Default*: :cpp:`SpecularFactor(0.3f)`
+
+ - :cpp:`PhongExponent(float)`: The Phong Exponent.
+
+   - *Default*: :cpp:`PhongExponent(0.8f)`
+
+ - :cpp:`ShowWireFrame(bool)`: Whether to show wireframe or not.  Uses the geometry shader.
+
+   - *Default*: :cpp:`ShowWireFrame(false)`
+
+ - :cpp:`WireFrameColour(float, float, float)`: The colour of the wireframe.
+
+   - *Default*: :cpp:`WireFrameColour(0.f, 0.f, 0.f)`
+
+ - :cpp:`WireFrameWidth(float)`: The approximate width of the wireframe lines.
+   
+   - *Default* :cpp:`WireFrameWidth(1.5f)`
+
+ - :cpp:`GenerateNormals(bool)`: Whether to automatically generate normals for
+   each triangle. Uses the geometry shader. Normals are per-triangle and as such
+   produce flat shading.
+   
+   - *Default*: :cpp:`GenerateNormals(false)`
+
+ - :cpp:`PerVertexColour(bool)`: Whether to use the colours specified as part
+   of the geometry, where each vertex has its own colour value.
+   
+   - *Default*: :cpp:`PerVertexColour(false)`
+
 
 Required Data
 *************
 The phong style requires that your geometry uses  one of the following
 primitive types:
 
-  - givr::primitive_type::TRIANGLES
-  - givr::primitive_type::TRIANGLE_STRIP
-  - givr::primitive_type::TRIANGLE_FAN
-  - givr::primitive_type::TRIANGLES_ADJACENCY
-  - givr::primitive_type::TRIANGLE_STRIP_ADJACENCY
+  - :cpp:`givr::PrimitiveType::TRIANGLES`
+  - :cpp:`givr::PrimitiveType::TRIANGLE_STRIP`
+  - :cpp:`givr::PrimitiveType::TRIANGLE_FAN`
+  - :cpp:`givr::PrimitiveType::TRIANGLES_ADJACENCY`
+  - :cpp:`givr::PrimitiveType::TRIANGLE_STRIP_ADJACENCY`
 
+It also requires that the geometry provides vertices. 
 
 Example
 ********
-::
 
-    givr::phong phong_style;
-    phong_style.colour = vec3f{71.0/255.0, 111.0/255.0, 255.0/255.0};
-    phong_style.light_position = vec3f{-60.0, 30.0, -60.0};
+A simple example::
+
+    auto phongStyle = Phong(
+        LightPosition(0.0, 0.0, 100.0),
+        Colour(1.0, 1.0, 0.1529)
+    );

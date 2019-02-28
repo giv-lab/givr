@@ -1,4 +1,6 @@
 .. _givr-camera-and-projection:
+.. role:: cpp(code)
+   :language: cpp
 
 Camera and Projection
 ======================
@@ -17,33 +19,34 @@ The view context is provided by givr and is a simple templated struct which hold
 a reference to a camera and projection class.
 
 In the example code below and in the examples provided throughout the documentation
-the type for the camera is `givr::turntable` and the type for the projection is
-`givr::perspective_view`.  The instance of the camera is available via the 
-`view.camera` attribute and the instance of the projection is available via the
-`view.projection` attribute.  Both types must be able to be instantiated with
+the type for the camera is :cpp:`givr::camera::TurnTable` and the type for the projection is
+:cpp:`givr::camera::PerspectiveView`.  The instance of the camera is available via the 
+:cpp:`view.camera` attribute and the instance of the projection is available via the
+:cpp:`view.projection` attribute.  Both types must be able to be instantiated with
 no parameters. 
 
 Example
 ********
+
 ::
 
-    givr::view_context<givr::turntable, givr::perspective_view> view;
+    auto view = View(TurnTable(), Perspective());
 
 
 
 Camera
 --------------------------------------------------------------------------------
-The only camera type built into givr at the moment is a turntable camera,
-which provides some simple turntable type controls. You can rotate around
+The only camera type built into givr at the moment is a TurnTable camera,
+which provides some simple TurnTable type controls. You can rotate around
 two axes and zoom in and out.
 
 If you would like to provide your own camera, you may do so. In order to do
 so you must do four things:
 
 1. Create a custom type (struct/class) that represents your camera.
-2. Define a `mat4f get_view_matrix(MyCameraT const &camera)` function which
+2. Define a `mat4f getViewMatrix(MyCameraT const &camera)` function which
    within that class generates the view matrix from the camera instance.
-3. Define a `mat4f get_view_position(MyCameraT const &camera)` function which
+3. Define a `mat4f getViewPosition(MyCameraT const &camera)` function which
    within that class generates the view position for given camera instance.
 4. Specify this type of camera for your view context
 
@@ -57,20 +60,20 @@ Example
 ::
 
    struct MyCamera {
-       static mat4f get_view_matrix(MyCamera const &c) {
+       static mat4f getViewMatrix(MyCamera const &c) {
            auto up = ...;
            auto pos =  ...;
            auto lookAtPoint =  ...;
            return lookAt(pos, up, lookAtPoint);
        }
 
-       static vec3f get_view_position(MyCamera const &c) {
+       static vec3f getViewPosition(MyCamera const &c) {
            auto pos = ...;
            return pos;
        }
    };
    ...
-   givr::view_context<MyCamera, givr::perspective_view> view;
+   givr::ViewContext<MyCamera, givr::PerspectiveView> view;
 
 Projection
 --------------------------------------------------------------------------------
@@ -78,7 +81,7 @@ Similar to the Camera class above, the projection class can also be customized.
 you need do 3 things for the project class
 
 1. Create a custom type (struct/class) that represents your projection.
-2. Define a `mat4f get_projection_matrix(MyProjectionT const &camera)`
+2. Define a `mat4f getProjectionMatrix(MyProjectionT const &camera)`
    within that class function which generates the view matrix from the
    projection instance.
 3. Specify this type of projection for your view context

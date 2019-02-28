@@ -1,47 +1,31 @@
 #include "buffer.h"
 #include <cassert>
 
-using buffer = givr::buffer;
+using Buffer = givr::Buffer;
 
-buffer::buffer(
-    GLuint num
-) : m_number_buffers{num}
-  , m_buffer_ids{nullptr}
+Buffer::Buffer(
+) : m_bufferID{0}
 {
-    alloc(num);
+    alloc();
 }
 
-buffer::buffer(
-) : m_number_buffers{0}
-  , m_buffer_ids{nullptr}
-{
-}
-
-void buffer::alloc(GLuint num) {
+void Buffer::alloc() {
     dealloc();
-    m_number_buffers = num;
-    m_buffer_ids = new GLuint[m_number_buffers];
-    glGenBuffers(m_number_buffers, m_buffer_ids);
+    glGenBuffers(1, &m_bufferID);
 }
-void buffer::dealloc() {
-    if (m_buffer_ids) {
-        glDeleteBuffers(m_number_buffers, m_buffer_ids);
-        delete[] m_buffer_ids;
-        m_number_buffers = 0;
+void Buffer::dealloc() {
+    if (m_bufferID) {
+        glDeleteBuffers(1, &m_bufferID);
     }
 }
 
-void buffer::bind(GLenum target) {
-    bind(target, 0);
+void Buffer::bind(GLenum target) {
+    glBindBuffer(target, m_bufferID);
 }
-void buffer::bind(GLenum target, GLuint i) {
-    assert(i < m_number_buffers);
-    glBindBuffer(target, m_buffer_ids[i]);
-}
-void buffer::unbind(GLenum target) {
+void Buffer::unbind(GLenum target) {
     glBindBuffer(target, 0);
 }
 
-buffer::~buffer() {
+Buffer::~Buffer() {
     dealloc();
 }

@@ -1,62 +1,64 @@
 #include "texture.h"
 #include <cassert>
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-using texture = givr::texture;
 
-texture::texture(
-) : m_number_textures{0}
-  , m_texture_ids{nullptr}
+using Texture = givr::Texture;
+
+Texture::Texture(
+) : m_textureID{0}
 {
-}
-texture::texture(
-    GLuint num
-) : m_number_textures{num}
-  , m_texture_ids{nullptr}
-{
-    alloc(num);
+    alloc();
 }
 // TODO(lw): make a version that just receives the source directly.
-texture::~texture() {
+Texture::~Texture() {
+    dealloc();
 }
 
-void texture::alloc(GLuint num)
+void Texture::alloc()
 {
     dealloc();
-    m_number_textures = num;
-    m_texture_ids = new GLuint[m_number_textures];
-    glGenTextures(m_number_textures, m_texture_ids);
+    glGenTextures(1, &m_textureID);
 }
-void texture::dealloc()
+void Texture::dealloc()
 {
-    if (m_texture_ids) {
-        glDeleteBuffers(m_number_textures, m_texture_ids);
-        delete[] m_texture_ids;
-        m_number_textures = 0;
+    if (m_textureID) {
+        //Temporarily disabled until better way to manage IDs is decided on
+        //glDeleteBuffers(1, &m_textureID);
     }
 }
 
-void texture::bind(GLenum target)
+void Texture::bind(GLenum target)
 {
-    bind(target, 0);
+    glBindTexture(target, m_textureID);
 }
 
-void texture::bind(GLenum target, GLuint i)
+void Texture::load(GLenum target, std::string filename, GLint level)
 {
-    assert(i < m_number_textures);
-    glBindTexture(target, m_texture_ids[i]);
-}
+    int width, height, comp;
+    unsigned char *image = stbi_load(filename.c_str(),
+        &width, &height, &comp, 0);
 
-void texture::load(GLenum target, std::string filename, GLint level, GLenum format)
-{
-    // load and generate the texture
-    int width, height, channels;
-    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-    if (data) {
-        glTexImage2D(target, level, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(target);
-    } else {
+    if ((image == nullptr) || (comp > 4)) {
         throw std::runtime_error("Failed to load texture");
+    } else {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        const GLenum formats[4] = { GL_RED, GL_RG, GL_RGB, GL_RGBA };
+
+        glActiveTexture(GL_TEXTURE0);    //Bind to avoid disturbing active units
+        glBindTexture(target, m_textureID);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glTexImage2D(target, level, formats[comp - 1], width,
+            height, 0, formats[comp - 1], GL_UNSIGNED_BYTE, image);
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);        //Return to default
     }
-    stbi_image_free(data);
+
+    stbi_image_free(image);
+
 }

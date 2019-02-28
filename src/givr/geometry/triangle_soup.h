@@ -6,25 +6,43 @@
 #include "triangle.h"
 
 namespace givr {
+namespace geometry {
 
-    struct triangle_soup {
-        std::vector<triangle> triangles;
+    struct TriangleSoupGeometry {
+        private:
+            std::vector<TriangleGeometry> m_triangles;
+        public:
+            std::vector<TriangleGeometry> &triangles() { return m_triangles; }
+            std::vector<TriangleGeometry> const &triangles() const { return m_triangles; }
 
-        void add_line(triangle t) {
-            triangles.push_back(t);
-        }
-        void add_line(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
-            triangles.push_back(triangle{p1, p2, p3});
-        }
+            void push_back(TriangleGeometry t) {
+                m_triangles.push_back(t);
+            }
+            void push_back(vec3f const &p1, vec3f const &p2, vec3f const &p3) {
+                m_triangles.push_back(Triangle(Point1(p1), Point2(p2), Point3(p3)));
+            }
 
-        struct data : public vertex_array_data<primitive_type::TRIANGLES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
-            std::vector<float> vertices;
+            struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+                std::uint16_t dimensions = 3;
 
-            buffer_usage_type normals_type = buffer_usage_type::STATIC_DRAW;
-            std::vector<float> normals;
-        };
+                BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> vertices;
+
+                BufferUsageType normalsType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> normals;
+            };
     };
 
-    triangle_soup::data generate_geometry(triangle_soup const &t);
-};// end namespace givr
+    template <typename... Args>
+    TriangleSoupGeometry TriangleSoup(Args &&... args) {
+        TriangleSoupGeometry geometry;
+        std::vector<TriangleGeometry> tris{args...};
+        for (auto &t : tris) {
+            geometry.triangles().push_back(t);
+        }
+        return geometry;
+    }
+
+    TriangleSoupGeometry::Data generateGeometry(TriangleSoupGeometry const &t);
+}// end namespace geometry
+}// end namespace givr

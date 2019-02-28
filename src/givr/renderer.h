@@ -15,55 +15,65 @@
 
 namespace givr {
 
-    struct render_context {
-        std::unique_ptr<program> shader_program;
-        std::unique_ptr<vertex_array> vao;
+    struct RenderContext {
+        std::unique_ptr<Program> shaderProgram;
+        std::unique_ptr<VertexArray> vao;
 
         // Keep references to the GL_ARRAY_BUFFERS so that
         // the stay in scope for this context.
-        std::vector<std::unique_ptr<buffer>> array_buffers;
+        std::vector<std::unique_ptr<Buffer>> arrayBuffers;
 
-        GLuint number_of_indices;
-        GLuint start_index;
-        GLuint end_index;
+        GLuint numberOfIndices;
+        GLuint startIndex;
+        GLuint endIndex;
 
-        primitive_type primitive;
+        PrimitiveType primitive;
 
-        bool has_indices = false;
+        bool hasIndices = false;
+
+        // Default ctor/dtor & move operations
+        RenderContext() = default;
+        ~RenderContext() = default;
+        RenderContext(RenderContext &&) = default;
+        RenderContext &operator=(RenderContext &&) = default;
+
+        // But no copy or assignment. Bad.
+        RenderContext(const RenderContext & ) = delete;
+        RenderContext &operator=(const RenderContext &) = delete;
     };
 
     template <typename ViewContextT>
-    void draw_array(
-        render_context &ctx,
-        ViewContextT const &view_ctx,
-        std::function<void(std::unique_ptr<program> const&)> set_uniforms
+    void drawArray(
+        RenderContext &ctx,
+        ViewContextT const &viewCtx,
+        std::function<void(std::unique_ptr<Program> const&)> setUniforms
     ) {
-        ctx.shader_program->use();
+        ctx.shaderProgram->use();
 
-        mat4f view = get_view_matrix(view_ctx.camera);
-        mat4f projection = get_projection_matrix(view_ctx.projection);
-        vec3f view_pos = get_view_position(view_ctx.camera);
+        mat4f view = viewCtx.camera.viewMatrix();
+        mat4f projection = viewCtx.projection.projectionMatrix();
+        vec3f viewPosition = viewCtx.camera.viewPosition();
 
-        ctx.shader_program->set_vec3("view_pos", view_pos);
-        ctx.shader_program->set_mat4("view", view);
-        ctx.shader_program->set_mat4("projection", projection);
-        set_uniforms(ctx.shader_program);
+        ctx.shaderProgram->setVec3("viewPosition", viewPosition);
+        ctx.shaderProgram->setMat4("view", view);
+        ctx.shaderProgram->setMat4("projection", projection);
+        setUniforms(ctx.shaderProgram);
         ctx.vao->bind();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        GLenum mode = givr::get_mode(ctx.primitive);
-        if (ctx.number_of_indices > 0) {
-            glDrawElements(mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0);
+        glPolygonMode(GL_FRONT, GL_FILL);
+        GLenum mode = givr::getMode(ctx.primitive);
+        if (ctx.numberOfIndices > 0) {
+            glDrawElements(mode, ctx.numberOfIndices, GL_UNSIGNED_INT, 0);
         } else {
-            glDrawArrays(mode, ctx.start_index, ctx.end_index);
+            glDrawArrays(mode, ctx.startIndex, ctx.endIndex);
         }
 
         ctx.vao->unbind();
     }
-    void allocate_buffers(
-        render_context &ctx
+    void allocateBuffers(
+        RenderContext &ctx
     );
-    void upload_buffers(
-        render_context &ctx,
-        buffer_data const &data
+    void uploadBuffers(
+        RenderContext &ctx,
+        BufferData const &data
     );
 };// end namespace givr

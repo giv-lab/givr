@@ -3,22 +3,39 @@
 
 #include "../vertex_array_data.h"
 #include "../types.h"
+#include "geometry.h"
 #include "line.h"
 
 namespace givr {
+namespace geometry {
 
-    struct multiline {
-        std::vector<line> segments;
+    struct MultiLineGeometry {
+        private:
+            std::vector<LineGeometry> m_segments;
 
-        void add_line(line l);
-        void add_line(vec3f const &p1, vec3f const &p2);
+        public:
+            std::vector<LineGeometry> &segments() { return m_segments; }
+            std::vector<LineGeometry> const &segments() const { return m_segments; }
+            std::vector<LineGeometry> &operator*() { return m_segments; }
 
+            void push_back(LineGeometry l);
 
-        struct data : public vertex_array_data<primitive_type::LINES> {
-            buffer_usage_type vertices_type = buffer_usage_type::STATIC_DRAW;
-            std::vector<float> vertices;
-        };
+            struct Data : public VertextArrayData<PrimitiveType::LINES> {
+                std::uint16_t dimensions = 3;
+
+                BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
+                std::vector<float> vertices;
+            };
     };
 
-    multiline::data generate_geometry(multiline const &l);
-};// end namespace givr
+    template <typename... Args>
+    MultiLineGeometry MultiLine(Args &&... args) {
+        // TODO: we could do better compile time checking here.
+        MultiLineGeometry geometry;
+        geometry.segments() = {args...};
+        return geometry;
+    }
+
+    MultiLineGeometry::Data generateGeometry(MultiLineGeometry const &l);
+}// end namespace geometry
+}// end namespace givr

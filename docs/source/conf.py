@@ -41,6 +41,7 @@ release = '0.0.1'
 extensions = [
     'sphinx.ext.imgmath',
     'sphinx.ext.githubpages',
+    'sphinxcontrib.inlinesyntaxhighlight',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -68,7 +69,8 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = "manni"
+# pygments_style = "fruity"
 
 
 # -- Options for HTML output -------------------------------------------------

@@ -2,28 +2,64 @@
 #include <cmath>
 
 #include "../types.h"
+#include "camera.h"
+#include "parameters.h"
 
 namespace givr {
+namespace camera {
     constexpr const float LONGITUDE_MAX = 2. * M_PI;
     constexpr const float LATITUDE_MAX = M_PI;
 
-    struct turntable {
+    struct TurnTableCamera
+        : public Camera<Longitude, Latitude, Zoom, Translation>
+    {
         // TODO: ensure these are in the right ranges.
-        float latitude = LATITUDE_MAX / 2.;
-        float longitude = 0.f;//LONGITUDE_MAX / 2.;
-        float radius = 75.f;
-        vec3f translation = vec3f{ 0.f, 0.f, 0.f };
+        TurnTableCamera() {
+            set(Latitude(LATITUDE_MAX / 2.));
+            set(Longitude(0.f));
+            set(Zoom(75.f));
+            set(Translation(0.f, 0.f, 0.f));
+        }
 
-        void rotate_around_x_percent(float perc);
-        void rotate_around_y_percent(float perc);
-        void rotate_around_x(float angle);
-        void rotate_around_y(float angle);
+        float const &latitude() const { return value<Latitude>().value(); }
+        float const &longitude() const { return value<Longitude>().value(); }
+        float const &zoom() const { return value<Zoom>().value(); }
+        vec3f const &translation() const { return value<Translation>().value(); }
+
+        float &latitude() { return value<Latitude>().value(); }
+        float &longitude() { return value<Longitude>().value(); }
+        float &zoom() { return value<Zoom>().value(); }
+        vec3f &translation() { return value<Translation>().value(); }
+
+        void rotateAroundXPercent(float perc);
+        void rotateAroundYPercent(float perc);
+        void rotateAroundX(float angle);
+        void rotateAroundY(float angle);
         void zoom(float amount);
         void translate(vec3f amount);
+
+        mat4f viewMatrix() const;
+        vec3f viewPosition() const;
     };
 
-    mat4f get_view_matrix(turntable const & t);
+    template <typename... Args>
+    TurnTableCamera TurnTable(Args &&... args) {
+        using namespace utility;
+        static_assert(!has_duplicate_types<Args...>,
+            "The arguments you passed in have duplicate parameters");
 
-    vec3f get_view_position(turntable const & t);
+        static_assert(
+            is_subset_of<std::tuple<Args...>, TurnTableCamera::Args> &&
+            sizeof...(args) <= std::tuple_size<TurnTableCamera::Args>::value,
+            "You have provided incorrect parameters for TurnTable. "
+            "Longitude, Latitude, Zoom and Translation are optional.");
+        TurnTableCamera pv;
 
-}; // end namespace givr
+        if constexpr (sizeof...(args) > 0) {
+            pv.set(std::forward<Args>(args)...);
+        }
+        return pv;
+    }
+
+} // end namespace camera
+} // end namespace givr

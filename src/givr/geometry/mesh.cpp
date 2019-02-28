@@ -26,6 +26,7 @@ namespace std {
 };
 
 namespace givr {
+namespace geometry {
 
     template<typename V1, typename V2>
     std::tuple<std::vector<unsigned int>, V1, V2> two_index_unifier(
@@ -112,7 +113,7 @@ namespace givr {
         return { unified_indices, unified_dataA, unified_dataB, unified_dataC };
     }
 
-    mesh::data load_mesh_file(const char *file_name) {
+    MeshGeometry::Data loadMeshFile(const char *file_name) {
 
         //Tiny obj loading
         tinyobj::attrib_t attrib;
@@ -123,7 +124,7 @@ namespace givr {
 
         if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &errors, file_name)) {
             std::cerr << errors << std::endl;
-            return mesh::data{};
+            return MeshGeometry::Data{};
         }
 
         std::vector<float> multi_index_vertex_data = attrib.vertices;
@@ -138,11 +139,11 @@ namespace givr {
             normal_indices.push_back(index.normal_index);
         }
 
-        mesh::data unified_index_mesh;
+        MeshGeometry::Data unifiedIndexMesh;
 
         if (multi_index_uv_data.size() == 0 && multi_index_normal_data.size() == 0) {
-            unified_index_mesh.indices = vertex_indices;
-            unified_index_mesh.vertices = multi_index_vertex_data;
+            unifiedIndexMesh.indices = vertex_indices;
+            unifiedIndexMesh.vertices = multi_index_vertex_data;
         }
         else if (multi_index_normal_data.size() != 0 && multi_index_uv_data.size() == 0) {
             auto[unified_indices, unified_vertices, unified_normals] = two_index_unifier(
@@ -150,9 +151,9 @@ namespace givr {
                 normal_indices, multi_index_normal_data, 3
             );
 
-            unified_index_mesh.indices = unified_indices;
-            unified_index_mesh.vertices = unified_vertices;
-            unified_index_mesh.normals = unified_normals;
+            unifiedIndexMesh.indices = unified_indices;
+            unifiedIndexMesh.vertices = unified_vertices;
+            unifiedIndexMesh.normals = unified_normals;
         }
         else if (multi_index_normal_data.size() == 0 && multi_index_uv_data.size() != 0) {
             auto[unified_indices, unified_vertices, unified_uvs] = two_index_unifier(
@@ -160,9 +161,9 @@ namespace givr {
                 normal_indices, multi_index_uv_data, 2
             );
 
-            unified_index_mesh.indices = unified_indices;
-            unified_index_mesh.vertices = unified_vertices;
-            unified_index_mesh.uvs = unified_uvs;
+            unifiedIndexMesh.indices = unified_indices;
+            unifiedIndexMesh.vertices = unified_vertices;
+            unifiedIndexMesh.uvs = unified_uvs;
         }
         else{
             auto[unified_indices, unified_vertices, unified_normals, unified_uvs] = three_index_unifier(
@@ -170,19 +171,20 @@ namespace givr {
                 normal_indices, multi_index_normal_data, 3,
                 uv_indices, multi_index_uv_data, 2);
 
-            unified_index_mesh.indices = unified_indices;
-            unified_index_mesh.vertices = unified_vertices;
-            unified_index_mesh.normals = unified_normals;
-            unified_index_mesh.uvs = unified_uvs;
+            unifiedIndexMesh.indices = unified_indices;
+            unifiedIndexMesh.vertices = unified_vertices;
+            unifiedIndexMesh.normals = unified_normals;
+            unifiedIndexMesh.uvs = unified_uvs;
         }
 
-        //unified_index_mesh.uvs.resize(unified_index_mesh.vertices.size() * 2 / 3);
-        return unified_index_mesh;
+        //unifiedIndexMesh.uvs.resize(unifiedIndexMesh.vertices.size() * 2 / 3);
+        return unifiedIndexMesh;
 
     }
 
-    mesh::data generate_geometry(const mesh& m) {
-        return load_mesh_file(m.filename.c_str());
+    MeshGeometry::Data generateGeometry(const MeshGeometry& m) {
+        return loadMeshFile(m.value<Filename>().value().c_str());
     }
 
-};
+}// namespace geometry
+}// namespace givr

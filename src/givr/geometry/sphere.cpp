@@ -3,10 +3,10 @@
 #include <cassert>
 #include <cmath>
 
-using sphere = givr::sphere;
+using SphereGeometry = givr::geometry::SphereGeometry;
 
-sphere::data givr::generate_geometry(sphere const &s) {
-    sphere::data data;
+SphereGeometry::Data givr::geometry::generateGeometry(SphereGeometry const &s) {
+    SphereGeometry::Data data;
 
     // TODO: should make this reserve the space necessary for the sphere.
 
@@ -15,36 +15,40 @@ sphere::data givr::generate_geometry(sphere const &s) {
     auto sphereFunc = [](float azi, float alt) {
         return point{ std::cos(azi)*std::sin(alt), std::cos(alt), std::sin(azi)*std::sin(alt) };
     };
+    auto azimuthPoints = s.value<AzimuthPoints>().value();
+    auto altitudePoints = s.value<AltitudePoints>().value();
+    auto centroid = s.value<Centroid>().value();
+    auto radius = s.value<Radius>().value();
 
-    for (size_t azi = 0; azi < s.azimuthPoints; azi++) {
-        for (size_t alt = 0; alt < s.altitudePoints; alt++) {
-            if (azi < s.azimuthPoints - 1 && alt < s.altitudePoints - 1) {
-                data.indices.push_back(alt + azi * s.altitudePoints);
-                data.indices.push_back((alt + 1) + azi * s.altitudePoints);
-                data.indices.push_back((alt + 1) + (azi + 1)* s.altitudePoints);
+    for (size_t azi = 0; azi < azimuthPoints; azi++) {
+        for (size_t alt = 0; alt < altitudePoints; alt++) {
+            if (azi < azimuthPoints - 1 && alt < altitudePoints - 1) {
+                data.indices.push_back((alt + 1) + (azi + 1)* altitudePoints);
+                data.indices.push_back((alt + 1) + azi * altitudePoints);
+                data.indices.push_back(alt + azi * altitudePoints);
 
-                data.indices.push_back(alt + azi * s.altitudePoints);
-                data.indices.push_back((alt + 1) + (azi + 1)*s.altitudePoints);
-                data.indices.push_back(alt + (azi + 1)*s.altitudePoints);
+                data.indices.push_back(alt + (azi + 1)*altitudePoints);
+                data.indices.push_back((alt + 1) + (azi + 1)*altitudePoints);
+                data.indices.push_back(alt + azi * altitudePoints);
             }
-            else if(alt < s.altitudePoints - 1){
-                data.indices.push_back(alt + azi * s.altitudePoints);
-                data.indices.push_back((alt + 1) + azi * s.altitudePoints);
+            else if(alt < altitudePoints - 1){
                 data.indices.push_back((alt + 1));
+                data.indices.push_back((alt + 1) + azi * altitudePoints);
+                data.indices.push_back(alt + azi * altitudePoints);
 
-                data.indices.push_back(alt + azi * s.altitudePoints);
-                data.indices.push_back((alt + 1));
                 data.indices.push_back(alt);
+                data.indices.push_back((alt + 1));
+                data.indices.push_back(alt + azi * altitudePoints);
             }
-            float u = float(azi) / float(s.azimuthPoints - 1);
-            float v = float(alt) / float(s.altitudePoints - 1);
+            float u = float(azi) / float(azimuthPoints - 1);
+            float v = float(alt) / float(altitudePoints - 1);
             //Make uniform distribution
             v = acos(1 - 2.f*v) / M_PI;     //DELETE THIS IF SPHERES LOOK BAD
 
             point spherePoint = sphereFunc(2.f*M_PI*u, M_PI*v);
-            data.vertices.push_back(spherePoint.v[0]);
-            data.vertices.push_back(spherePoint.v[1]);
-            data.vertices.push_back(spherePoint.v[2]);
+            data.vertices.push_back((radius * spherePoint.v[0]) + centroid[0]);
+            data.vertices.push_back((radius * spherePoint.v[1]) + centroid[1]);
+            data.vertices.push_back((radius * spherePoint.v[2]) + centroid[2]);
 
             data.normals.push_back(spherePoint.v[0]);
             data.normals.push_back(spherePoint.v[1]);
@@ -59,4 +63,3 @@ sphere::data givr::generate_geometry(sphere const &s) {
 
     return data;
 }
-

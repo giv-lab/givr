@@ -15,66 +15,76 @@
 
 namespace givr {
 
-    struct instanced_render_context {
-        std::unique_ptr<program> shader_program;
-        std::unique_ptr<vertex_array> vao;
+    struct InstancedRenderContext {
+        std::unique_ptr<Program> shaderProgram;
+        std::unique_ptr<VertexArray> vao;
 
-        std::vector<mat4f> model_transforms;
-        std::unique_ptr<buffer> model_transforms_buffer;
+        std::vector<mat4f> modelTransforms;
+        std::unique_ptr<Buffer> modelTransformsBuffer;
 
         // Keep references to the GL_ARRAY_BUFFERS so that
         // the stay in scope for this context.
-        std::vector<std::unique_ptr<buffer>> array_buffers;
+        std::vector<std::unique_ptr<Buffer>> arrayBuffers;
 
-        GLuint number_of_indices;
-        GLuint start_index;
-        GLuint end_index;
+        GLuint numberOfIndices;
+        GLuint startIndex;
+        GLuint endIndex;
 
-        primitive_type primitive;
+        PrimitiveType primitive;
+
+        // Default ctor/dtor & move operations
+        InstancedRenderContext() = default;
+        ~InstancedRenderContext() = default;
+        InstancedRenderContext(InstancedRenderContext &&) = default;
+        InstancedRenderContext &operator=(InstancedRenderContext &&) = default;
+
+        // But no copy or assignment. Bad.
+        InstancedRenderContext(const InstancedRenderContext & ) = delete;
+        InstancedRenderContext &operator=(const InstancedRenderContext &) = delete;
     };
 
     template <typename ViewContextT>
-    void draw_instanced(
-        instanced_render_context &ctx,
-        ViewContextT const &view_ctx,
-        std::function<void(std::unique_ptr<program> const&)> set_uniforms
+    void drawInstanced(
+        InstancedRenderContext &ctx,
+        ViewContextT const &viewCtx,
+        std::function<void(std::unique_ptr<Program> const&)> setUniforms
     ) {
-        ctx.shader_program->use();
+        ctx.shaderProgram->use();
 
-        mat4f view = get_view_matrix(view_ctx.camera);
-        mat4f projection = get_projection_matrix(view_ctx.projection);
-        vec3f view_pos = get_view_position(view_ctx.camera);
+        mat4f view = viewCtx.camera.viewMatrix();
+        mat4f projection = viewCtx.projection.projectionMatrix();
+        vec3f viewPosition = viewCtx.camera.viewPosition();
 
-        ctx.shader_program->set_vec3("view_pos", view_pos);
-        ctx.shader_program->set_mat4("view", view);
-        ctx.shader_program->set_mat4("projection", projection);
-        set_uniforms(ctx.shader_program);
+        ctx.shaderProgram->setVec3("viewPosition", viewPosition);
+        ctx.shaderProgram->setMat4("view", view);
+        ctx.shaderProgram->setMat4("projection", projection);
+        setUniforms(ctx.shaderProgram);
 
         ctx.vao->bind();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        GLenum mode = givr::get_mode(ctx.primitive);
-        ctx.model_transforms_buffer->bind(GL_ARRAY_BUFFER);
-        ctx.model_transforms_buffer->data(GL_ARRAY_BUFFER, ctx.model_transforms, GL_DYNAMIC_DRAW);
+        glPolygonMode(GL_FRONT, GL_FILL);
+        GLenum mode = givr::getMode(ctx.primitive);
+        ctx.modelTransformsBuffer->bind(GL_ARRAY_BUFFER);
+        ctx.modelTransformsBuffer->data(GL_ARRAY_BUFFER, ctx.modelTransforms, GL_DYNAMIC_DRAW);
 
-        if (ctx.number_of_indices > 0) {
+        if (ctx.numberOfIndices > 0) {
             glDrawElementsInstanced(
-                mode, ctx.number_of_indices, GL_UNSIGNED_INT, 0, ctx.model_transforms.size()
+                mode, ctx.numberOfIndices, GL_UNSIGNED_INT, 0, ctx.modelTransforms.size()
             );
         } else {
             glDrawArraysInstanced(
-                mode, ctx.start_index, ctx.end_index, ctx.model_transforms.size()
+                mode, ctx.startIndex, ctx.endIndex, ctx.modelTransforms.size()
             );
         }
 
         ctx.vao->unbind();
 
-        ctx.model_transforms.clear();
+        ctx.modelTransforms.clear();
     }
-    void allocate_buffers(
-        instanced_render_context &ctx
+    void allocateBuffers(
+        InstancedRenderContext &ctx
     );
-    void upload_buffers(
-        instanced_render_context &ctx,
-        buffer_data const &data
+    void uploadBuffers(
+        InstancedRenderContext &ctx,
+        BufferData const &data
     );
 };// end namespace givr

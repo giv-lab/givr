@@ -9,39 +9,45 @@
 
 namespace givr {
 
-    class program
+    class Program
     {
     public:
-        struct shader_args {
-            std::string path;
-            GLenum type;
-        };
-        program(GLuint vertex, GLuint shader);
-        explicit program(std::initializer_list<shader_args> shaders);
-        ~program();
+        Program(GLuint vertex, GLuint fragment);
+        Program(GLuint vertex, GLuint geometry, GLuint fragment);
+        ~Program();
 
-        operator GLuint() const { return m_program_id; }
+        // Default ctor/dtor & move operations
+        Program(Program &&other) = default;
+        Program &operator=(Program &&rhs) = default;
+
+        // But no copy or assignment. Bad.
+        Program(const Program & ) = delete;
+        Program &operator=(const Program &) = delete;
+
+        operator GLuint() const { return m_programID; }
         void use();
 
-        void set_vec2(const std::string &name, vec2f const &value) const;
-        void set_vec3(const std::string &name, vec3f const &value) const;
-        void set_mat4(const std::string &name, mat4f const &mat) const;
-        void set_bool(const std::string &name, bool value) const;
-        void set_float(const std::string &name, float value) const;
+        void setVec2(const std::string &name, vec2f const &value) const;
+        void setVec3(const std::string &name, vec3f const &value) const;
+        void setMat4(const std::string &name, mat4f const &mat) const;
+        void setBool(const std::string &name, bool value) const;
+        void setFloat(const std::string &name, float value) const;
+        void setInt(const std::string &name, int value) const;
 
         // TODO: make these work for our math library
         /*
-        void set_int(const std::string &name, int value) const;
-        void set_vec2(const std::string &name, const glm::vec2 &value) const;
-        void set_vec2(const std::string &name, float x, float y) const;
-        void set_vec4(const std::string &name, const glm::vec4 &value) const;
-        void set_vec4(const std::string &name, float x, float y, float z, float w);
-        void set_mat2(const std::string &name, const glm::mat2 &mat) const;
-        void set_mat3(const std::string &name, const glm::mat3 &mat) const;*/
+        void setInt(const std::string &name, int value) const;
+        void setVec2(const std::string &name, const glm::vec2 &value) const;
+        void setVec2(const std::string &name, float x, float y) const;
+        void setVec4(const std::string &name, const glm::vec4 &value) const;
+        void setVec4(const std::string &name, float x, float y, float z, float w);
+        void setMat2(const std::string &name, const glm::mat2 &mat) const;
+        void setMat3(const std::string &name, const glm::mat3 &mat) const;*/
 
 
         private:
-            GLuint m_program_id;
+            void linkAndErrorCheck();
+            GLuint m_programID = 0;
 
     };
 };// end namespace givr

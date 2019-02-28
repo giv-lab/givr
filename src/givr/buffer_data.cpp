@@ -1,50 +1,51 @@
 #include "buffer_data.h"
 
-using buffer_data = givr::buffer_data;
+using BufferData = givr::BufferData;
+using vec3f = givr::vec3f;
 
-void buffer_data::add_indices(std::vector<GLuint> const &new_indices) {
-    indices.insert(indices.end(), new_indices.begin(), new_indices.end());
+void BufferData::addIndices(std::vector<GLuint> const &newIndices) {
+    indices.insert(indices.end(), newIndices.begin(), newIndices.end());
 }
-void buffer_data::add_vertices(std::vector<float> const &new_vertices) {
-    vertices.insert(vertices.end(), new_vertices.begin(), new_vertices.end());
+void BufferData::addVertices(std::vector<float> const &newVertices) {
+    vertices.insert(vertices.end(), newVertices.begin(), newVertices.end());
 }
-void buffer_data::add_vertices(std::vector<vec3f> const &new_vertices) {
-    vertices.resize(new_vertices.size()*3);
-    for (size_t i = 0; i < new_vertices.size(); ++i) {
-        vertices[(i*3)] = new_vertices[i][0];
-        vertices[(i*3)+1] = new_vertices[i][1];
-        vertices[(i*3)+2] = new_vertices[i][2];
+void BufferData::addVertices(std::vector<vec3f> const &newVertices) {
+    vertices.resize(newVertices.size()*3);
+    for (size_t i = 0; i < newVertices.size(); ++i) {
+        vertices[(i*3)] = newVertices[i][0];
+        vertices[(i*3)+1] = newVertices[i][1];
+        vertices[(i*3)+2] = newVertices[i][2];
     }
 }
-void buffer_data::add_normals(std::vector<float> const &new_normals) {
-    normals.insert(normals.end(), new_normals.begin(), new_normals.end());
+void BufferData::addNormals(std::vector<float> const &newNormals) {
+    normals.insert(normals.end(), newNormals.begin(), newNormals.end());
 }
-void buffer_data::add_normals(std::vector<vec3f> const &new_normals) {
-    normals.resize(new_normals.size()*3);
-    for (size_t i = 0; i < new_normals.size(); ++i) {
-        normals[(i*3)] = new_normals[i][0];
-        normals[(i*3)+1] = new_normals[i][1];
-        normals[(i*3)+2] = new_normals[i][2];
+void BufferData::addNormals(std::vector<vec3f> const &newNormals) {
+    normals.resize(newNormals.size()*3);
+    for (size_t i = 0; i < newNormals.size(); ++i) {
+        normals[(i*3)] = newNormals[i][0];
+        normals[(i*3)+1] = newNormals[i][1];
+        normals[(i*3)+2] = newNormals[i][2];
     }
 }
-void buffer_data::add_uvs(std::vector<float> const &new_uvs) {
-    uvs.insert(uvs.end(), new_uvs.begin(), new_uvs.end());
+void BufferData::addUvs(std::vector<float> const &newUvs) {
+    uvs.insert(uvs.end(), newUvs.begin(), newUvs.end());
 }
-/*TODO: void buffer_data::add_uvs(std::vector<vec3f> const &new_uvs) {
-    uvs.reserve(new_uvs.size()*2);
+/*TODO: void BufferData::addUvs(std::vector<vec3f> const &newUvs) {
+    uvs.reserve(newUvs.size()*2);
     for (size_t i = 0; i < uvs.size(); ++i) {
-        uvs[(i*3)] = new_uvs[i][0];
-        uvs[(i*3)+1] = new_uvs[i][1];
+        uvs[(i*3)] = newUvs[i][0];
+        uvs[(i*3)+1] = newUvs[i][1];
     }
 }*/
-void buffer_data::add_colours(std::vector<float> const &new_colours) {
-    colours.insert(colours.end(), new_colours.begin(), new_colours.end());
+void BufferData::addColours(std::vector<float> const &newColours) {
+    colours.insert(colours.end(), newColours.begin(), newColours.end());
 }
-void buffer_data::add_colours(std::vector<vec3f> const &new_colours) {
-    colours.resize(new_colours.size()*3);
-    for (size_t i = 0; i < new_colours.size(); ++i) {
-        colours[(i*3)] = new_colours[i][0];
-        colours[(i*3)+1] = new_colours[i][1];
-        colours[(i*3)+2] = new_colours[i][2];
+void BufferData::addColours(std::vector<vec3f> const &newColours) {
+    colours.resize(newColours.size()*3);
+    for (size_t i = 0; i < newColours.size(); ++i) {
+        colours[(i*3)] = newColours[i][0];
+        colours[(i*3)+1] = newColours[i][1];
+        colours[(i*3)+2] = newColours[i][2];
     }
 }

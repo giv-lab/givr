@@ -1,10 +1,10 @@
 #include "triangle.h"
 
-using triangle = givr::triangle;
+using TriangleGeometry = givr::geometry::TriangleGeometry;
 
-triangle::data givr::generate_geometry(triangle const &t) {
-    triangle::data data;
-    vec3f normal = glm::normalize(glm::cross(t.p2-t.p1, t.p3-t.p1));
+TriangleGeometry::Data givr::geometry::generateGeometry(TriangleGeometry const &t) {
+    TriangleGeometry::Data data;
+    vec3f normal = glm::normalize(glm::cross(t.p2()-t.p1(), t.p3()-t.p1()));
     data.normals.reserve(9);
     data.vertices.reserve(9);
     auto push_vertex = [&](vec3f const &p) {
@@ -13,8 +13,8 @@ triangle::data givr::generate_geometry(triangle const &t) {
             data.normals.push_back(normal[i]);
         }
     };
-    push_vertex(t.p1);
-    push_vertex(t.p2);
-    push_vertex(t.p3);
+    push_vertex(t.p1());
+    push_vertex(t.p2());
+    push_vertex(t.p3());
     return data;
 }

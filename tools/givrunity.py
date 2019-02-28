@@ -52,7 +52,7 @@ def unity_build():
                 print("-"*80)
                 print("ERROR")
                 print("-"*80)
-                print([h.name for h in headers])
+                print([(h.name, h.dependencies) for h in headers])
                 raise RuntimeError("Unable to properly handle header dependencies")
             for h in headers:
                 h.dependencies = list(set(h.dependencies) - set(written))

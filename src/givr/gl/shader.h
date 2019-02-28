@@ -9,18 +9,25 @@
 
 namespace givr {
 
-class shader
+class Shader
 {
     public:
-        shader(const std::string &source, GLenum shader_type);
+        Shader(const std::string &source, GLenum shaderType);
         // TODO(lw): make a version that just receives the source directly.
-        ~shader();
+        ~Shader();
 
-        operator GLuint() const { return m_shader_id; }
+        // Default ctor/dtor & move operations
+        Shader(Shader &&other) = default;
+        Shader &operator=(Shader &&rhs) = default;
 
+        // But no copy or assignment. Bad.
+        Shader(const Shader & ) = delete;
+        Shader &operator=(const Shader &) = delete;
+
+        operator GLuint() const { return m_shaderID; }
 
     private:
-        GLuint m_shader_id;
+        GLuint m_shaderID = 0;
 
 };
 };// end namespace givr

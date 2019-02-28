@@ -3,34 +3,55 @@
 
 #include "../vertex_array_data.h"
 #include "../types.h"
+#include "geometry.h"
 
 namespace givr {
+namespace geometry {
 
-    template <primitive_type LineType>
-    struct polyline {
-        std::vector<vec3f> vertices;
-
+    template <PrimitiveType LineType>
+    struct PolyLineGeometry {
         static_assert(
-            LineType != primitive_type::LINE_LOOP ||
-            LineType != primitive_type::LINE_STRIP,
-            "polyline only supports LINE_LOOP or LINE_STRIP"
+            LineType != PrimitiveType::LINE_LOOP ||
+            LineType != PrimitiveType::LINE_STRIP,
+            "PolyLine only supports LINE_LOOP or LINE_STRIP"
         );
+        private:
+            std::vector<Point> m_points;
+        public:
+            std::vector<Point> &points() { return m_points; }
+            std::vector<Point> const &points() const { return m_points; }
+            std::vector<Point> &operator*() { return m_points; }
+            // TODO: expose more of the vector interface here, or
+            //       the conversion operator or something
+            void push_back(Point const &p) { m_points.push_back(p); }
+            void clear() { m_points.clear(); }
 
-        struct data : public vertex_array_data<LineType> {
-            buffer_usage_type vertices_type;
+        struct Data : public VertextArrayData<LineType> {
+            std::uint16_t dimensions = 3;
+
+            BufferUsageType verticesType;
             std::vector<float> vertices;
         };
     };
 
-    template <primitive_type LineType>
-    typename polyline<LineType>::data generate_geometry(polyline<LineType> const &l) {
-        typename polyline<LineType>::data data;
-        data.vertices.reserve(l.vertices.size()*3);
-        for (std::size_t i = 0; i < l.vertices.size(); ++i) {
-            data.vertices.push_back(l.vertices[i][0]);
-            data.vertices.push_back(l.vertices[i][1]);
-            data.vertices.push_back(l.vertices[i][2]);
+    template <PrimitiveType LineType, typename... Args>
+    PolyLineGeometry<LineType> PolyLine(Args &&... args) {
+        PolyLineGeometry<LineType> geometry;
+        geometry.points() = {args...};
+        return geometry;
+    }
+
+    template <PrimitiveType LineType>
+    typename PolyLineGeometry<LineType>::Data generateGeometry(PolyLineGeometry<LineType> const &l) {
+        typename PolyLineGeometry<LineType>::Data data;
+        auto const &points = l.points();
+        data.vertices.reserve(points.size()*3);
+        for (std::size_t i = 0; i < points.size(); ++i) {
+            data.vertices.push_back(points[i].value()[0]);
+            data.vertices.push_back(points[i].value()[1]);
+            data.vertices.push_back(points[i].value()[2]);
         }
         return data;
     }
-};// end namespace givr
+}// end namespace geometry
+}// end namespace givr

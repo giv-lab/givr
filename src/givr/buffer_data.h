@@ -6,29 +6,30 @@
 #include "types.h"
 
 namespace givr {
-    struct buffer_data {
+    struct BufferData {
         // Holds the necessary vertex buffer data
         // if the size is zero, then it is not used and will not be supplied to the shader
+        std::uint16_t dimensions = 3;
 
-        buffer_usage_type indices_type;
+        BufferUsageType indicesType;
         std::vector<GLuint> indices;
-        buffer_usage_type vertices_type;
+        BufferUsageType verticesType;
         std::vector<float> vertices;
-        buffer_usage_type normals_type;
+        BufferUsageType normalsType;
         std::vector<float> normals;
-        buffer_usage_type uvs_type;
+        BufferUsageType uvsType;
         std::vector<float> uvs;
-        buffer_usage_type colours_type;
+        BufferUsageType coloursType;
         std::vector<float> colours;
 
-        void add_indices(std::vector<GLuint> const &new_indices);
-        void add_vertices(std::vector<float> const &new_vertices);
-        void add_vertices(std::vector<vec3f> const &new_vertices);
-        void add_normals(std::vector<float> const &new_normals);
-        void add_normals(std::vector<vec3f> const &new_normals);
-        void add_uvs(std::vector<float> const &new_uvs);
-        //TODO: void add_uvs(std::vector<vec2f> const &new_uvs);
-        void add_colours(std::vector<float> const &new_colours);
-        void add_colours(std::vector<vec3f> const &new_colours);
-    }; // end struct buffer_data
+        void addIndices(std::vector<GLuint> const &newIndices);
+        void addVertices(std::vector<float> const &newVertices);
+        void addVertices(std::vector<vec3f> const &newVertices);
+        void addNormals(std::vector<float> const &newNormals);
+        void addNormals(std::vector<vec3f> const &newNormals);
+        void addUvs(std::vector<float> const &newUvs);
+        //TODO: void addUvs(std::vector<vec2f> const &newUvs);
+        void addColours(std::vector<float> const &newColours);
+        void addColours(std::vector<vec3f> const &newColours);
+    }; // end struct BufferData
 };// end namespace givr
