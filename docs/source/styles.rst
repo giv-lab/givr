@@ -28,7 +28,7 @@ Lines have two parameters:
 
  - :cpp:`Width(float)`: The width of the line.
 
-   - *Default*: :cpp:`1.f`
+   - *Default*: :cpp:`Width(1.f)`
 
 
 *NOTE:* Not all opengl implementations allow setting line width to all values.
@@ -108,38 +108,38 @@ The phong shader provides a number of parameters
 
  - :cpp:`AmbientFactor(float)`: The Ambient lighting factor.
 
-   - *Default*: :cpp:`0.05f`
+   - *Default*: :cpp:`AmbientFactor(0.05f)`
 
  - :cpp:`SpecularFactor(float)`: The Specular lighting factor.
 
-   - *Default*: :cpp:`0.3f`
+   - *Default*: :cpp:`SpecularFactor(0.3f)`
 
  - :cpp:`PhongExponent(float)`: The Phong Exponent.
 
-   - *Default*: :cpp:`0.8f`
+   - *Default*: :cpp:`PhongExponent(0.8f)`
 
  - :cpp:`ShowWireFrame(bool)`: Whether to show wireframe or not.  Uses the geometry shader.
 
-   - *Default*: :cpp:`false`
+   - *Default*: :cpp:`ShowWireFrame(false)`
 
  - :cpp:`WireFrameColour(float, float, float)`: The colour of the wireframe.
 
-   - *Default*: :cpp:`0.f, 0.f, 0.f`
+   - *Default*: :cpp:`WireFrameColour(0.f, 0.f, 0.f)`
 
  - :cpp:`WireFrameWidth(float)`: The approximate width of the wireframe lines.
    
-   - *Default* :cpp:`1.5f`
+   - *Default* :cpp:`WireFrameWidth(1.5f)`
 
  - :cpp:`GenerateNormals(bool)`: Whether to automatically generate normals for
    each triangle. Uses the geometry shader. Normals are per-triangle and as such
    produce flat shading.
    
-   - *Default*: :cpp:`false`
+   - *Default*: :cpp:`GenerateNormals(false)`
 
  - :cpp:`PerVertexColour(bool)`: Whether to use the colours specified as part
    of the geometry, where each vertex has its own colour value.
    
-   - *Default*: :cpp:`false`
+   - *Default*: :cpp:`PerVertexColour(false)`
 
 
 Required Data

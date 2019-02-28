@@ -1,4 +1,6 @@
 .. _givr-camera-and-projection:
+.. role:: cpp(code)
+   :language: cpp
 
 Camera and Projection
 ======================
@@ -17,17 +19,18 @@ The view context is provided by givr and is a simple templated struct which hold
 a reference to a camera and projection class.
 
 In the example code below and in the examples provided throughout the documentation
-the type for the camera is `givr::TurnTable` and the type for the projection is
-`givr::PerspectiveView`.  The instance of the camera is available via the 
-`view.camera` attribute and the instance of the projection is available via the
-`view.projection` attribute.  Both types must be able to be instantiated with
+the type for the camera is :cpp:`givr::camera::TurnTable` and the type for the projection is
+:cpp:`givr::camera::PerspectiveView`.  The instance of the camera is available via the 
+:cpp:`view.camera` attribute and the instance of the projection is available via the
+:cpp:`view.projection` attribute.  Both types must be able to be instantiated with
 no parameters. 
 
 Example
 ********
+
 ::
 
-    givr::ViewContext<givr::TurnTable, givr::PerspectiveView> view;
+    auto view = View(TurnTable(), Perspective());
 
 
 
