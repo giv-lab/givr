@@ -2,33 +2,49 @@ Quickstart
 ==========
 .. highlight:: c++
 
-Here is very simple program that renders a sphere going in a circle.
-I have removed all of the windowing/opengl setup code so you can focus
-on the basic API of how to draw something::
+Here is very simple program that renders a rotating triangle. It uses
+the `io.h` library that Andrew Owens created for managing GLFW, and
+the turntable controls from the givr-examples::
 
-   #include <givr.h>
+    //------------------------------------------------------------------------------
+    // A simple example showing how to use the triangle geometry
+    //------------------------------------------------------------------------------
+    #include "givr.h"
+    #include <glm/gtc/matrix_transform.hpp>
 
-   ...
+    #include "io.h"
+    #include "turntable_controls.h"
 
-   /* Instantiate camera/projection objects */
-   givr::ViewContext<givr::TurnTable, givr::PerspectiveView> view;
+    using namespace glm;
+    using namespace givr;
+    using namespace givr::camera;
+    using namespace givr::geometry;
+    using namespace givr::style;
 
-   /* Create Geometry Style and rendering context */
-   givr::Phong phongStyle;
-   phongStyle.colour = vec3f{1.0, 1.0, 0.1529};
-   phongStyle.lightPosition = vec3f{2.0, 2.0, 15.0};
-   auto sphere = createRenderable(givr::Sphere{}, phongStyle);
+    int main(void)
+    {
+        io::GLFWContext windows;
+        auto window = windows.create(io::Window::dimensions{640, 480}, "Simple example");
 
-   ...
+        auto view = View(TurnTable(), Perspective());
+        TurnTableControls controls(window, view.camera);
 
-   /* Setup the model matrix to translate it to the appropriate spot */
-   float u = 0.f;
-   loop {
-      x = 10.0 * cos(u);
-      y = 10.0 * sin(u);
-      u += 0.05;
-      mat4f m = glm::translate(mat4f{1.f}, vec3f{x, y, 0.});
+        auto triangle = createRenderable(
+            Triangle(Point1(0.0, 1., 0.), Point2(-1., -1., 0.), Point3(1., -1., 0.)),
+            Phong(Colour(1., 1., 0.1529), LightPosition(2., 2., 15.))
+        );
 
-      /* Draw it in that position */
-      draw(sphere, view, m);
-   }
+        glClearColor(1.f, 1.f, 1.f, 1.f);
+        float u = 0.;
+        window.run([&](float frameTime) {
+            view.projection.updateAspectRatio(window.width(), window.height());
+            mat4f m{1.f};
+            u += frameTime;
+            auto angle = 365.f*sin(u*.01f);
+            m = rotate(m, angle, vec3f{1.0, 1.0, 0.0});
+            auto size = cos(u*0.1f);
+            m = scale(m, 15.f*vec3f{size});
+            draw(triangle, view, m);
+        });
+        exit(EXIT_SUCCESS);
+    }

@@ -1,4 +1,6 @@
 .. _givr-geometry:
+.. role:: cpp(code)
+   :language: cpp
 
 Geometry
 ==========
@@ -15,30 +17,35 @@ The Triangle geometry is used to create a single triangle.
 
 Parameters
 **********
-It has 3 parameters, one for each point of the triangle::
+It has 3 parameters, one for each point of the triangle:
 
-    struct Triangle {
-        vec3f p1;
-        vec3f p2;
-        vec3f p3;
-    }
+ - :cpp:`Point1(float, float, float)`: The position of vertex 1
+
+   - **Required**
+
+ - :cpp:`Point2(float, float, float)`: The position of vertex 2
+
+   - **Required**
+
+ - :cpp:`Point3(float, float, float)`: The position of vertex3 
+
+   - **Required**
 
 Data
 ******
-The triangle geometry these pieces of data which are made available to the style:
-  * vertices 
-  * normals
+
+The triangle geometry provides the following data to the style:
+
+  - vertices 
+  - normal 
+
+    -  **NOTE:** The normal is calculated as if the winding order is clockwise.
 
 Example
 ********
 ::
 
-   vec3f p1 = ...;
-   vec3f p2 = ...;
-   vec3f p3 = ...;
-   givr::Triangle t{p1, p2, p3};
-
-
+     auto triangle = Triangle(Point1(0.0, 1., 0.), Point2(-1., -1., 0.), Point3(1., -1., 0.)),
 
 
 Line

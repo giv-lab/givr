@@ -174,6 +174,7 @@ std::string givr::style::phongFragmentSource(bool usingTexture) {
             // diffuse
             vec3 lightDirection = normalize(lightPosition - originalPosition);
             vec3 normal = normalize(fragNormal);
+            if (!gl_FrontFacing) normal = -normal;
             float diff = max(dot(lightDirection, normal), 0.0);
             vec3 diffuse = diff * finalColour;
 
