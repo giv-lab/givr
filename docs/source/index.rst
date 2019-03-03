@@ -12,6 +12,7 @@ Welcome to GIVR's documentation!
 
    quickstart
    overview
+   examples
    styles
    geometry
    camera_and_projection

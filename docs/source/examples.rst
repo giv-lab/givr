@@ -1,3 +1,15 @@
+Starter Project
+===============
+There is a starter project you can use to get yourself started.
+It contains the dependencies and a sample :code:`main.cpp` which
+shows a spinning triangle.  
+
+The build instructions for this start project are the same as for
+the examples below, and have thus been ommitted.
+
+You can find the latest release of the start project here:
+https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-simple-project/tags/v0.0.4
+
 Building the Examples
 =====================
 .. highlight:: bash
@@ -11,11 +23,11 @@ of the features from C++17, and have tested these projects on various
 recent distributions and it compiles and runs.
 
 Download a recent version of the examples. The most recent version is:
-https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/-/archive/master/givr-examples-master.zip
+https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/-/archive/v0.0.4/givr-examples-v0.0.4.zip
 Unzip this file somewhere.  Then continue to your OS specific instructions.
 
 You can also use git to grab a copy, the gitlab repository is here:
-https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples
+https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/tags/v0.0.4
 
 
 Windows
@@ -24,13 +36,14 @@ On windows, you will need Visual Studio 2017. You will also need to
 download and install cmake: https://cmake.org/download/
 
 Next to the directory that was created when you unzipped the above file,
-create a `build` directory.
+create a :code:`build` directory.
 
-Now run the cmake-gui command from your start menu. It requires two directories
-the first is the directory which contains the CMakeLists.txt from the file you
-unzipped above.  The second is the  `build` directory that you created.
+Now run the cmake-gui command from your start menu. When the window opens you will
+see two inputs at the top. The top most must be set to the directory that contains
+the CMakeLists.txt from the zip you just downloaded.  The second should refer
+to the :code:`build` directory that you just created.
 
-Once these have been selected, you can press the configure button. It will
+Once these are set, you can press the configure button. It will
 run for a few seconds, produce some output in the bottom frame and then show
 you some configuration entries that you can change if you would like. You do 
 not need to change any of these, despite the fact that they are coloured red.
