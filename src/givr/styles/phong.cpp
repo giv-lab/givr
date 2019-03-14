@@ -7,14 +7,17 @@ template<typename ColorSrc>
 using pirc = givr::style::T_PhongInstancedRenderContext<ColorSrc>;
 using namespace givr::style;
 
-std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture) {
+std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture, bool hasNormals) {
     return
         "#version 330 core\n" +
         std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(hasNormals ? "#define HAS_NORMALS\n" : "") +
         modelSource +
         std::string(R"shader( mat4 model;
         in vec3 position;
-        in vec3 normal;
+        #ifdef HAS_NORMALS
+            in vec3 normal;
+        #endif
         #ifdef USING_TEXTURE
             in vec2 uvs;
         #endif
@@ -35,7 +38,9 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
             mat4 mvp = projection * mv;
             gl_Position = mvp * vec4(position, 1.0);
             geomOriginalPosition = vec3(model * vec4(position, 1.0));
-            geomNormal = vec3(model*vec4(normal, 0));
+            #ifdef HAS_NORMALS
+                geomNormal = vec3(model*vec4(normal, 0));
+            #endif
             geomColour = colour;
             #ifdef USING_TEXTURE
                 geomUv = uvs;
@@ -45,17 +50,20 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         )shader"
     );
 }
-std::string givr::style::phongGeometrySource(bool usingTexture) {
+std::string givr::style::phongGeometrySource(bool usingTexture, bool hasNormals) {
     return
         "#version 330 core\n" +
         std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(hasNormals ? "#define HAS_NORMALS\n" : "") +
         std::string(R"shader(
         layout (triangles) in;
         layout (triangle_strip, max_vertices = 3) out;
 
         uniform bool generateNormals;
 
-        in vec3 geomNormal[];
+        #ifdef HAS_NORMALS
+            in vec3 geomNormal[];
+        #endif
         in vec3 geomOriginalPosition[];
         #ifdef USING_TEXTURE
             in vec2 geomUv[];
@@ -81,7 +89,9 @@ std::string givr::style::phongGeometrySource(bool usingTexture) {
 
             gl_Position = gl_in[0].gl_Position;
             if (!generateNormals) {
-                fragNormal = geomNormal[0];
+                #ifdef HAS_NORMALS
+                    fragNormal = geomNormal[0];
+                #endif
             } else {
                 fragNormal = normal;
             }
@@ -95,7 +105,9 @@ std::string givr::style::phongGeometrySource(bool usingTexture) {
 
             gl_Position = gl_in[1].gl_Position;
             if (!generateNormals) {
-                fragNormal = geomNormal[1];
+                #ifdef HAS_NORMALS
+                    fragNormal = geomNormal[1];
+                #endif
             } else {
                 fragNormal = normal;
             }
@@ -109,7 +121,9 @@ std::string givr::style::phongGeometrySource(bool usingTexture) {
 
             gl_Position = gl_in[2].gl_Position;
             if (!generateNormals) {
-                fragNormal = geomNormal[2];
+                #ifdef HAS_NORMALS
+                    fragNormal = geomNormal[2];
+                #endif
             } else {
                 fragNormal = normal;
             }
