@@ -42,7 +42,7 @@ namespace givr {
 
 
         std::string phongVertexSource(std::string modelSource, bool usingTexture);
-        std::string phongGeometrySource();
+        std::string phongGeometrySource(bool usingTexture);
         std::string phongFragmentSource(bool usingTexture);
 
         template <typename RenderContextT>
@@ -98,7 +98,7 @@ namespace givr {
                 return phongVertexSource("in", std::is_same<ColorSrc, ColorTexture>::value);
             }
             std::string getGeometryShaderSource() const {
-                return phongGeometrySource();
+                return phongGeometrySource(std::is_same<ColorSrc, ColorTexture>::value);
             }
             std::string getFragmentShaderSource() const {
                 return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value);
@@ -113,7 +113,7 @@ namespace givr {
         {
             void setUniforms(std::unique_ptr<Program> const &p) const {
                 if constexpr (std::is_same<ColorSrc, ColorTexture>::value)
-                    setTexturePhongUniforms(*this, p);
+                    setTexturedPhongUniforms(*this, p);
                 else
                     setPhongUniforms(*this, p);
 
@@ -123,7 +123,7 @@ namespace givr {
                 return phongVertexSource("uniform", std::is_same<ColorSrc, ColorTexture>::value);
             }
             std::string getGeometryShaderSource() const {
-                return phongGeometrySource();
+                return phongGeometrySource(std::is_same<ColorSrc, ColorTexture>::value);
             }
             std::string getFragmentShaderSource() const {
                 return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value);

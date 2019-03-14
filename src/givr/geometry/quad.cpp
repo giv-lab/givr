@@ -5,7 +5,7 @@ using QuadGeometry = givr::geometry::QuadGeometry;
 QuadGeometry::Data givr::geometry::generateGeometry(QuadGeometry const &t) {
     QuadGeometry::Data data;
     vec3f normal1 = glm::normalize(glm::cross(t.p3()-t.p2(), t.p1()-t.p2()));
-    vec3f normal2 = glm::normalize(glm::cross(t.p4()-t.p2(), t.p3()-t.p2()));
+    vec3f normal2 = glm::normalize(glm::cross(t.p4()-t.p3(), t.p1()-t.p3()));
     vec3f avg = glm::normalize(normal1 + normal2);
     data.uvs.reserve(8);
     data.normals.reserve(12);
@@ -30,11 +30,11 @@ QuadGeometry::Data givr::geometry::generateGeometry(QuadGeometry const &t) {
     push_vertex(t.p2(), avg);
     push_uvs(0.0, 1.0);
     push_vertex(t.p3(), avg);
-    push_uvs(1.0, 0.0);
-    push_vertex(t.p4(), normal2);
     push_uvs(1.0, 1.0);
+    push_vertex(t.p4(), normal2);
+    push_uvs(1.0, 0.0);
 
     add_tri(0, 1, 2);
-    add_tri(1, 3, 2);
+    add_tri(0, 2, 3);
     return data;
 }

@@ -1,4 +1,5 @@
 #include "phong.h"
+#include <iostream>
 
 template<typename ColorSrc>
 using prc = givr::style::T_PhongRenderContext<ColorSrc>;
@@ -24,7 +25,6 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
 
         out vec3 geomNormal;
         out vec3 geomOriginalPosition;
-        out vec2 geomUv;
         #ifdef USING_TEXTURE
             out vec2 geomUv;
         #endif
@@ -45,9 +45,11 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         )shader"
     );
 }
-std::string givr::style::phongGeometrySource() {
-    return std::string(R"shader(
-        #version 330 core
+std::string givr::style::phongGeometrySource(bool usingTexture) {
+    return
+        "#version 330 core\n" +
+        std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(R"shader(
         layout (triangles) in;
         layout (triangle_strip, max_vertices = 3) out;
 
@@ -55,7 +57,9 @@ std::string givr::style::phongGeometrySource() {
 
         in vec3 geomNormal[];
         in vec3 geomOriginalPosition[];
-        in vec2 geomUv[];
+        #ifdef USING_TEXTURE
+            in vec2 geomUv[];
+        #endif
         in vec3 geomColour[];
 
         out vec3 fragNormal;
@@ -82,7 +86,9 @@ std::string givr::style::phongGeometrySource() {
                 fragNormal = normal;
             }
             originalPosition = geomOriginalPosition[0];
-            fragUv = geomUv[0];
+            #ifdef USING_TEXTURE
+                fragUv = geomUv[0];
+            #endif
             fragColour = geomColour[0];
             fragBarycentricCoords = vec3(1.0, 0.0, 0.0);
             EmitVertex();
@@ -94,7 +100,9 @@ std::string givr::style::phongGeometrySource() {
                 fragNormal = normal;
             }
             originalPosition = geomOriginalPosition[1];
-            fragUv = geomUv[1];
+            #ifdef USING_TEXTURE
+                fragUv = geomUv[1];
+            #endif
             fragColour = geomColour[1];
             fragBarycentricCoords = vec3(0.0, 1.0, 0.0);
             EmitVertex();
@@ -106,7 +114,9 @@ std::string givr::style::phongGeometrySource() {
                 fragNormal = normal;
             }
             originalPosition = geomOriginalPosition[2];
-            fragUv = geomUv[2];
+            #ifdef USING_TEXTURE
+                fragUv = geomUv[2];
+            #endif
             fragColour = geomColour[2];
             fragBarycentricCoords = vec3(0.0, 0.0, 1.0);
             EmitVertex();
