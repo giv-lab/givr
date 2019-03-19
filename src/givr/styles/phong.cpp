@@ -88,54 +88,24 @@ std::string givr::style::phongGeometrySource(bool usingTexture, bool hasNormals)
                     );
             }
 
-
-            gl_Position = gl_in[0].gl_Position;
-            if (!generateNormals) {
-                #ifdef HAS_NORMALS
-                    fragNormal = geomNormal[0];
+            for(int i = 0; i < 3; i++) {
+                gl_Position = gl_in[i].gl_Position;
+                if (!generateNormals) {
+                    #ifdef HAS_NORMALS
+                        fragNormal = geomNormal[i];
+                    #endif
+                } else {
+                    fragNormal = normal;
+                }
+                originalPosition = geomOriginalPosition[i];
+                #ifdef USING_TEXTURE
+                    fragUv = geomUv[i];
                 #endif
-            } else {
-                fragNormal = normal;
+                fragColour = geomColour[i];
+                fragBarycentricCoords = vec3(0.0, 0.0, 0.0);
+                fragBarycentricCoords[i] = 1.0;
+                EmitVertex();
             }
-            originalPosition = geomOriginalPosition[0];
-            #ifdef USING_TEXTURE
-                fragUv = geomUv[0];
-            #endif
-            fragColour = geomColour[0];
-            fragBarycentricCoords = vec3(1.0, 0.0, 0.0);
-            EmitVertex();
-
-            gl_Position = gl_in[1].gl_Position;
-            if (!generateNormals) {
-                #ifdef HAS_NORMALS
-                    fragNormal = geomNormal[1];
-                #endif
-            } else {
-                fragNormal = normal;
-            }
-            originalPosition = geomOriginalPosition[1];
-            #ifdef USING_TEXTURE
-                fragUv = geomUv[1];
-            #endif
-            fragColour = geomColour[1];
-            fragBarycentricCoords = vec3(0.0, 1.0, 0.0);
-            EmitVertex();
-
-            gl_Position = gl_in[2].gl_Position;
-            if (!generateNormals) {
-                #ifdef HAS_NORMALS
-                    fragNormal = geomNormal[2];
-                #endif
-            } else {
-                fragNormal = normal;
-            }
-            originalPosition = geomOriginalPosition[2];
-            #ifdef USING_TEXTURE
-                fragUv = geomUv[2];
-            #endif
-            fragColour = geomColour[2];
-            fragBarycentricCoords = vec3(0.0, 0.0, 1.0);
-            EmitVertex();
 
             EndPrimitive();
         }
