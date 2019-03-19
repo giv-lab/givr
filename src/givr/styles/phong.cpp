@@ -26,7 +26,9 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         uniform mat4 view;
         uniform mat4 projection;
 
-        out vec3 geomNormal;
+        #ifdef HAS_NORMALS
+            out vec3 geomNormal;
+        #endif
         out vec3 geomOriginalPosition;
         #ifdef USING_TEXTURE
             out vec2 geomUv;
