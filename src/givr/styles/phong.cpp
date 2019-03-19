@@ -1,4 +1,5 @@
 #include "phong.h"
+#include <iostream>
 
 template<typename ColorSrc>
 using prc = givr::style::T_PhongRenderContext<ColorSrc>;
@@ -6,14 +7,17 @@ template<typename ColorSrc>
 using pirc = givr::style::T_PhongInstancedRenderContext<ColorSrc>;
 using namespace givr::style;
 
-std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture) {
+std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture, bool hasNormals) {
     return
         "#version 330 core\n" +
         std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(hasNormals ? "#define HAS_NORMALS\n" : "") +
         modelSource +
         std::string(R"shader( mat4 model;
         in vec3 position;
-        in vec3 normal;
+        #ifdef HAS_NORMALS
+            in vec3 normal;
+        #endif
         #ifdef USING_TEXTURE
             in vec2 uvs;
         #endif
@@ -22,9 +26,10 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         uniform mat4 view;
         uniform mat4 projection;
 
-        out vec3 geomNormal;
+        #ifdef HAS_NORMALS
+            out vec3 geomNormal;
+        #endif
         out vec3 geomOriginalPosition;
-        out vec2 geomUv;
         #ifdef USING_TEXTURE
             out vec2 geomUv;
         #endif
@@ -35,7 +40,9 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
             mat4 mvp = projection * mv;
             gl_Position = mvp * vec4(position, 1.0);
             geomOriginalPosition = vec3(model * vec4(position, 1.0));
-            geomNormal = vec3(model*vec4(normal, 0));
+            #ifdef HAS_NORMALS
+                geomNormal = vec3(model*vec4(normal, 0));
+            #endif
             geomColour = colour;
             #ifdef USING_TEXTURE
                 geomUv = uvs;
@@ -45,17 +52,24 @@ std::string givr::style::phongVertexSource(std::string modelSource, bool usingTe
         )shader"
     );
 }
-std::string givr::style::phongGeometrySource() {
-    return std::string(R"shader(
-        #version 330 core
+std::string givr::style::phongGeometrySource(bool usingTexture, bool hasNormals) {
+    return
+        "#version 330 core\n" +
+        std::string(usingTexture ? "#define USING_TEXTURE\n" : "") +
+        std::string(hasNormals ? "#define HAS_NORMALS\n" : "") +
+        std::string(R"shader(
         layout (triangles) in;
         layout (triangle_strip, max_vertices = 3) out;
 
         uniform bool generateNormals;
 
-        in vec3 geomNormal[];
+        #ifdef HAS_NORMALS
+            in vec3 geomNormal[];
+        #endif
         in vec3 geomOriginalPosition[];
-        in vec2 geomUv[];
+        #ifdef USING_TEXTURE
+            in vec2 geomUv[];
+        #endif
         in vec3 geomColour[];
 
         out vec3 fragNormal;
@@ -74,42 +88,24 @@ std::string givr::style::phongGeometrySource() {
                     );
             }
 
-
-            gl_Position = gl_in[0].gl_Position;
-            if (!generateNormals) {
-                fragNormal = geomNormal[0];
-            } else {
-                fragNormal = normal;
+            for(int i = 0; i < 3; i++) {
+                gl_Position = gl_in[i].gl_Position;
+                if (!generateNormals) {
+                    #ifdef HAS_NORMALS
+                        fragNormal = geomNormal[i];
+                    #endif
+                } else {
+                    fragNormal = normal;
+                }
+                originalPosition = geomOriginalPosition[i];
+                #ifdef USING_TEXTURE
+                    fragUv = geomUv[i];
+                #endif
+                fragColour = geomColour[i];
+                fragBarycentricCoords = vec3(0.0, 0.0, 0.0);
+                fragBarycentricCoords[i] = 1.0;
+                EmitVertex();
             }
-            originalPosition = geomOriginalPosition[0];
-            fragUv = geomUv[0];
-            fragColour = geomColour[0];
-            fragBarycentricCoords = vec3(1.0, 0.0, 0.0);
-            EmitVertex();
-
-            gl_Position = gl_in[1].gl_Position;
-            if (!generateNormals) {
-                fragNormal = geomNormal[1];
-            } else {
-                fragNormal = normal;
-            }
-            originalPosition = geomOriginalPosition[1];
-            fragUv = geomUv[1];
-            fragColour = geomColour[1];
-            fragBarycentricCoords = vec3(0.0, 1.0, 0.0);
-            EmitVertex();
-
-            gl_Position = gl_in[2].gl_Position;
-            if (!generateNormals) {
-                fragNormal = geomNormal[2];
-            } else {
-                fragNormal = normal;
-            }
-            originalPosition = geomOriginalPosition[2];
-            fragUv = geomUv[2];
-            fragColour = geomColour[2];
-            fragBarycentricCoords = vec3(0.0, 0.0, 1.0);
-            EmitVertex();
 
             EndPrimitive();
         }
