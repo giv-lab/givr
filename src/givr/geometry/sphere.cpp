@@ -23,22 +23,22 @@ SphereGeometry::Data givr::geometry::generateGeometry(SphereGeometry const &s) {
     for (size_t azi = 0; azi < azimuthPoints; azi++) {
         for (size_t alt = 0; alt < altitudePoints; alt++) {
             if (azi < azimuthPoints - 1 && alt < altitudePoints - 1) {
-                data.indices.push_back(alt + azi * altitudePoints);
-                data.indices.push_back((alt + 1) + azi * altitudePoints);
                 data.indices.push_back((alt + 1) + (azi + 1)* altitudePoints);
-
+                data.indices.push_back((alt + 1) + azi * altitudePoints);
                 data.indices.push_back(alt + azi * altitudePoints);
-                data.indices.push_back((alt + 1) + (azi + 1)*altitudePoints);
+
                 data.indices.push_back(alt + (azi + 1)*altitudePoints);
+                data.indices.push_back((alt + 1) + (azi + 1)*altitudePoints);
+                data.indices.push_back(alt + azi * altitudePoints);
             }
             else if(alt < altitudePoints - 1){
-                data.indices.push_back(alt + azi * altitudePoints);
+                data.indices.push_back((alt + 1));
                 data.indices.push_back((alt + 1) + azi * altitudePoints);
-                data.indices.push_back((alt + 1));
-
                 data.indices.push_back(alt + azi * altitudePoints);
-                data.indices.push_back((alt + 1));
+
                 data.indices.push_back(alt);
+                data.indices.push_back((alt + 1));
+                data.indices.push_back(alt + azi * altitudePoints);
             }
             float u = float(azi) / float(azimuthPoints - 1);
             float v = float(alt) / float(altitudePoints - 1);
