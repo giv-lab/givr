@@ -32,7 +32,7 @@ namespace givr {
         ctx.startIndex = 0;
         ctx.endIndex =  data.vertices.size() / data.dimensions;
 
-        std::uint16_t vaIndex = 0;
+        std::uint16_t vaIndex = 4;
         ctx.vao->bind();
 
         std::unique_ptr<Buffer> &indices = ctx.arrayBuffers[0];
@@ -47,27 +47,29 @@ namespace givr {
             GLenum type,
             GLuint size,
             GLenum bufferType,
+            std::string name,
             std::vector<float> const &data
         ) {
-            // if this data piece is empty
-            if (data.size() == 0) {
-                ++bufferIndex;
-                return;
-            }
+            // if this data piece is empty disable this one.
             std::unique_ptr<Buffer> &vbo = ctx.arrayBuffers[bufferIndex];
             vbo->bind(type);
-            vbo->data(type, data, bufferType);
-            glVertexAttribPointer(vaIndex, size, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-            glEnableVertexAttribArray(vaIndex);
+            if (data.size() == 0) {
+                glDisableVertexAttribArray(vaIndex);
+            } else {
+                glBindAttribLocation(*ctx.shaderProgram.get(), vaIndex, name.c_str());
+                vbo->data(type, data, bufferType);
+                glVertexAttribPointer(vaIndex, size, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+                glEnableVertexAttribArray(vaIndex);
+            }
             ++vaIndex;
             ++bufferIndex;
         };
 
         // Upload / bind / map model data
-        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.verticesType), data.vertices);
-        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.normalsType), data.normals);
-        applyBuffer(GL_ARRAY_BUFFER, 2, getBufferUsageType(data.uvsType), data.uvs);
-        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.coloursType), data.colours);
+        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.verticesType), "position", data.vertices);
+        applyBuffer(GL_ARRAY_BUFFER, data.dimensions, getBufferUsageType(data.normalsType), "normals", data.normals);
+        applyBuffer(GL_ARRAY_BUFFER, 2, getBufferUsageType(data.uvsType), "uvs", data.uvs);
+        applyBuffer(GL_ARRAY_BUFFER, 3, getBufferUsageType(data.coloursType), "colour", data.colours);
 
         ctx.vao->unbind();
 
