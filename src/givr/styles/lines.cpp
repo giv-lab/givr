@@ -18,7 +18,7 @@ void lirc::setUniforms(std::unique_ptr<givr::Program> const &p) const {
 
 std::string linesVertexSource(std::string modelSource) {
     return "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
-        in vec3 position;
+        layout(location=4) in vec3 position;
 
         uniform mat4 view;
         uniform mat4 projection;
@@ -66,7 +66,7 @@ std::string lrc::getFragmentShaderSource() const {
 }
 
 std::string lirc::getVertexShaderSource() const {
-    return linesVertexSource("in");
+    return linesVertexSource("layout(location=0) in");
 }
 
 std::string lirc::getFragmentShaderSource() const {

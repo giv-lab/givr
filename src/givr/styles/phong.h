@@ -41,9 +41,9 @@ namespace givr {
         };
 
 
-        std::string phongVertexSource(std::string modelSource, bool usingTexture, bool hasNormals);
-        std::string phongGeometrySource(bool usingTexture, bool hasNormals);
-        std::string phongFragmentSource(bool usingTexture);
+        std::string phongVertexSource(std::string modelSource, bool usingTexture, bool hasNormals, bool hasColours);
+        std::string phongGeometrySource(bool usingTexture, bool hasNormals, bool hasColours);
+        std::string phongFragmentSource(bool usingTexture, bool hasColours);
 
         template <typename RenderContextT>
         void setPhongUniforms(RenderContextT const &ctx, std::unique_ptr<givr::Program> const &p) {
@@ -94,21 +94,23 @@ namespace givr {
                     setPhongUniforms(*this, p);
             }
 
-            std::string getVertexShaderSource(bool hasNormals) const {
+            std::string getVertexShaderSource(bool hasNormals, bool hasColours) const {
                 return phongVertexSource(
-                        "in",
+                        "layout(location=0) in",
                         std::is_same<ColorSrc, ColorTexture>::value,
-                        hasNormals
+                        hasNormals,
+                        hasColours
                     );
             }
-            std::string getGeometryShaderSource(bool hasNormals) const {
+            std::string getGeometryShaderSource(bool hasNormals, bool hasColours) const {
                 return phongGeometrySource(
                         std::is_same<ColorSrc, ColorTexture>::value,
-                        hasNormals
+                        hasNormals,
+                        hasColours
                     );
             }
-            std::string getFragmentShaderSource() const {
-                return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value);
+            std::string getFragmentShaderSource(bool hasColours) const {
+                return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value, hasColours);
             }
         };
 
@@ -126,21 +128,23 @@ namespace givr {
 
             }
 
-            std::string getVertexShaderSource(bool hasNormals) const {
+            std::string getVertexShaderSource(bool hasNormals, bool hasColours) const {
                 return phongVertexSource(
                         "uniform",
                         std::is_same<ColorSrc, ColorTexture>::value,
-                        hasNormals
+                        hasNormals,
+                        hasColours
                     );
             }
-            std::string getGeometryShaderSource(bool hasNormals) const {
+            std::string getGeometryShaderSource(bool hasNormals, bool hasColours) const {
                 return phongGeometrySource(
                         std::is_same<ColorSrc, ColorTexture>::value,
-                        hasNormals
+                        hasNormals,
+                        hasColours
                     );
             }
-            std::string getFragmentShaderSource() const {
-                return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value);
+            std::string getFragmentShaderSource(bool hasColours) const {
+                return phongFragmentSource(std::is_same<ColorSrc, ColorTexture>::value, hasColours);
             }
         };
 
@@ -230,11 +234,12 @@ namespace givr {
         RenderContextT getContext(GeometryT &, T_PhongStyle<ColorSrc> const &p) {
             RenderContextT ctx;
             constexpr bool _hasNormals = hasNormals<GeometryT>::value;
+            constexpr bool _hasColours = hasColours<GeometryT>::value;
             // TODO: this probably belongs in the constructor
             ctx.shaderProgram = std::make_unique<Program>(
-                Shader{ ctx.getVertexShaderSource(_hasNormals), GL_VERTEX_SHADER },
-                Shader{ ctx.getGeometryShaderSource(_hasNormals), GL_GEOMETRY_SHADER },
-                Shader{ ctx.getFragmentShaderSource(), GL_FRAGMENT_SHADER }
+                Shader{ ctx.getVertexShaderSource(_hasNormals, _hasColours), GL_VERTEX_SHADER },
+                Shader{ ctx.getGeometryShaderSource(_hasNormals, _hasColours), GL_GEOMETRY_SHADER },
+                Shader{ ctx.getFragmentShaderSource(_hasColours), GL_FRAGMENT_SHADER }
             );
             ctx.primitive = getPrimitive<GeometryT>();
             updateStyle(ctx, p);
