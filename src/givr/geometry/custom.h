@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include <utility>
+#include <gsl/span>
 
 #include "../vertex_array_data.h"
 #include "../types.h"
@@ -28,11 +29,11 @@ namespace geometry {
             BufferUsageType indicesType;
             BufferUsageType coloursType;
 
-            std::pair<int, float const *> vertices;
-            std::pair<int, float const *> normals;
-            std::pair<int, std::uint32_t const *> indices;
-            std::pair<int, float const *> colours;
-            std::pair<int, float const *> uvs;
+            gsl::span<const float> vertices;
+            gsl::span<const float> normals;
+            gsl::span<const uint32_t> indices;
+            gsl::span<const float> colours;
+            gsl::span<const float> uvs;
         };
 
     };
@@ -49,23 +50,23 @@ namespace geometry {
     template <PrimitiveType PrimitiveT>
     typename CustomGeometry<PrimitiveT>::Data generateGeometry(CustomGeometry<PrimitiveT> const &l) {
         typename CustomGeometry<PrimitiveT>::Data data;
-        data.vertices = std::make_pair(
-            l.vertices.size()*3,
-            reinterpret_cast<float const *>(l.vertices.data())
+        data.vertices = gsl::span<const float>(
+            reinterpret_cast<float const *>(l.vertices.data()),
+            l.vertices.size()*3
         );
-        data.normals = std::make_pair(
-            l.normals.size()*3,
-            reinterpret_cast<float const *>(l.normals.data())
+        data.normals = gsl::span<const float>(
+            reinterpret_cast<float const *>(l.normals.data()),
+            l.normals.size()*3
         );
-        data.colours = std::make_pair(
-            l.colours.size()*3,
-            reinterpret_cast<float const *>(l.colours.data())
+        data.colours = gsl::span<const float>(
+            reinterpret_cast<float const *>(l.colours.data()),
+            l.colours.size()*3
         );
-        data.uvs = std::make_pair(
-            l.uvs.size()*2,
-            reinterpret_cast<float const *>(l.uvs.data())
+        data.uvs = gsl::span<const float>(
+            reinterpret_cast<float const *>(l.uvs.data()),
+            l.uvs.size()*2
         );
-        data.indices = std::make_pair(l.indices.size(), l.indices.data());
+        data.indices = gsl::span<const std::uint32_t>(l.indices);
 
         return data;
     }
