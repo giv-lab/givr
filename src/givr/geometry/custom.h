@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
+#include <utility>
 
 #include "../vertex_array_data.h"
 #include "../types.h"
@@ -27,11 +28,11 @@ namespace geometry {
             BufferUsageType indicesType;
             BufferUsageType coloursType;
 
-            std::vector<float> vertices;
-            std::vector<float> normals;
-            std::vector<std::uint32_t> indices;
-            std::vector<float> colours;
-            std::vector<float> uvs;
+            std::pair<int, float const *> vertices;
+            std::pair<int, float const *> normals;
+            std::pair<int, std::uint32_t const *> indices;
+            std::pair<int, float const *> colours;
+            std::pair<int, float const *> uvs;
         };
 
     };
@@ -48,13 +49,23 @@ namespace geometry {
     template <PrimitiveType PrimitiveT>
     typename CustomGeometry<PrimitiveT>::Data generateGeometry(CustomGeometry<PrimitiveT> const &l) {
         typename CustomGeometry<PrimitiveT>::Data data;
-
-        __customGeometryCopy<vec3f, 3>(l.vertices, data.vertices);
-        __customGeometryCopy<vec3f, 3>(l.normals, data.normals);
-        __customGeometryCopy<vec3f, 3>(l.colours, data.colours);
-        __customGeometryCopy<vec2f, 2>(l.uvs, data.uvs);
-
-        data.indices.insert(data.indices.end(), l.indices.begin(), l.indices.end());
+        data.vertices = std::make_pair(
+            l.vertices.size()*3,
+            reinterpret_cast<float const *>(l.vertices.data())
+        );
+        data.normals = std::make_pair(
+            l.normals.size()*3,
+            reinterpret_cast<float const *>(l.normals.data())
+        );
+        data.colours = std::make_pair(
+            l.colours.size()*3,
+            reinterpret_cast<float const *>(l.colours.data())
+        );
+        data.uvs = std::make_pair(
+            l.uvs.size()*2,
+            reinterpret_cast<float const *>(l.uvs.data())
+        );
+        data.indices = std::make_pair(l.indices.size(), l.indices.data());
 
         return data;
     }
