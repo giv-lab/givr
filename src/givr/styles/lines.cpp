@@ -23,14 +23,9 @@ std::string linesVertexSource(std::string modelSource) {
         uniform mat4 view;
         uniform mat4 projection;
 
-        out vec3 fragPosition;
-
         void main(){
-            mat4 modelview = model * view;
-            mat4 mvp = projection * modelview;
+            mat4 mvp = projection * view * model;
             gl_Position = mvp * vec4(position, 1.0);
-            vec4 modelVert = modelview * vec4(position, 1.0);
-            fragPosition = vec3(modelVert);
         }
 
         )shader"
@@ -42,8 +37,6 @@ std::string linesFragmentSource() {
         uniform vec3 colour;
         uniform vec3 lightPosition;
         uniform vec3 viewPosition;
-
-        in vec3 fragPosition;
 
         out vec4 outColour;
 
