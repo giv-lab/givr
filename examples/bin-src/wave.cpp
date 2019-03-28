@@ -47,8 +47,8 @@ void fill(geometry::Grid2 &grid,  // grid
 void animate(float time) {
 
   auto func = [time](float x, float y) {
-    constexpr float amp = 0.5f;
-    return amp * std::sin((x * x + y * y) + time);
+    constexpr float amp = 5.f;
+    return amp * std::cos((x * x + y * y) + time);
   };
 
   fill(heightMap, -M_PI * 2, M_PI * 2, // x
