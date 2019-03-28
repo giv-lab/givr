@@ -30,7 +30,7 @@
 #include "givr/styles/parameters.h"
 #include "givr/styles/style.h"
 #include "givr/styles/noshading.h"
-#include "givr/styles/flatshading.h"
+#include "givr/styles/noshading.h"
 #include "givr/styles/lines.h"
 #include "givr/styles/phong.h"
 
