@@ -62,7 +62,7 @@ namespace givr {
             GLuint size,
             GLenum bufferType,
             std::string name,
-            std::vector<float> const &data
+            gsl::span<const float> const &data
         ) {
             std::unique_ptr<Buffer> &vbo = ctx.arrayBuffers[bufferIndex];
             vbo->bind(type);

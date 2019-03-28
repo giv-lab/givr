@@ -48,7 +48,7 @@ namespace givr {
             GLuint size,
             GLenum bufferType,
             std::string name,
-            std::vector<float> const &data
+            gsl::span<const float> const &data
         ) {
             // if this data piece is empty disable this one.
             std::unique_ptr<Buffer> &vbo = ctx.arrayBuffers[bufferIndex];
