@@ -19,8 +19,10 @@ https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/tags/v0.0.8
 
 Windows
 -------
-On windows, you will need Visual Studio 2017. You may also need to update it after installation so that your compiler is up to date (launch Visual Studio and click on the flag in the top corner).  You will also need to
-download and install cmake: https://cmake.org/download/
+On windows, you will need Visual Studio 2017. You may also need to update it
+after installation so that your compiler is up to date (launch Visual Studio
+and click on the flag in the top corner).  You will also need to download
+and install cmake: https://cmake.org/download/
 
 Next to the directory that was created when you unzipped the above file,
 create a :code:`build` directory.
@@ -40,6 +42,13 @@ can choose one of the example programs as your default and then build and run it
 
 If you want more information on how to use cmake-gui on windows they have
 instructions here: https://cmake.org/runningcmake/
+
+Windows Video
+*************
+
+.. raw:: html
+
+   <iframe width="696" height="392" src="https://www.youtube.com/embed/BuQvK3zlzwY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 Linux
@@ -88,12 +97,24 @@ Example program
 ===============
 .. highlight:: c++
 
-Here is a very simple program that renders a rotating triangle. We will use
-this example to get a basic idea of what givr does. This example also uses
-Here is very simple program that renders a rotating triangle. It uses the
-`io.h` library that Andrew Owens created for managing GLFW, and the turntable
-controls from the givr-examples. If you successfully built the examples,
-you can follow along by opening triangle.cpp::
+Here is a very simple program that renders a rotating triangle. We
+will use this example to get a basic idea of what givr does
+and how you use it.  The example comes from the `givr-examples
+<https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples>`_
+repository. If you successfully built the examples using the
+instructions above, then you can open the `examples/triangle.cpp
+<https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/blob/v0.0.8/examples/triangle.cpp>`_
+file in your code editor and follow along from there.
+
+This example also uses the `io.h` library that Andrew Owens created for
+managing GLFW, and the turntable controls from the givr-examples.  The lines
+which are highlighted in yellow are example of the givr API. We will talk
+about each of these lines in the following section.  The rest of the lines
+come from C++, glm, `io.h` or the turntable controls.
+
+.. code-block:: c++
+  :linenos:
+  :emphasize-lines: 4, 11, 12, 13, 14, 22, 25, 26, 27, 28, 33, 40
 
     //------------------------------------------------------------------------------
     // A simple example showing how to use the triangle geometry
@@ -139,20 +160,17 @@ you can follow along by opening triangle.cpp::
         exit(EXIT_SUCCESS);
     }
 
-Overview
-=========
+Example Explanation
+===================
 
-.. highlight:: cpp
-
-givr provides a simple and safe API for rendering geometry. The following
-gives you an overview of how you can use givr to draw things.
+.. highlight:: c++
 
 There are 8 things that need to be in place for givr to render things to
 the screen:
 
  1. Include givr.h
- 2. Using Namespace
- 3. Instantiate camera/view information
+ 2. Using Namespace (optional)
+ 3. Instantiate camera/view
  4. Instantiate your geometry
  5. Instantiate your style
  6. Create the renderable
@@ -170,13 +188,12 @@ The triangle example also includes glm (for doing math), io.h (for handling
 windowing; it essentially wraps GLFW), and turntable_controls.h (for
 interacting with the scene, e.g. rotating and zooming in/out).
 
-2. Using Namespace
---------------------------
+2. Using Namespace (optional)
+-----------------------------
 givr uses namespaces to organize its code. In most of the examples
 we make use of using namespace directives to shorten the amount of
 code we have to type. How much you use this is up to you::
 
-    using namespace glm;
     using namespace givr;
     using namespace givr::camera;
     using namespace givr::geometry;
@@ -188,23 +205,25 @@ givr comes with a builtin camera and projection class::
 
     auto view = View(TurnTable(), Perspective());
 
-When your window changes size, you will want to inform the projection class
-of the change in aspect ratio. For example, we are using GLFW and `io.h`::
+When your window changes size, you will want to inform the projection
+class of the change in aspect ratio. To do this you use the
+:code:`view.project.updateAspectRatio` method::
+
+    view.projection.updateAspectRatio(width, window);
+
+You will need to get the width and height values from somewhere. If you are
+using the `io.h` library, then you can ask for them directly from the
+window class that you instantiated::
 
     io::GLFWContext windows;
     auto window = windows.create(io::Window::dimensions{640,480}, “Simple example”);
+    ...
     view.projection.updateAspectRatio(window.width(), window.height());
-
-If you are using just GLFW directly::
-
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
-    view.projection.updateAspectRatio(width, height);
 
 4. Instantiate Geometry
 -----------------------
-givr comes with a number of different types of geometry, e.g. lines, triangles, spheres,
-a Mesh loaded from an OBJ file, and custom geometry.  
+givr comes with a number of different types of geometry, e.g. lines, triangles,
+spheres, a Mesh loaded from an OBJ file, and custom geometry.
 
 Note that when you instantiate the geometry object, you are not actually
 building the geometry. It isn't until you create the renderable that the
