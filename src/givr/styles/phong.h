@@ -218,7 +218,7 @@ namespace givr {
                 data.indicesType = d.indicesType;
                 data.addIndices(d.indices);
             }
-            if constexpr (hasColours<GeometryT>::value && !std::is_same<ColorSrc, Colour>::value) {
+            if constexpr (hasColours<GeometryT>::value && std::is_same<ColorSrc, Colour>::value) {
                 data.coloursType = d.coloursType;
                 data.addColours(d.colours);
             }
