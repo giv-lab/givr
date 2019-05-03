@@ -1,10 +1,13 @@
-Quickstart
+Example program
 ==========
 .. highlight:: c++
 
-Here is very simple program that renders a rotating triangle. It uses
-the `io.h` library that Andrew Owens created for managing GLFW, and
-the turntable controls from the givr-examples::
+Here is a very simple program that renders a rotating triangle. We will use
+this example to get a basic idea of what givr does. This example also uses
+Here is very simple program that renders a rotating triangle. It uses the
+`io.h` library that Andrew Owens created for managing GLFW, and the turntable
+controls from the givr-examples. If you successfully built the examples,
+you can follow along by opening triangle.cpp::
 
     //------------------------------------------------------------------------------
     // A simple example showing how to use the triangle geometry
@@ -23,6 +26,7 @@ the turntable controls from the givr-examples::
 
     int main(void)
     {
+        // Set up your windowing system / OpenGL context 
         io::GLFWContext windows;
         auto window = windows.create(io::Window::dimensions{640, 480}, "Simple example");
 

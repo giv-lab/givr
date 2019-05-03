@@ -24,10 +24,10 @@ givr requires that you provide an OpenGL context and allows you to use
 whichever windowing and user input library you prefer. It also requires that
 you provide the main loop of the program.
 
-This documentation is split into two parts. The first part is a very basic
-user manual which guides you through downloading, building and running your
-first givr based program.  The second is a reference manual that covers all
-of the API and their parameters.
+This documentation is split into two parts. The first part is a user manual
+which guides you through downloading, building and running your first givr
+based program.  The second is a reference manual that covers all of the API
+and their parameters.
 
 
 .. toctree::
