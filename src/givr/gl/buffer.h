@@ -4,7 +4,7 @@
 
 #include <vector>
 #include <array>
-#include <utility>
+#include <iostream>
 
 namespace givr {
 
@@ -36,10 +36,6 @@ namespace givr {
             template <typename T, long unsigned int Size>
             void data(GLenum target, const std::array<T, Size> &data, GLenum usage) {
                 glBufferData(target, sizeof(T) * Size, data.data(), usage);
-            }
-            template <typename T>
-            void data(GLenum target, const std::pair<int, T const *> &data, GLenum usage) {
-                glBufferData(target, sizeof(T) * data.first, data.second, usage);
             }
 
         private:

@@ -32,9 +32,9 @@ namespace givr {
         BufferData const &data
     ) {
         // Start by setting the appropriate context variables for rendering.
-        ctx.numberOfIndices = data.indices.first;
+        ctx.numberOfIndices = data.indices.size();
         ctx.startIndex = 0;
-        ctx.endIndex =  data.vertices.first / data.dimensions;
+        ctx.endIndex =  data.vertices.size() / data.dimensions;
 
         std::uint16_t vaIndex = 0;
         ctx.vao->bind();
@@ -62,11 +62,11 @@ namespace givr {
             GLuint size,
             GLenum bufferType,
             std::string name,
-            std::pair<int, float const *> const &data
+            std::vector<float> const &data
         ) {
             std::unique_ptr<Buffer> &vbo = ctx.arrayBuffers[bufferIndex];
             vbo->bind(type);
-            if (data.first == 0) {
+            if (data.size() == 0) {
                 glDisableVertexAttribArray(vaIndex);
             } else {
                 vbo->data(type, data, bufferType);

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <utility>
 
 #include "gl.h"
 #include "types.h"
@@ -13,30 +12,24 @@ namespace givr {
         std::uint16_t dimensions = 3;
 
         BufferUsageType indicesType;
-        std::pair<int, std::uint32_t const *> indices;
+        std::vector<GLuint> indices;
         BufferUsageType verticesType;
-        std::pair<int, float const *> vertices;
+        std::vector<float> vertices;
         BufferUsageType normalsType;
-        std::pair<int, float const *> normals;
+        std::vector<float> normals;
         BufferUsageType uvsType;
-        std::pair<int, float const *> uvs;
+        std::vector<float> uvs;
         BufferUsageType coloursType;
-        std::pair<int, float const *> colours;
-
+        std::vector<float> colours;
 
         void addIndices(std::vector<GLuint> const &newIndices);
-        void addIndices(std::pair<int, std::uint32_t const *> const &newIndices);
         void addVertices(std::vector<float> const &newVertices);
         void addVertices(std::vector<vec3f> const &newVertices);
-        void addVertices(std::pair<int, float const *> const &newVertices);
         void addNormals(std::vector<float> const &newNormals);
         void addNormals(std::vector<vec3f> const &newNormals);
-        void addNormals(std::pair<int, float const *> const &newNormals);
         void addUvs(std::vector<float> const &newUvs);
-        void addUvs(std::pair<int, float const *> const &newUvs);
         //TODO: void addUvs(std::vector<vec2f> const &newUvs);
         void addColours(std::vector<float> const &newColours);
         void addColours(std::vector<vec3f> const &newColours);
-        void addColours(std::pair<int, float const *> const &newColours);
     }; // end struct BufferData
 };// end namespace givr
