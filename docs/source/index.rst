@@ -34,9 +34,7 @@ and their parameters.
    :maxdepth: 2
    :caption: User Manual:
 
-   user-manual/examples
-   user-manual/quickstart
-   user-manual/overview
+   user-manual
 
 .. toctree::
    :maxdepth: 2
