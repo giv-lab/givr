@@ -64,11 +64,7 @@ namespace givr {
         glPolygonMode(GL_FRONT, GL_FILL);
         GLenum mode = givr::getMode(ctx.primitive);
         ctx.modelTransformsBuffer->bind(GL_ARRAY_BUFFER);
-        ctx.modelTransformsBuffer->data(
-            GL_ARRAY_BUFFER,
-            gsl::span<mat4f>(ctx.modelTransforms),
-            GL_DYNAMIC_DRAW
-        );
+        ctx.modelTransformsBuffer->data(GL_ARRAY_BUFFER, ctx.modelTransforms, GL_DYNAMIC_DRAW);
 
         if (ctx.numberOfIndices > 0) {
             glDrawElementsInstanced(

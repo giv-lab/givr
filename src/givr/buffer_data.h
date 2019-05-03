@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <utility>
-#include <gsl/span>
 
 #include "gl.h"
 #include "types.h"
@@ -14,25 +13,30 @@ namespace givr {
         std::uint16_t dimensions = 3;
 
         BufferUsageType indicesType;
-        gsl::span<const std::uint32_t> indices;
+        std::pair<int, std::uint32_t const *> indices;
         BufferUsageType verticesType;
-        gsl::span<const float> vertices;
+        std::pair<int, float const *> vertices;
         BufferUsageType normalsType;
-        gsl::span<const float> normals;
+        std::pair<int, float const *> normals;
         BufferUsageType uvsType;
-        gsl::span<const float> uvs;
+        std::pair<int, float const *> uvs;
         BufferUsageType coloursType;
-        gsl::span<const float> colours;
+        std::pair<int, float const *> colours;
 
 
-        void addIndices(gsl::span<const std::uint32_t> const &newIndices);
-        void addVertices(gsl::span<const float> const &newVertices);
+        void addIndices(std::vector<GLuint> const &newIndices);
+        void addIndices(std::pair<int, std::uint32_t const *> const &newIndices);
+        void addVertices(std::vector<float> const &newVertices);
         void addVertices(std::vector<vec3f> const &newVertices);
-        void addNormals(gsl::span<const float> const &newNormals);
+        void addVertices(std::pair<int, float const *> const &newVertices);
+        void addNormals(std::vector<float> const &newNormals);
         void addNormals(std::vector<vec3f> const &newNormals);
-        void addUvs(gsl::span<const float> const &newUvs);
-        void addUvs(std::vector<vec2f> const &newUvs);
-        void addColours(gsl::span<const float> const &newColours);
+        void addNormals(std::pair<int, float const *> const &newNormals);
+        void addUvs(std::vector<float> const &newUvs);
+        void addUvs(std::pair<int, float const *> const &newUvs);
+        //TODO: void addUvs(std::vector<vec2f> const &newUvs);
+        void addColours(std::vector<float> const &newColours);
         void addColours(std::vector<vec3f> const &newColours);
+        void addColours(std::pair<int, float const *> const &newColours);
     }; // end struct BufferData
 };// end namespace givr

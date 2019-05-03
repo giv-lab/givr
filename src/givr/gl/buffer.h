@@ -5,7 +5,6 @@
 #include <vector>
 #include <array>
 #include <utility>
-#include <gsl/span>
 
 namespace givr {
 
@@ -31,8 +30,16 @@ namespace givr {
             void bind(GLenum target);
             void unbind(GLenum target);
             template <typename T>
-            void data(GLenum target, const gsl::span<T> &data, GLenum usage) {
+            void data(GLenum target, const std::vector<T> &data, GLenum usage) {
                 glBufferData(target, sizeof(T) * data.size(), data.data(), usage);
+            }
+            template <typename T, long unsigned int Size>
+            void data(GLenum target, const std::array<T, Size> &data, GLenum usage) {
+                glBufferData(target, sizeof(T) * Size, data.data(), usage);
+            }
+            template <typename T>
+            void data(GLenum target, const std::pair<int, T const *> &data, GLenum usage) {
+                glBufferData(target, sizeof(T) * data.first, data.second, usage);
             }
 
         private:
