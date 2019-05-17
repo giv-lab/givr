@@ -1,9 +1,5 @@
 #include "phong.h"
 
-template<typename ColorSrc>
-using prc = givr::style::T_PhongRenderContext<ColorSrc>;
-template<typename ColorSrc>
-using pirc = givr::style::T_PhongInstancedRenderContext<ColorSrc>;
 using namespace givr::style;
 
 std::string givr::style::phongVertexSource(std::string modelSource, bool usingTexture, bool hasNormals, bool hasColours) {

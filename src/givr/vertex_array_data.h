@@ -6,7 +6,7 @@
 // is compatible with the style.
 namespace givr {
 template <givr::PrimitiveType PrimitiveValue>
-class VertextArrayData {
+class VertexArrayData {
 };
 
 // A constexpr function for determining the primitive type from
@@ -15,27 +15,27 @@ template <typename GeometryT>
 constexpr givr::PrimitiveType getPrimitive() {
     typedef givr::PrimitiveType pt;
     typedef typename GeometryT::Data Geometry;
-    if constexpr (std::is_base_of<VertextArrayData<pt::POINTS>, Geometry>::value) {
+    if constexpr (std::is_base_of<VertexArrayData<pt::POINTS>, Geometry>::value) {
         return PrimitiveType::POINTS;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINES>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINES>, Geometry>::value) {
         return PrimitiveType::LINES;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_LOOP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_LOOP>, Geometry>::value) {
         return PrimitiveType::LINE_LOOP;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_STRIP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_STRIP>, Geometry>::value) {
         return PrimitiveType::LINE_STRIP;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLES>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLES>, Geometry>::value) {
         return PrimitiveType::TRIANGLES;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_STRIP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_STRIP>, Geometry>::value) {
         return PrimitiveType::TRIANGLE_STRIP;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_FAN>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_FAN>, Geometry>::value) {
         return PrimitiveType::TRIANGLE_FAN;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINES_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINES_ADJACENCY>, Geometry>::value) {
         return PrimitiveType::LINES_ADJACENCY;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_STRIP_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_STRIP_ADJACENCY>, Geometry>::value) {
         return PrimitiveType::LINE_STRIP_ADJACENCY;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLES_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLES_ADJACENCY>, Geometry>::value) {
         return PrimitiveType::TRIANGLES_ADJACENCY;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_STRIP_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_STRIP_ADJACENCY>, Geometry>::value) {
         return PrimitiveType::TRIANGLE_STRIP_ADJACENCY;
     } else {
         // We can guarantee we can render this.
@@ -49,15 +49,15 @@ template <typename GeometryT>
 constexpr bool isLineBased() {
     typedef givr::PrimitiveType pt;
     typedef typename GeometryT::Data Geometry;
-    if constexpr (std::is_base_of<VertextArrayData<pt::LINES>, Geometry>::value) {
+    if constexpr (std::is_base_of<VertexArrayData<pt::LINES>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_LOOP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_LOOP>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_STRIP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_STRIP>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINES_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINES_ADJACENCY>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::LINE_STRIP_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::LINE_STRIP_ADJACENCY>, Geometry>::value) {
         return true;
     } else {
         return false;
@@ -70,15 +70,15 @@ template <typename GeometryT>
 constexpr bool isTriangleBased() {
     typedef givr::PrimitiveType pt;
     typedef typename GeometryT::Data Geometry;
-    if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLES>, Geometry>::value) {
+    if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLES>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_STRIP>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_STRIP>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_FAN>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_FAN>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLES_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLES_ADJACENCY>, Geometry>::value) {
         return true;
-    } else if constexpr (std::is_base_of<VertextArrayData<pt::TRIANGLE_STRIP_ADJACENCY>, Geometry>::value) {
+    } else if constexpr (std::is_base_of<VertexArrayData<pt::TRIANGLE_STRIP_ADJACENCY>, Geometry>::value) {
         return true;
     } else {
         return false;
@@ -90,7 +90,7 @@ template <typename GeometryT>
 constexpr bool isPointBased() {
     typedef givr::PrimitiveType pt;
     typedef typename GeometryT::Data Geometry;
-    if constexpr (std::is_base_of<VertextArrayData<pt::POINTS>, Geometry>::value) {
+    if constexpr (std::is_base_of<VertexArrayData<pt::POINTS>, Geometry>::value) {
         return true;
     } else {
         return false;

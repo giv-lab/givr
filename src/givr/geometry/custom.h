@@ -21,13 +21,14 @@ namespace geometry {
 
         // TODO: add simpler ways to construct this.
 
-        struct Data : public VertextArrayData<PrimitiveT> {
+        struct Data : public VertexArrayData<PrimitiveT> {
             std::uint16_t dimensions = 3;
 
             BufferUsageType verticesType;
             BufferUsageType normalsType;
             BufferUsageType indicesType;
             BufferUsageType coloursType;
+            BufferUsageType uvsType;
 
             gsl::span<const float> vertices;
             gsl::span<const float> normals;

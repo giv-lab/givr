@@ -8,10 +8,18 @@
 namespace givr {
 namespace geometry {
 
-    struct TriangleSoupGeometry {
+    struct TriangleSoup {
         private:
             std::vector<TriangleGeometry> m_triangles;
         public:
+            template <typename... Args>
+            TriangleSoup(Args &&... args) {
+                std::vector<TriangleGeometry> tris{args...};
+                for (auto &t : tris) {
+                    m_triangles.push_back(t);
+                }
+            }
+
             std::vector<TriangleGeometry> &triangles() { return m_triangles; }
             std::vector<TriangleGeometry> const &triangles() const { return m_triangles; }
 
@@ -22,7 +30,7 @@ namespace geometry {
                 m_triangles.push_back(Triangle(Point1(p1), Point2(p2), Point3(p3)));
             }
 
-            struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            struct Data : public VertexArrayData<PrimitiveType::TRIANGLES> {
                 std::uint16_t dimensions = 3;
 
                 BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
@@ -32,17 +40,10 @@ namespace geometry {
                 std::vector<float> normals;
             };
     };
+    // Backwards Compatibility
+    using TriangleSoupGeometry = TriangleSoup;
 
-    template <typename... Args>
-    TriangleSoupGeometry TriangleSoup(Args &&... args) {
-        TriangleSoupGeometry geometry;
-        std::vector<TriangleGeometry> tris{args...};
-        for (auto &t : tris) {
-            geometry.triangles().push_back(t);
-        }
-        return geometry;
-    }
 
-    TriangleSoupGeometry::Data generateGeometry(TriangleSoupGeometry const &t);
+    TriangleSoup::Data generateGeometry(TriangleSoup const &t);
 }// end namespace geometry
 }// end namespace givr

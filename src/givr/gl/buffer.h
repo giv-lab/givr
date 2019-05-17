@@ -34,6 +34,10 @@ namespace givr {
             void data(GLenum target, const gsl::span<T> &data, GLenum usage) {
                 glBufferData(target, sizeof(T) * data.size(), data.data(), usage);
             }
+            template <typename T>
+            void data(GLenum target, const std::vector<T> &data, GLenum usage) {
+                glBufferData(target, sizeof(T) * data.size(), data.data(), usage);
+            }
 
         private:
             GLuint m_bufferID = 0;
