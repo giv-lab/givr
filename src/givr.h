@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 
 #include "givr/draw.h"
-#include "givr/buffer_data.h"
 #include "givr/instanced_renderer.h"
 #include "givr/camera/parameters.h"
 #include "givr/camera/camera.h"
