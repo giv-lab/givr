@@ -119,8 +119,7 @@ int main(void) {
   auto heightMapBuffer = givr::createRenderable(heightMapMesh, phongStyle);
 
   glClearColor(1.f, 1.f, 1.f, 1.f);
-  float u = 0.;
-  window.run([&](float frameTime) {
+  window.run([&](float) {
     view.projection.updateAspectRatio(window.width(), window.height());
     g_time += 0.1f;
 
