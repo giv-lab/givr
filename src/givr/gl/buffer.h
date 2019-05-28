@@ -2,10 +2,10 @@
 
 #include "../gl.h"
 
-#include <gsl/span>
 #include <vector>
 #include <array>
-#include <iostream>
+#include <utility>
+#include <gsl/span>
 
 namespace givr {
 
