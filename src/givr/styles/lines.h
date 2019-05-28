@@ -67,9 +67,9 @@ namespace style {
     std::string linesVertexSource(std::string modelSource);
     std::string linesFragmentSource();
 
-    template <typename RenderContextT, typename GeometryT>
-    RenderContextT getContext(GeometryT &, GL_Line const &l) {
-        RenderContextT ctx;
+    template <typename GeometryT>
+    RenderContext<GeometryT, GL_Line> getContext(GeometryT const &, GL_Line const &l) {
+        RenderContext<GeometryT, GL_Line> ctx;
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{linesVertexSource(ctx.getModelSource()), GL_VERTEX_SHADER},
             Shader{linesFragmentSource(), GL_FRAGMENT_SHADER}

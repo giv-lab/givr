@@ -1,6 +1,6 @@
 #include "noshading.h"
 
-std::string noShadingVertexSource(std::string modelSource) {
+std::string givr::style::noShadingVertexSource(std::string modelSource) {
     return "#version 330 core\n" + modelSource + std::string(R"shader( mat4 model;
         layout(location=4) in vec3 position;
 
@@ -17,7 +17,7 @@ std::string noShadingVertexSource(std::string modelSource) {
     );
 }
 
-std::string noShadingFragmentSource() {
+std::string givr::style::noShadingFragmentSource() {
     return std::string(R"shader(#version 330 core
         uniform vec3 colour;
 

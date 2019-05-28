@@ -140,11 +140,12 @@ namespace givr {
             );
         }
 
-        template <typename GeometryT, typename StyleT>
-        RenderContext<GeometryT, StyleT>
-        getContext(GeometryT const &, StyleT const &p) {
-            RenderContext<GeometryT, StyleT> ctx;
-            ctx.shaderProgram = getPhongShaderProgram<GeometryT, StyleT>(ctx.getModelSource());
+        template <typename GeometryT, typename ColorSrc>
+        RenderContext<GeometryT, T_Phong<ColorSrc>>
+        getContext(GeometryT const &, T_Phong<ColorSrc> const &p) {
+            std::cout << "Phong" << std::endl;
+            RenderContext<GeometryT, T_Phong<ColorSrc>> ctx;
+            ctx.shaderProgram = getPhongShaderProgram<GeometryT, T_Phong<ColorSrc>>(ctx.getModelSource());
             ctx.primitive = getPrimitive<GeometryT>();
             updateStyle(ctx, p);
             return std::move(ctx);

@@ -30,7 +30,7 @@ namespace givr {
 
         GLuint numberOfIndices;
         GLuint startIndex;
-        GLuint endIndex;
+        GLuint vertexCount;
 
         PrimitiveType primitive;
 
@@ -83,12 +83,12 @@ namespace givr {
                 );
             } else {
                 glDrawArraysInstanced(
-                    mode, ctx.startIndex, ctx.endIndex, ctx.modelTransforms.size()
+                    mode, ctx.startIndex, ctx.vertexCount, ctx.modelTransforms.size()
                 );
             }
         } else {
             glDrawArraysInstanced(
-                mode, ctx.startIndex, ctx.endIndex, ctx.modelTransforms.size()
+                mode, ctx.startIndex, ctx.vertexCount, ctx.modelTransforms.size()
             );
         }
 
@@ -146,7 +146,7 @@ namespace givr {
             ctx.numberOfIndices = 0;
         }
         ctx.startIndex = 0;
-        ctx.endIndex =  data.vertices.size() / data.dimensions;
+        ctx.vertexCount =  data.vertices.size() / data.dimensions;
 
         std::uint16_t vaIndex = 0;
         ctx.vao->bind();

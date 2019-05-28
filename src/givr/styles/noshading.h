@@ -54,9 +54,10 @@ namespace style {
         return std::move(generateGeometry(g));
     }
 
-    template <typename RenderContextT, typename GeometryT>
-    RenderContextT getContext(GeometryT &, NoShading const &f) {
-        RenderContextT ctx;
+    template <typename GeometryT>
+    RenderContext<GeometryT, NoShading> getContext(GeometryT const &, NoShading const &f) {
+        std::cout << "NoShading" << std::endl;
+        RenderContext<GeometryT, NoShading> ctx;
         ctx.shaderProgram = std::make_unique<Program>(
             Shader{noShadingVertexSource(ctx.getModelSource()), GL_VERTEX_SHADER},
             Shader{noShadingFragmentSource(), GL_FRAGMENT_SHADER}
