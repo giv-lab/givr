@@ -12,9 +12,6 @@ namespace geometry {
     struct Line
         : public Geometry<Point1, Point2>
     {
-        Line() {
-        }
-
         template <typename... Args>
         Line(Args &&... args) {
             using required_args = std::tuple<Point1, Point2>;

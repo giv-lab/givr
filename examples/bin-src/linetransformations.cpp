@@ -20,7 +20,7 @@ int main(void)
     auto view = View(TurnTable(), Perspective());
     TurnTableControls controls(window, view.camera);
 
-    auto lineStyle = GL_Line(Width(15.), Colour(0.0, 0.0, 0.0));
+    auto lineStyle = GL_Line(Width(15.), Colour(1.0, 0.0, 0.0));
     auto line = Line(
         Point1(-1.0, 0.0, 0.0),
         Point2(1.0, 0.0, 0.0)
