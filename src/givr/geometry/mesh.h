@@ -10,15 +10,34 @@
 
 namespace givr {
 namespace geometry {
-    struct MeshGeometry
+    struct Mesh
         : public Geometry<Filename>
           // TODO: Add other parameters like smooth shading etc.
     {
+        template <typename... Args>
+        Mesh(Args &&... args) {
+            using required_args = std::tuple<Filename>;
+
+            using namespace utility;
+            static_assert(!has_duplicate_types<Args...>,
+                "The arguments you passed in have duplicate parameters");
+
+            static_assert(is_subset_of<required_args, std::tuple<Args...>>,
+                "Filename is a required parameter for Mesh. "
+                "Please provide them.");
+            static_assert(is_subset_of<std::tuple<Args...>, Mesh::Args>,
+                "You have provided incorrect parameters for Mesh. "
+                "Filename is required.");
+            static_assert(sizeof...(args) <= std::tuple_size<Mesh::Args>::value,
+                "You have provided incorrect parameters for Mesh. "
+                "Filename is required.");
+            set(std::forward<Args>(args)...);
+        }
 
         std::string const &filename() const { return value<Filename>().value(); }
         std::string &filename() { return value<Filename>().value(); }
 
-        struct Data : VertextArrayData<PrimitiveType::TRIANGLES> {
+        struct Data : VertexArrayData<PrimitiveType::TRIANGLES> {
             std::uint16_t dimensions = 3;
 
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
@@ -32,30 +51,11 @@ namespace geometry {
             std::vector<float> uvs;
         };
     };
+    // Backwards compatibility
+    using MeshGeometry = Mesh;
 
-    template <typename... Args>
-    MeshGeometry Mesh(Args &&... args) {
-        using required_args = std::tuple<Filename>;
 
-        using namespace utility;
-        static_assert(!has_duplicate_types<Args...>,
-            "The arguments you passed in have duplicate parameters");
-
-        static_assert(is_subset_of<required_args, std::tuple<Args...>>,
-            "Filename is a required parameter for Mesh. "
-            "Please provide them.");
-        static_assert(is_subset_of<std::tuple<Args...>, MeshGeometry::Args>,
-            "You have provided incorrect parameters for Mesh. "
-            "Filename is required.");
-        static_assert(sizeof...(args) <= std::tuple_size<MeshGeometry::Args>::value,
-            "You have provided incorrect parameters for Mesh. "
-            "Filename is required.");
-        MeshGeometry m;
-        m.set(std::forward<Args>(args)...);
-        return m;
-    }
-
-    MeshGeometry::Data generateGeometry(const MeshGeometry& m);
+    Mesh::Data generateGeometry(const Mesh& m);
 
 }// end namespace geometry
 }// end namespace givr

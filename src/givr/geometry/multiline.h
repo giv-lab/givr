@@ -9,33 +9,34 @@
 namespace givr {
 namespace geometry {
 
-    struct MultiLineGeometry {
+    struct MultiLine {
         private:
-            std::vector<LineGeometry> m_segments;
+            std::vector<Line> m_segments;
 
         public:
-            std::vector<LineGeometry> &segments() { return m_segments; }
-            std::vector<LineGeometry> const &segments() const { return m_segments; }
-            std::vector<LineGeometry> &operator*() { return m_segments; }
+            template <typename... Args>
+            MultiLine(
+                Args &&... args
+            ) : m_segments{std::forward<Args>(args)...}
+            { }
 
-            void push_back(LineGeometry l);
+            std::vector<Line> &segments() { return m_segments; }
+            std::vector<Line> const &segments() const { return m_segments; }
+            std::vector<Line> &operator*() { return m_segments; }
 
-            struct Data : public VertextArrayData<PrimitiveType::LINES> {
+            void push_back(Line l);
+
+            struct Data : public VertexArrayData<PrimitiveType::LINES> {
                 std::uint16_t dimensions = 3;
 
                 BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
                 std::vector<float> vertices;
             };
     };
+    // Backwards Compatibility
+    using MultiLineGeometry = MultiLine;
 
-    template <typename... Args>
-    MultiLineGeometry MultiLine(Args &&... args) {
-        // TODO: we could do better compile time checking here.
-        MultiLineGeometry geometry;
-        geometry.segments() = {args...};
-        return geometry;
-    }
 
-    MultiLineGeometry::Data generateGeometry(MultiLineGeometry const &l);
+    MultiLine::Data generateGeometry(MultiLine const &l);
 }// end namespace geometry
 }// end namespace givr

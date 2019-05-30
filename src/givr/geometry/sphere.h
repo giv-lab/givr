@@ -10,11 +10,31 @@
 namespace givr {
 namespace geometry {
 
-    struct SphereGeometry
+    struct Sphere
         : public Geometry<Centroid, Radius, AzimuthPoints, AltitudePoints>
     {
+        template <typename... Args>
+        Sphere(Args &&... args) {
+            using namespace utility;
+            static_assert(!has_duplicate_types<Args...>,
+                "The arguments you passed in have duplicate parameters");
 
-        struct Data : public VertextArrayData<PrimitiveType::TRIANGLES> {
+            static_assert(is_subset_of<std::tuple<Args...>, Sphere::Args>,
+                "You have provided incorrect parameters for Sphere. "
+                "Centroid, Radius, AzimuthPoints, AltitudePoints are optional.");
+            static_assert(sizeof...(args) <= std::tuple_size<Sphere::Args>::value,
+                "You have provided incorrect parameters for Sphere. "
+                "Centroid, Radius, AzimuthPoints, AltitudePoints are optional.");
+            this->set(Centroid(0.0, 0.0, 0.0));
+            this->set(Radius(1.0));
+            this->set(AzimuthPoints(20.));
+            this->set(AltitudePoints(20.));
+            if constexpr (sizeof...(args) > 0) {
+                this->set(std::forward<Args>(args)...);
+            }
+        }
+
+        struct Data : public VertexArrayData<PrimitiveType::TRIANGLES> {
             std::uint16_t dimensions = 3;
 
             BufferUsageType verticesType = BufferUsageType::STATIC_DRAW;
@@ -29,31 +49,11 @@ namespace geometry {
         };
 
     };
+    // Backwards Compatibility
+    using SphereGeometry = Sphere;
 
-    template <typename... Args>
-    SphereGeometry Sphere(Args &&... args) {
-        using namespace utility;
-        static_assert(!has_duplicate_types<Args...>,
-            "The arguments you passed in have duplicate parameters");
 
-        static_assert(is_subset_of<std::tuple<Args...>, SphereGeometry::Args>,
-            "You have provided incorrect parameters for Sphere. "
-            "Centroid, Radius, AzimuthPoints, AltitudePoints are optional.");
-        static_assert(sizeof...(args) <= std::tuple_size<SphereGeometry::Args>::value,
-            "You have provided incorrect parameters for Sphere. "
-            "Centroid, Radius, AzimuthPoints, AltitudePoints are optional.");
-        SphereGeometry s;// = Sphere();
-        s.set(Centroid(0.0, 0.0, 0.0));
-        s.set(Radius(1.0));
-        s.set(AzimuthPoints(20.));
-        s.set(AltitudePoints(20.));
-        if constexpr (sizeof...(args) > 0) {
-            s.set(std::forward<Args>(args)...);
-        }
-        return s;
-    }
-
-    SphereGeometry::Data generateGeometry(SphereGeometry const &s);
+    Sphere::Data generateGeometry(Sphere const &s);
 
 }// end namespace geometry
 }// end namespace givr
