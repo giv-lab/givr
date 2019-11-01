@@ -24,14 +24,16 @@ after installation so that your compiler is up to date (launch Visual Studio
 and click on the flag in the top corner).  You will also need to download
 and install cmake: https://cmake.org/download/
 
-Next to the directory that was created when you unzipped the above file,
-create a :code:`build` directory.
+Create a :code:`build` directory which will contain all of the build files. You
+can create this anywhere, but I most often create it next to or within the
+directory that was created above.
 
-Now run the cmake-gui command from your start menu. It requires two directories
-the first is the directory which contains the CMakeLists.txt from the file you
-unzipped above.  The second is the  :code:`build` directory that you created.
+Now run the cmake-gui command from your start menu. It requires that you
+specify two directories.  The first is the directory which contains the
+CMakeLists.txt you wish to build.  The second is the :code:`build` directory
+that you created.
 
-Once these have been selected, you can press the configure button. It will
+Once these have been selected, press the configure button. It will
 run for a few seconds, produce some output in the bottom frame and then show
 you some configuration entries that you can change if you would like. You do
 not need to change any of these, despite the fact that they are coloured red.
@@ -85,7 +87,7 @@ Starter Project
 ===============
 There is a starter project you can use to get yourself started.
 It contains the dependencies and a sample :code:`main.cpp` which
-shows a spinning triangle.  
+shows a spinning triangle.
 
 The build instructions for this start project are the same as for
 the examples below, and have been ommitted.
