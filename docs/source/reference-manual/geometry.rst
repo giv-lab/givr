@@ -13,13 +13,12 @@ Introduction
 The following documentation gives you a terse, but reasonably complete description
 of the types of geometry that you can instantiate within givr.
 
-**Note**: We use some Template Metaprogramming techniques to provide this API.
-
+**Note**: We use some Template Metaprogramming techniques to provide this API. 
 These techniques are used so that your code will not compile when the
 you have provided incomplete data or incorrect types. It also allows you
 to provide the parameters to each function call in whatever order you choose
 and enforces a style that promotes readability.  The name of the struct
-which constains the geometry has a different name from the function which
+which contains the geometry has a different name from the function which
 you use to instantiate it. As such we make liberal use of the keyword
 :cpp:`auto` to simplify the examples.
 
@@ -29,7 +28,7 @@ code below in the same format.
 
 If you intend to organize your code into classes and need to know the exact
 types that are used in order to declare member variables or function
-parameters that take these as types, then read the *Advanced* section at the
+parameters that take these as types, then read the *Actual Types* section at the
 end.
 
 
@@ -55,7 +54,7 @@ It has three parameters, one for each point of the triangle:
 
    - **Required**
 
- - :cpp:`Point3(float, float, float)`: The position of vertex3 
+ - :cpp:`Point3(float, float, float)`: The position of vertex3
 
    - **Required**
 
@@ -64,8 +63,8 @@ Data
 
 The triangle geometry provides the following data to the style:
 
-  - vertices 
-  - normal 
+  - vertices
+  - normal
 
     -  **NOTE:** The normal is calculated as if the winding order is clockwise.
 
@@ -78,7 +77,7 @@ Example
         Point1(0.f, 1.f, 0.f),
         Point2(-1.f, -1.f, 0.f),
         Point3(1.f, -1.f, 0.f)
-    ),
+    );
 
 
 Line
@@ -101,7 +100,7 @@ It has two parameters, one for each point of the triangle:
 Data
 ******
 The line geometry provides this data to the style:
-  * vertices 
+  * vertices
 
 Example
 *******
@@ -132,7 +131,7 @@ You can also add line segments using the following API::
 Data
 ******
 The MultiLine geometry provides this data to the style:
-  * vertices 
+  * vertices
 
 Example
 *******
@@ -164,14 +163,14 @@ parameter. This template parameter may be set to one of two values:
 If you use :cpp:`PrimitiveType::LINE_LOOP`, the final point will be connected by a line segment with
 the first point. If you use :code:`PrimitiveType::LINE_STRIP` then it will not be. This parameter
 is a template parameter so that we can do compile time checking to ensure it is
-set to the right value. 
+set to the right value.
 
 The class takes a list of points as parameters.
 
 Data
 ******
 The PolyLine geometry provides this data to the style:
-  * vertices 
+  * vertices
 
 Example
 *******
@@ -224,7 +223,7 @@ The sphere produces:
    - vertices
    - normals
    - indices
-   - uvs 
+   - uvs
 
 *Note*: uv coordinates are not currently used by any styles.
 
@@ -374,7 +373,7 @@ Data
 ******
 
 The triangle geometry these pieces of data which are made available to the style:
-  * vertices 
+  * vertices
   * normals
 
 Example
@@ -469,11 +468,11 @@ quite flexible, with the caveat that you are required to understand how geometry
 is typically provided to the GPU and manage all of the indices, vertices, normals
 colours or uv coordinates yourself. It does very little compile time or run time
 checking. As a result, you are responsible for all aspects of this particular
-geometry. 
+geometry.
 
 *NOTE:* The renderers that we use assume a few things about the setup of this data.
 
-  - vertices are 3 floats. 
+  - vertices are 3 floats.
   - normals are 3 floats.
   - uvs are 2 floats
   - colours are 3 floats.
@@ -513,7 +512,7 @@ as the template parameter. This template parameter may be set to any of the
 
 
 The `CustomGeometry` class provides lists of `vec3f` for vertices, normals
-and colours, a list of `vec2f` 
+and colours, a list of `vec2f`
 ::
 
     template <PrimitiveType PrimitiveT>
@@ -527,7 +526,7 @@ and colours, a list of `vec2f`
 
 Data
 ******
-It provides the data you provide to the style. 
+It provides the data you provide to the style.
 
 Example
 *******
@@ -537,7 +536,7 @@ of geometry, then you should be willing to read an existing tutorial on how to
 setup these sorts of buffers for rendering. The exact format depends on whether
 it's indexed, which primitive type you are using etc.
 
-Advanced
+Actual Types
 ------------
 As mentioned in the introduction, we use the C++ :cpp:`auto` keyword liberally
 in the example code above. This hides the actual types that are used throughout.
@@ -545,10 +544,10 @@ This section explains the types a bit more concretely.
 
 Named Parameters
 ****************
-The various parameters that are passed into the geometry are an sub class of
+The various parameters that are passed into the geometry are a sub class of
 the :cpp:`givr::utility::Type` class which is templated.  These classes wrap
 some other type, like a :cpp:`glm::vec3` or a :cpp:`float`. Each of the sub
-classes are named after the parameter they represent. 
+classes are named after the parameter they represent.
 Each of the instantiation functions for the Geometry operate on these named
 types.
 It is the usage of these named parameters which allows us to perform various
@@ -578,7 +577,7 @@ named parameters and then ensures the following:
  #. All required parameters are specified.
  #. No duplicate parameters are specified.
  #. Only parameters that are used are specified.
- #. That the types of the parameters are valid.
+ #. The types of the parameters are valid.
 
 Types of the Geometry
 *********************
@@ -600,3 +599,4 @@ of each of the geometries used in the examples::
     MeshGeometry palmTree = Mesh(...);
     TriangleSoupGeometry jellyGeometry;
     CustomGeometry<PrimitiveType::TRIANGLES> custom;
+

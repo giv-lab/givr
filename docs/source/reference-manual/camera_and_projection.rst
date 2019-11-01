@@ -9,7 +9,7 @@ The camera and projection system within givr is still undergoing quite
 work to design it to be more friendly and easy to use. As with all of
 givr, feedback is welcome.
 
-There are three components involved in this system, the view context,
+There are three components involved in this system: the view context,
 the camera and the projection.
 
 
@@ -18,12 +18,12 @@ View Context
 The view context is provided by givr and is a simple templated struct which holds
 a reference to a camera and projection class.
 
-In the example code below and in the examples provided throughout the documentation
+In the example code below and in the examples provided throughout the documentation,
 the type for the camera is :cpp:`givr::camera::TurnTable` and the type for the projection is
-:cpp:`givr::camera::PerspectiveView`.  The instance of the camera is available via the 
+:cpp:`givr::camera::PerspectiveView`.  The instance of the camera is available via the
 :cpp:`view.camera` attribute and the instance of the projection is available via the
 :cpp:`view.projection` attribute.  Both types must be able to be instantiated with
-no parameters. 
+no parameters.
 
 Example
 ********
@@ -78,10 +78,11 @@ Example
 Projection
 --------------------------------------------------------------------------------
 Similar to the Camera class above, the projection class can also be customized.
-you need do 3 things for the project class
+You need to do 3 things for the projection class:
 
 1. Create a custom type (struct/class) that represents your projection.
 2. Define a `mat4f getProjectionMatrix(MyProjectionT const &camera)`
    within that class function which generates the view matrix from the
    projection instance.
-3. Specify this type of projection for your view context
+3. Specify this type of projection for your view context.
+
