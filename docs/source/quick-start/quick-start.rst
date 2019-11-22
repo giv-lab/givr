@@ -16,9 +16,9 @@ They can be downloaded here:
  * `givr.h <https://gitlab.cpsc.ucalgary.ca/graphics-interaction-visualization/givr/raw/master/build/givr.h>`_
  * `givr.cpp <https://gitlab.cpsc.ucalgary.ca/graphics-interaction-visualization/givr/raw/master/build/givr.cpp>`_
 
-Step 2: Setup windowing
------------------------
-You can use any windowing library with givr. For the quickstart, we will assume you have :code:`glfw3` installed and available to your compiler. There are many ways to do this. We recommend (vcpkg) <https://github.com/Microsoft/vcpkg>. You will also need a method for initalizing the OpenGL libraries. For this quickstart, we will use :code:`glad` which may also be installed via :code:`vcpkg`.
+Step 2: Obtain a windowing library 
+----------------------------------
+You can use any windowing library with givr. However, for this documentation, we will use :code:`glfw3`. There are many ways to obtain and install :code:`glfw3`. We recommend (vcpkg) <https://github.com/Microsoft/vcpkg>. You will also need a method for initalizing the OpenGL libraries. For this quickstart, we will use :code:`glad` which may also be installed via :code:`vcpkg`.
 
 Finally, we will also use a set of helpers that wraps glad and glfw3 into a simpler API. This library is called :code:`givio` and is available here:
 
