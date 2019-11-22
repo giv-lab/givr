@@ -6,14 +6,15 @@
 Welcome to GIVR's documentation!
 ================================
 
-givr is an MIT licensed, type-safe API for rendering geometry.  It was
-primarily developed by Lakin Wecker, Jeremy Hart and Andrew Owens for use
-in CPSC 587 - Computer Animation at the University of Calgary.
+givr is a GPLv3 licensed, type-safe API for rendering geometry.  It was
+primarily developed by Lakin Wecker, Jeremy Hart, Andrew Owens, Kathleen Ang
+and Dr. Przemyslaw Prusinkiewicz for use in CPSC 587 - Computer Animation
+at the University of Calgary.
 
-Computer graphics programs are incredibly rewarding. Not only do you get
-immediate feedback about your program when you run it, the results are
+Computer graphics programs are incredibly rewarding. You get
+immediate feedback about your program when you run it and the results are
 enjoyable to watch and can be shown to your friends and family. Modern
-Computer Graphics programming environments, however, can be frustrating.
+Computer Graphics programming environments, however, are complicated.
 They are designed to allow for maximum flexibility and performance and leave
 you to do much of the verification yourself.  It is very easy to make a program
 that compiles, runs and produces no output on the screen.
@@ -41,10 +42,17 @@ all of the API and their parameters.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Quick Start
+
+   quick-start/quick-start
+
+.. toctree::
+   :maxdepth: 2
    :caption: Graphics Programming:
 
    gfx/introduction
    gfx/windowing
+   gfx/givr
 
 .. toctree::
    :maxdepth: 2

@@ -1,3 +1,5 @@
+.. _user-manual:
+
 Building the Examples
 =====================
 .. highlight:: bash
