@@ -47,18 +47,12 @@ all of the API and their parameters.
    quick-start/quick-start
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Graphics Programming:
+   :maxdepth: 3
+   :caption: User Manual:
 
    gfx/introduction
    gfx/windowing
    gfx/givr
-
-.. toctree::
-   :maxdepth: 2
-   :caption: User Manual:
-
-   user-manual
 
 .. toctree::
    :maxdepth: 2
