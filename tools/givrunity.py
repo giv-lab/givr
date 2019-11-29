@@ -1,5 +1,6 @@
 import glob
 import os.path
+import sys
 
 class source:
     def __init__(self, filename):
@@ -31,10 +32,10 @@ class source:
         fd.write(f"// END {self.name}\n")
         fd.write(f"//------------------------------------------------------------------------------\n\n")
 
-def unity_build():
+def unity_build(src_dir):
     headers = [
         source(filename)
-        for filename in glob.iglob('givr/src/**/*.h', recursive=True)
+        for filename in glob.iglob(f'{src_dir}/**/*.h', recursive=True)
     ]
     exclude = ["givr.h"]#, "tiny_obj_loader.h", "stb_image.h"]
     headers = [h for h in headers if h.name not in exclude]
@@ -76,4 +77,6 @@ def unity_build():
 
 
 if __name__ == "__main__":
-    unity_build()
+    if len(sys.argv) != 2:
+        sys.exit("Usage: ./tools/givrunity.py ./src")
+    unity_build(sys.argv[1])
