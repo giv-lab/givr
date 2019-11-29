@@ -19,12 +19,13 @@ for a compiler and CMake.
 You will need a compiler capable of compiling C++17. We have tested these
 projects on various recent distributions and it compiles and runs.
 
-Download a recent version of the examples. The most recent version is:
-https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/-/archive/v0.0.8/givr-examples-v0.0.8.zip
+Download a recent version of the examples. They are included as part of
+the givr distribution, which can be downloaded here:
+https://github.com/lakinwecker/givr/archive/v0.0.8.zip
 Unzip this file somewhere.  Then continue to your OS specific instructions.
 
 You can also use git to grab a copy, the gitlab repository is here:
-https://gitlab.cpsc.ucalgary.ca/lakin.wecker/givr-examples/tags/v0.0.8
+https://github.com/lakinwecker/givr/tree/v0.0.8
 
 
 Windows
