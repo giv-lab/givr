@@ -50,9 +50,9 @@ all of the API and their parameters.
    :maxdepth: 3
    :caption: User Manual:
 
-   gfx/introduction
-   gfx/windowing
-   gfx/givr
+   user-manual/introduction
+   user-manual/windowing
+   user-manual/givr
 
 .. toctree::
    :maxdepth: 2
