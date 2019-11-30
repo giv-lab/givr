@@ -7,9 +7,9 @@ Welcome to GIVR's documentation!
 ================================
 
 givr is a GPLv3 licensed, type-safe API for rendering geometry.  It was
-primarily developed by Lakin Wecker, Jeremy Hart, Andrew Owens, Kathleen Ang
-and Dr. Przemyslaw Prusinkiewicz for use in CPSC 587 - Computer Animation
-at the University of Calgary.
+primarily developed by Lakin Wecker, Jeremy Hart, Andrew Owens, Kathleen
+Ang with guidance from Dr. Przemyslaw Prusinkiewicz. It was developed for
+use in CPSC 587 - Computer Animation at the University of Calgary.
 
 Computer graphics programs are incredibly rewarding. Not only do you get
 immediate feedback about your program when you run it, the results are
