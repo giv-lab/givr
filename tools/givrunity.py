@@ -9,12 +9,30 @@ class source:
         self.dependencies = []
         self._parse_dependences()
 
+    def _is_local_include(self, line):
+        return line.strip().startswith("#include \"")
+
+    def _is_gsl_include(self, line):
+        return line.strip().startswith("#include <gsl/")
+
+    def _is_internal_dependency(self, line):
+        return self._is_local_include(line) or self._is_gsl_include(line)
+
+    def _get_internal_depdendency(self, line):
+        start, end = "", ""
+        if self._is_local_include(line):
+            return os.path.basename(line.strip().replace('#include "', '').replace('"', ''))
+        elif self._is_gsl_include(line):
+            line.strip().replace('#include <gsl/', '')
+            return os.path.basename(line[:line.find(">")])
+
+
     def _parse_dependences(self):
         lines = []
         with open(self.filename) as fd:
             for line in fd.readlines():
-                if line.strip().startswith("#include \""):
-                    dependency = os.path.basename(line.strip().replace('#include "', '').replace('"', ''))
+                if self._is_internal_dependency(line):
+                    dependency = self._get_internal_depdendency(line)
                     if dependency != self.name:
                         self.dependencies.append(dependency)
                     continue
@@ -36,6 +54,9 @@ def unity_build(src_dir):
     headers = [
         source(filename)
         for filename in glob.iglob(f'{src_dir}/**/*.h', recursive=True)
+    ] + [
+        source(filename)
+        for filename in glob.iglob(f'{src_dir}/gsl/*', recursive=True)
     ]
     exclude = ["givr.h"]#, "tiny_obj_loader.h", "stb_image.h"]
     headers = [h for h in headers if h.name not in exclude]
@@ -61,7 +82,7 @@ def unity_build(src_dir):
 
     implementations = [
         source(filename)
-        for filename in glob.iglob('givr/src/**/*.cpp', recursive=True)
+        for filename in glob.iglob(f'{src_dir}/**/*.cpp', recursive=True)
     ]
     exclude = [
         "stb_image.cpp",

@@ -21,11 +21,11 @@ projects on various recent distributions and it compiles and runs.
 
 Download a recent version of the examples. They are included as part of
 the givr distribution, which can be downloaded here:
-https://github.com/lakinwecker/givr/archive/v0.0.10.zip
+https://github.com/giv-lab/givr/archive/v0.0.11.zip
 Unzip this file somewhere.  Then continue to your OS specific instructions.
 
 You can also use git to grab a copy, the gitlab repository is here:
-https://github.com/lakinwecker/givr/tree/v0.0.10
+https://github.com/giv-lab/givr/tree/v0.0.11
 
 
 Windows
@@ -99,7 +99,7 @@ for the examples above.
 
 Download the project here:
 
-* `example-project <https://github.com/lakinwecker/givr-simple-project/archive/v0.0.10.zip>`_
+* `example-project <https://github.com/giv-lab/givr-simple-project/archive/v0.0.11.zip>`_
 
 Including givr in an existing project.
 ======================================
@@ -143,5 +143,5 @@ Step 3: Your main program
 You will need a main.cpp to run your program. You can write your own or
 start from this simple example of a triangle:
 
- * `triangle.cpp <https://github.com/lakinwecker/givr/blob/v0.0.10/examples/bin-src/triangle.cpp>`_
+ * `triangle.cpp <https://github.com/giv-lab/givr/blob/v0.0.11/examples/bin-src/triangle.cpp>`_
 
